@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  overflow: hidden;
+}
+
+@font-face {
+  font-family: 'LGSmart';
+  src: url('./assets/fonts/LGEITextTTF-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LGSmart';
+  src: url('./assets/fonts/LGEITextTTF-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LGSmart';
+  src: url('./assets/fonts/LGEITextTTF-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'LGSmart';
+  src: url('./assets/fonts/LGEITextTTF-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
