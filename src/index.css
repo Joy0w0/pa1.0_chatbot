@@ -2,9 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
+/* html {
   overflow: hidden;
-}
+} */
 
 @font-face {
   font-family: 'LGSmart';
