@@ -12,8 +12,8 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
     svg.selectAll('*').remove();
 
     const width = 800;
-    const height = 80;
-    const margin = { top: 20, right: 240, bottom: 20, left: 150 };
+    const height = 100;
+    const margin = { top: 40, right: 240, bottom: 20, left: 150 };
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
     const barHeight = 10;
@@ -226,36 +226,38 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
                 ? Math.max(1, barWidth / totalBubbleWidth) 
                 : 1;
               
-              let currentX = startX + (barWidth - totalBubbleWidth * scale) / 2;
+              // 버블을 막대 위에 균등하게 분배
+              let currentBubbleX = startX;
 
-              currentBubbles.forEach((bubble, index) => {
-                if (bubble.currentCount > 0) {
-                  const rawR = 6 + Math.sqrt(bubble.currentCount) * 3;
-                  const r = Math.max(6, rawR * scale);
-                  const cx = currentX + r;
-                  const cy = centerY;
+              const visibleBubbles = currentBubbles.filter(bubble => bubble.currentCount > 0);
+              
+              visibleBubbles.forEach((bubble, index) => {
+                const rawR = 6 + Math.sqrt(bubble.currentCount) * 3;
+                const r = Math.max(6, rawR * scale);
+                
+                // 버블을 막대 위에 균등하게 배치
+                const bubbleSpacing = barWidth / (visibleBubbles.length + 1);
+                const cx = startX + bubbleSpacing * (index + 1);
+                const cy = centerY;
 
-                  g.append('circle')
-                    .attr('cx', cx)
-                    .attr('cy', cy)
-                    .attr('r', r)
-                    .attr('fill', aiddColorScale(bubble.type))
-                    .attr('stroke', '#fff')
-                    .attr('stroke-width', 0.8)
-                    .attr('opacity', 0.85);
+                g.append('circle')
+                  .attr('cx', cx)
+                  .attr('cy', cy)
+                  .attr('r', r)
+                  .attr('fill', aiddColorScale(bubble.type))
+                  .attr('stroke', '#fff')
+                  .attr('stroke-width', 0.8)
+                  .attr('opacity', 0.85);
 
-                  if (r > 8) {
-                    g.append('text')
-                      .attr('x', cx)
-                      .attr('y', cy + 4)
-                      .text(bubble.currentCount)
-                      .style('fill', 'white')
-                      .style('font-size', `${Math.min(12 * scale, 12)}px`)
-                      .style('font-weight', 'bold')
-                      .style('text-anchor', 'middle');
-                  }
-
-                  currentX += r * 2 + 6 * scale;
+                if (r > 8) {
+                  g.append('text')
+                    .attr('x', cx)
+                    .attr('y', cy + 4)
+                    .text(bubble.currentCount)
+                    .style('fill', 'white')
+                    .style('font-size', `${Math.min(12 * scale, 12)}px`)
+                    .style('font-weight', 'bold')
+                    .style('text-anchor', 'middle');
                 }
               });
             }
@@ -264,23 +266,29 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
       }
     });
 
-    // Add legend (original DeveloperTimeline style)
+    // Add legend at the top (해당 팀의 AIDD 유형만 표시)
+    const teamAIDDTypes = Array.from(
+      new Set(data.flatMap(item => item.bubbles.map(b => b.type)))
+    );
+    
     const legend = svg.append('g')
-      .attr('transform', `translate(${margin.left + chartWidth + 40}, ${margin.top})`);
+      .attr('transform', `translate(${margin.left}, 5)`); // 상단으로 이동
 
     const legendItems = [
       { label: 'Fingertime', color: '#0bd1b9', shape: 'rect' },
       { label: 'Braintime', color: '#f78aff', shape: 'rect' },
-      ...allAIDDTypes.map((key) => ({
+      ...teamAIDDTypes.map((key) => ({
         label: key,
         color: aiddColorScale(key),
         shape: 'circle',
       })),
     ];
 
+    // 가로로 배치하기 위한 계산
+    let currentX = 0;
     legendItems.forEach((item, i) => {
-      const x = 0;
-      const y = i * 24;
+      const x = currentX;
+      const y = 0;
 
       if (item.shape === 'rect') {
         legend
@@ -299,19 +307,23 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
           .attr('fill', item.color);
       }
 
-      legend
+      const text = legend
         .append('text')
         .attr('x', x + 16)
         .attr('y', y + 4)
         .text(item.label)
         .style('fill', 'white')
-        .style('font-size', '12px');
+        .style('font-size', '10px');
+
+      // 다음 아이템 위치 계산
+      const textWidth = item.label.length * 6 + 30; // 대략적인 텍스트 너비
+      currentX += textWidth;
     });
 
   }, [projectIndex, currentTime]);
 
   return (
-    <div className="w-full overflow-auto">
+    <div className="w-full h-24 overflow-visible">
       <svg ref={svgRef}></svg>
     </div>
   );
