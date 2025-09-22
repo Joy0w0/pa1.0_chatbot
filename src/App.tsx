@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import * as d3 from 'd3';
 
 const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: number; currentTime: string }) => {
   const svgRef = useRef<SVGSVGElement>(null);
@@ -6,14 +7,16 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
   useEffect(() => {
     if (!svgRef.current) return;
 
-    const svg = svgRef.current;
-    svg.innerHTML = ''; // Clear previous content
+    // Use D3.js for consistent styling with original DeveloperTimeline
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
 
-    const width = 450;
-    const height = 60;
-    const margin = { top: 10, right: 10, bottom: 10, left: 80 };
+    const width = 520;
+    const height = 80;
+    const margin = { top: 20, right: 10, bottom: 20, left: 150 };
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
+    const barHeight = 10;
 
     // Convert current time to minutes from 16:00
     const [hours, minutes, seconds] = currentTime.split(':').map(Number);
@@ -24,132 +27,199 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
     const projectData = [
       // Project 01
       [
-        { start: 0, end: 30, type: 'fingertime', user: 'dev1', bubbles: [{ type: 'Query', count: 3 }, { type: 'AI', count: 2 }] },
-        { start: 30, end: 45, type: 'braintime', user: 'dev1', bubbles: [] },
-        { start: 10, end: 60, type: 'fingertime', user: 'dev2', bubbles: [{ type: 'Revision', count: 5 }, { type: 'AI', count: 3 }] },
+        { start: 0, end: 30, type: 'fingertime', user: 'dev1@team061.com', bubbles: [{ type: 'Query2CodeRecommend', count: 3 }, { type: 'AIPlayRecommend', count: 2 }] },
+        { start: 30, end: 45, type: 'braintime', user: 'dev1@team061.com', bubbles: [] },
+        { start: 10, end: 60, type: 'fingertime', user: 'dev2@team061.com', bubbles: [{ type: 'RevisionMaker', count: 5 }, { type: 'AIPlayRecommend', count: 3 }] },
       ],
       // Project 02  
       [
-        { start: 5, end: 35, type: 'fingertime', user: 'dev1', bubbles: [{ type: 'Query', count: 4 }] },
-        { start: 15, end: 90, type: 'fingertime', user: 'dev2', bubbles: [{ type: 'Revision', count: 6 }, { type: 'Code', count: 3 }] },
+        { start: 5, end: 35, type: 'fingertime', user: 'dev1@team116.com', bubbles: [{ type: 'QueryMakerRecommend', count: 4 }] },
+        { start: 15, end: 90, type: 'fingertime', user: 'dev2@team116.com', bubbles: [{ type: 'RevisionMaker', count: 6 }, { type: 'Query2CodeRecommend', count: 3 }] },
       ],
       // Project 03
       [
-        { start: 8, end: 40, type: 'fingertime', user: 'dev1', bubbles: [{ type: 'AI', count: 2 }] },
-        { start: 20, end: 105, type: 'fingertime', user: 'dev2', bubbles: [{ type: 'Revision', count: 4 }, { type: 'Query', count: 2 }] },
+        { start: 8, end: 40, type: 'fingertime', user: 'dev1@team073.com', bubbles: [{ type: 'AIPlayRecommend', count: 2 }] },
+        { start: 20, end: 105, type: 'fingertime', user: 'dev2@team073.com', bubbles: [{ type: 'RevisionMaker', count: 4 }, { type: 'QueryMakerRecommend', count: 2 }] },
       ]
     ];
 
     const data = projectData[projectIndex];
     const users = Array.from(new Set(data.map(d => d.user)));
-    const userHeight = chartHeight / users.length;
 
-    const svgEl = svg;
-    svgEl.setAttribute('width', width.toString());
-    svgEl.setAttribute('height', height.toString());
+    // Set up SVG dimensions
+    svg.attr('width', width).attr('height', height);
 
-    // Create SVG groups
-    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.setAttribute('transform', `translate(${margin.left},${margin.top})`);
-    svgEl.appendChild(g);
+    // Create main group
+    const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+    // Create scales
+    const parseTime = d3.timeParse('%H:%M:%S');
+    const startTime = parseTime('16:00:00')!;
+    const endTime = parseTime('18:00:00')!;
+
+    const xScale = d3.scaleTime()
+      .domain([startTime, endTime])
+      .range([0, chartWidth]);
+
+    const yScale = d3.scaleBand()
+      .domain(users)
+      .range([0, chartHeight])
+      .padding(0.3);
+
+    // Add gradients (original DeveloperTimeline style)
+    const defs = svg.append('defs');
+
+    defs.append('linearGradient')
+      .attr('id', `fingerGradient-${projectIndex}`)
+      .attr('x1', '0%').attr('y1', '0%')
+      .attr('x2', '100%').attr('y2', '0%')
+      .selectAll('stop')
+      .data([
+        { offset: '0%', color: '#0bd1b9' },
+        { offset: '100%', color: '#1e7991' },
+      ])
+      .enter().append('stop')
+      .attr('offset', d => d.offset)
+      .attr('stop-color', d => d.color);
+
+    defs.append('linearGradient')
+      .attr('id', `brainGradient-${projectIndex}`)
+      .attr('x1', '0%').attr('y1', '0%')
+      .attr('x2', '100%').attr('y2', '0%')
+      .selectAll('stop')
+      .data([
+        { offset: '0%', color: '#f78aff' },
+        { offset: '100%', color: '#b13bff' },
+      ])
+      .enter().append('stop')
+      .attr('offset', d => d.offset)
+      .attr('stop-color', d => d.color);
+
+    // Add brain glow filter
+    defs.append('filter')
+      .attr('id', `brainGlow-${projectIndex}`)
+      .attr('x', '-50%').attr('y', '-50%')
+      .attr('width', '200%').attr('height', '200%')
+      .html(`
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      `);
+
+    // Time axis
+    g.append('g')
+      .call(d3.axisTop(xScale).ticks(4).tickFormat(d => d3.timeFormat('%H:%M')(d as Date)))
+      .selectAll('text')
+      .style('fill', '#e0e0e0')
+      .style('font-size', '10px');
+
+    // User labels
+    g.append('g')
+      .call(d3.axisLeft(yScale).tickFormat(d => (d as string).split('@')[0]))
+      .selectAll('text')
+      .style('fill', '#f0f0f0')
+      .style('font-size', '9px');
+
+    // AIDD color scale (original style)
+    const aiddColors = d3.schemeSet2.concat(d3.schemeSet3).slice(0, 10);
+    const allAIDDTypes = ['Query2CodeRecommend', 'AIPlayRecommend', 'RevisionMaker', 'QueryMakerRecommend'];
+    const aiddColorScale = d3.scaleOrdinal<string, string>()
+      .domain(allAIDDTypes)
+      .range(aiddColors);
 
     // Draw timeline bars
-    data.forEach((item, index) => {
-      const userIndex = users.indexOf(item.user);
-      const y = userIndex * userHeight + 5;
-      const barHeight = userHeight - 10;
+    data.forEach((item) => {
+      const userY = yScale(item.user)!;
+      const barY = userY + (yScale.bandwidth() - barHeight) / 2;
+      const centerY = barY + barHeight / 2;
 
       // Calculate bar width based on current time
-      const endTime = Math.min(item.end, currentMinutes);
-      if (endTime > item.start) {
-        const x = (item.start / totalMinutes) * chartWidth;
-        const barWidth = ((endTime - item.start) / totalMinutes) * chartWidth;
+      const itemStartMinutes = item.start;
+      const itemEndMinutes = Math.min(item.end, currentMinutes);
 
-        // Create bar
-        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        rect.setAttribute('x', x.toString());
-        rect.setAttribute('y', y.toString());
-        rect.setAttribute('width', barWidth.toString());
-        rect.setAttribute('height', barHeight.toString());
-        rect.setAttribute('fill', item.type === 'fingertime' ? '#0bd1b9' : '#f78aff');
-        rect.setAttribute('opacity', '0.8');
-        rect.setAttribute('rx', '2');
-        g.appendChild(rect);
+      if (itemEndMinutes > itemStartMinutes) {
+        const itemStartTime = new Date(startTime.getTime() + itemStartMinutes * 60000);
+        const itemEndTime = new Date(startTime.getTime() + itemEndMinutes * 60000);
 
-        // Add bubbles if fingertime and bar is wide enough
-        if (item.type === 'fingertime' && barWidth > 20) {
-          item.bubbles.forEach((bubble, bubbleIndex) => {
-            const bubbleX = x + (barWidth * (bubbleIndex + 1)) / (item.bubbles.length + 1);
-            const bubbleY = y + barHeight / 2;
-            const radius = 2 + Math.sqrt(bubble.count) * 1.5;
+        const startX = xScale(itemStartTime);
+        const endX = xScale(itemEndTime);
+        const barWidth = endX - startX;
 
-            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            circle.setAttribute('cx', bubbleX.toString());
-            circle.setAttribute('cy', bubbleY.toString());
-            circle.setAttribute('r', radius.toString());
-            circle.setAttribute('fill', ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'][bubbleIndex % 4]);
-            circle.setAttribute('stroke', '#fff');
-            circle.setAttribute('stroke-width', '0.5');
-            g.appendChild(circle);
+        if (barWidth > 1) {
+          // Create bar with original gradient style
+          const rect = g.append('rect')
+            .attr('x', startX)
+            .attr('y', barY)
+            .attr('width', barWidth)
+            .attr('height', barHeight)
+            .attr('fill', item.type === 'fingertime' 
+              ? `url(#fingerGradient-${projectIndex})` 
+              : `url(#brainGradient-${projectIndex})`
+            )
+            .attr('rx', 0)
+            .attr('opacity', 0.9)
+            .attr('stroke', item.type === 'braintime' ? '#f78aff' : 'none')
+            .attr('stroke-width', item.type === 'braintime' ? 2 : 0)
+            .style('filter', item.type === 'braintime'
+              ? 'drop-shadow(0 0 5px #f78aff) drop-shadow(0 0 10px #f78aff)'
+              : 'none'
+            );
 
-            if (radius > 3) {
-              const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-              text.setAttribute('x', bubbleX.toString());
-              text.setAttribute('y', (bubbleY + 2).toString());
-              text.setAttribute('text-anchor', 'middle');
-              text.setAttribute('font-size', '8px');
-              text.setAttribute('font-weight', 'bold');
-              text.setAttribute('fill', 'white');
-              text.textContent = bubble.count.toString();
-              g.appendChild(text);
+          if (item.type === 'braintime') {
+            rect.attr('filter', `url(#brainGlow-${projectIndex})`);
+          }
+
+          // Add AIDD bubbles (original style)
+          if (item.type === 'fingertime' && barWidth > 15) {
+            const entries = item.bubbles;
+            if (entries.length > 0) {
+              const radii = entries.map(bubble => 6 + Math.sqrt(bubble.count) * 3);
+              const totalBubbleWidth = radii.reduce((sum, r) => sum + r * 2 + 6, -6);
+              const scale = totalBubbleWidth > barWidth 
+                ? Math.max(1, barWidth / totalBubbleWidth) 
+                : 1;
+              
+              let currentX = startX + (barWidth - totalBubbleWidth * scale) / 2;
+
+              entries.forEach((bubble, index) => {
+                const rawR = 6 + Math.sqrt(bubble.count) * 3;
+                const r = Math.max(6, rawR * scale);
+                const cx = currentX + r;
+                const cy = centerY;
+
+                g.append('circle')
+                  .attr('cx', cx)
+                  .attr('cy', cy)
+                  .attr('r', r)
+                  .attr('fill', aiddColorScale(bubble.type))
+                  .attr('stroke', '#fff')
+                  .attr('stroke-width', 0.8)
+                  .attr('opacity', 0.85);
+
+                g.append('text')
+                  .attr('x', cx)
+                  .attr('y', cy + 4)
+                  .text(bubble.count)
+                  .style('fill', 'white')
+                  .style('font-size', `${Math.min(12 * scale, 12)}px`)
+                  .style('font-weight', 'bold')
+                  .style('text-anchor', 'middle');
+
+                currentX += r * 2 + 6 * scale;
+              });
             }
-          });
+          }
         }
       }
     });
 
-    // Draw user labels
-    users.forEach((user, index) => {
-      const y = index * userHeight + userHeight / 2;
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', '-5');
-      text.setAttribute('y', (y + 3).toString());
-      text.setAttribute('text-anchor', 'end');
-      text.setAttribute('font-size', '10px');
-      text.setAttribute('fill', '#ccc');
-      text.textContent = user;
-      g.appendChild(text);
-    });
-
-    // Draw time axis
-    for (let i = 0; i <= 4; i++) {
-      const x = (i / 4) * chartWidth;
-      const hour = 16 + (i * 0.5);
-      const timeLabel = `${Math.floor(hour)}:${(hour % 1) * 60 === 0 ? '00' : '30'}`;
-      
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', x.toString());
-      line.setAttribute('y1', '-5');
-      line.setAttribute('x2', x.toString());
-      line.setAttribute('y2', '0');
-      line.setAttribute('stroke', '#666');
-      g.appendChild(line);
-
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('x', x.toString());
-      text.setAttribute('y', '-8');
-      text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('font-size', '9px');
-      text.setAttribute('fill', '#ccc');
-      text.textContent = timeLabel;
-      g.appendChild(text);
-    }
-
   }, [projectIndex, currentTime]);
 
   return (
-    <div className="w-full h-16 border border-gray-600 rounded bg-gray-800/30 overflow-hidden">
-      <svg ref={svgRef} className="w-full h-full" />
+    <div className="w-full overflow-auto">
+      <svg ref={svgRef}></svg>
     </div>
   );
 };
@@ -185,10 +255,10 @@ export default function App() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-r from-[#1c1b47] via-[#232664] to-[#2f1b47] p-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-center text-white mb-8">
-          AIDD Monitoring Tool
+    <div className="w-full overflow-auto bg-gradient-to-r from-[#1c1b47] via-[rgb(35,38,100)] to-[#2f1b47] p-8 min-h-screen">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-2xl font-bold text-center text-white mb-8">
+          개발자 Fingertime / Braintime 및 AIDD 사용 시각화
         </h1>
         
         <div className="flex justify-center items-center gap-4 mb-8">
