@@ -11,9 +11,9 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
 
-    const width = 520;
+    const width = 800;
     const height = 80;
-    const margin = { top: 20, right: 10, bottom: 20, left: 150 };
+    const margin = { top: 20, right: 240, bottom: 20, left: 150 };
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
     const barHeight = 10;
@@ -215,6 +215,50 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
       }
     });
 
+    // Add legend (original DeveloperTimeline style)
+    const legend = svg.append('g')
+      .attr('transform', `translate(${margin.left + chartWidth + 40}, ${margin.top})`);
+
+    const legendItems = [
+      { label: 'Fingertime', color: '#0bd1b9', shape: 'rect' },
+      { label: 'Braintime', color: '#f78aff', shape: 'rect' },
+      ...allAIDDTypes.map((key) => ({
+        label: key,
+        color: aiddColorScale(key),
+        shape: 'circle',
+      })),
+    ];
+
+    legendItems.forEach((item, i) => {
+      const x = 0;
+      const y = i * 24;
+
+      if (item.shape === 'rect') {
+        legend
+          .append('rect')
+          .attr('x', x - 6)
+          .attr('y', y - 6)
+          .attr('width', 12)
+          .attr('height', 12)
+          .attr('fill', item.color);
+      } else {
+        legend
+          .append('circle')
+          .attr('cx', x)
+          .attr('cy', y)
+          .attr('r', 6)
+          .attr('fill', item.color);
+      }
+
+      legend
+        .append('text')
+        .attr('x', x + 16)
+        .attr('y', y + 4)
+        .text(item.label)
+        .style('fill', 'white')
+        .style('font-size', '12px');
+    });
+
   }, [projectIndex, currentTime]);
 
   return (
@@ -257,8 +301,8 @@ export default function App() {
   return (
     <div className="w-full overflow-auto bg-gradient-to-r from-[#1c1b47] via-[rgb(35,38,100)] to-[#2f1b47] p-8 min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-2xl font-bold text-center text-white mb-8">
-          개발자 Fingertime / Braintime 및 AIDD 사용 시각화
+        <h1 className="text-3xl font-bold text-center text-white mb-8">
+          AIDD Monitoring Tool
         </h1>
         
         <div className="flex justify-center items-center gap-4 mb-8">
