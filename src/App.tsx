@@ -37,12 +37,12 @@
 
 // export default App;
 
-import DeveloperTimeline from './components/DeveloperTimeline';
+import AIDDMonitoringTool from './components/AIDDMonitoringTool';
 
 export default function Home() {
   return (
-    <main className="p-10">
-      <DeveloperTimeline />
+    <main>
+      <AIDDMonitoringTool />
     </main>
   );
 }
