@@ -36,14 +36,25 @@ export default function AIDDMonitoringTool() {
   const [data, setData] = useState<Row[]>([]);
   const [teams, setTeams] = useState<TeamData[]>([]);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
-  const [animatedStats, setAnimatedStats] = useState<{ [key: string]: TeamStats }>({});
+  const [animatedStats, setAnimatedStats] = useState<{
+    [key: string]: TeamStats;
+  }>({});
   const [isPlaying, setIsPlaying] = useState(false);
 
   // 팀별 더미 데이터 (실제로는 API나 CSV에서 가져와야 함)
   const teamMetrics = {
-    'Project 01': { taskCompletion: { completed: 96, total: 96 }, expectedQuality: 32 },
-    'Project 02': { taskCompletion: { completed: 77, total: 77 }, expectedQuality: 12 },
-    'Project 03': { taskCompletion: { completed: 45, total: 60 }, expectedQuality: 8 }
+    'Project 01': {
+      taskCompletion: { completed: 96, total: 96 },
+      expectedQuality: 32,
+    },
+    'Project 02': {
+      taskCompletion: { completed: 77, total: 77 },
+      expectedQuality: 12,
+    },
+    'Project 03': {
+      taskCompletion: { completed: 45, total: 60 },
+      expectedQuality: 8,
+    },
   };
 
   useEffect(() => {
@@ -67,24 +78,28 @@ export default function AIDDMonitoringTool() {
     if (data.length === 0) return;
 
     // 상위 3개 팀 추출
-    const teamCounts = d3.rollup(data, v => v.length, d => d.team_name);
+    const teamCounts = d3.rollup(
+      data,
+      (v) => v.length,
+      (d) => d.team_name,
+    );
     const topTeams = Array.from(teamCounts.entries())
-      .sort(([,a], [,b]) => b - a)
+      .sort(([, a], [, b]) => b - a)
       .slice(0, 3)
       .map(([team]) => team);
 
     const teamData: TeamData[] = topTeams.map((teamName, index) => {
-      const teamMembers = data.filter(d => d.team_name === teamName);
-      
+      const teamMembers = data.filter((d) => d.team_name === teamName);
+
       // F/B Breakdown 계산
       const fbBreakdown = {
-        fingertime: teamMembers.filter(d => d.type === 'fingertime').length,
-        braintime: teamMembers.filter(d => d.type === 'braintime').length,
+        fingertime: teamMembers.filter((d) => d.type === 'fingertime').length,
+        braintime: teamMembers.filter((d) => d.type === 'braintime').length,
       };
 
       // AI Breakdown 계산 (상위 3개)
       const aiddMap: { [key: string]: number } = {};
-      teamMembers.forEach(item => {
+      teamMembers.forEach((item) => {
         try {
           const parsed = JSON.parse(item.recommend_types || '{}');
           Object.entries(parsed).forEach(([type, count]) => {
@@ -92,11 +107,11 @@ export default function AIDDMonitoringTool() {
           });
         } catch {}
       });
-      
+
       const aiBreakdown = Object.fromEntries(
         Object.entries(aiddMap)
-          .sort(([,a], [,b]) => b - a)
-          .slice(0, 3)
+          .sort(([, a], [, b]) => b - a)
+          .slice(0, 3),
       );
 
       const projectName = `Project 0${index + 1}`;
@@ -108,7 +123,7 @@ export default function AIDDMonitoringTool() {
         fbBreakdown,
         aiBreakdown,
         taskCompletion: metrics.taskCompletion,
-        expectedQuality: metrics.expectedQuality
+        expectedQuality: metrics.expectedQuality,
       };
     });
 
@@ -116,12 +131,12 @@ export default function AIDDMonitoringTool() {
 
     // 초기 애니메이션 상태 설정
     const initialStats: { [key: string]: TeamStats } = {};
-    teamData.forEach(team => {
+    teamData.forEach((team) => {
       initialStats[team.teamName] = {
         fbBreakdown: { fingertime: 0, braintime: 0 },
         aiBreakdown: {},
         taskCompletion: { completed: 0, total: team.taskCompletion.total },
-        expectedQuality: 0
+        expectedQuality: 0,
       };
     });
     setAnimatedStats(initialStats);
@@ -131,7 +146,7 @@ export default function AIDDMonitoringTool() {
     const allTimes = data
       .flatMap((d) => [parseTime(d.start_time), parseTime(d.end_time)])
       .filter(Boolean) as Date[];
-    
+
     if (allTimes.length > 0) {
       setCurrentTime(d3.min(allTimes)!);
     }
@@ -141,25 +156,25 @@ export default function AIDDMonitoringTool() {
     if (!currentTime || teams.length === 0) return;
 
     const parseTime = d3.timeParse('%H:%M:%S');
-    
+
     // 현재 시간까지의 누적 통계 계산
     const newStats: { [key: string]: TeamStats } = {};
-    
-    teams.forEach(team => {
-      const relevantData = team.members.filter(item => {
+
+    teams.forEach((team) => {
+      const relevantData = team.members.filter((item) => {
         const start = parseTime(item.start_time);
         return start && start <= currentTime;
       });
 
       // F/B Breakdown
       const fbBreakdown = {
-        fingertime: relevantData.filter(d => d.type === 'fingertime').length,
-        braintime: relevantData.filter(d => d.type === 'braintime').length,
+        fingertime: relevantData.filter((d) => d.type === 'fingertime').length,
+        braintime: relevantData.filter((d) => d.type === 'braintime').length,
       };
 
       // AI Breakdown
       const aiddMap: { [key: string]: number } = {};
-      relevantData.forEach(item => {
+      relevantData.forEach((item) => {
         try {
           const parsed = JSON.parse(item.recommend_types || '{}');
           Object.entries(parsed).forEach(([type, count]) => {
@@ -170,24 +185,28 @@ export default function AIDDMonitoringTool() {
 
       const aiBreakdown = Object.fromEntries(
         Object.entries(aiddMap)
-          .sort(([,a], [,b]) => b - a)
-          .slice(0, 3)
+          .sort(([, a], [, b]) => b - a)
+          .slice(0, 3),
       );
 
       // 시간 진행에 따른 비례 계산
       const parseTimeRange = d3.timeParse('%H:%M:%S');
       const startTime = parseTimeRange('16:00:00')!;
       const endTime = parseTimeRange('18:00:00')!;
-      const progress = Math.min(1, (currentTime.getTime() - startTime.getTime()) / (endTime.getTime() - startTime.getTime()));
+      const progress = Math.min(
+        1,
+        (currentTime.getTime() - startTime.getTime()) /
+          (endTime.getTime() - startTime.getTime()),
+      );
 
       newStats[team.teamName] = {
         fbBreakdown,
         aiBreakdown,
         taskCompletion: {
           completed: Math.floor(team.taskCompletion.completed * progress),
-          total: team.taskCompletion.total
+          total: team.taskCompletion.total,
         },
-        expectedQuality: Math.floor(team.expectedQuality * progress)
+        expectedQuality: Math.floor(team.expectedQuality * progress),
       };
     });
 
@@ -196,7 +215,7 @@ export default function AIDDMonitoringTool() {
 
   const startAnimation = () => {
     if (teams.length === 0) return;
-    
+
     setIsPlaying(true);
     const parseTime = d3.timeParse('%H:%M:%S');
     const startTime = parseTime('16:00:00')!;
@@ -209,7 +228,7 @@ export default function AIDDMonitoringTool() {
     const animate = () => {
       const elapsed = Date.now() - startTimestamp;
       const progress = Math.min(elapsed / animationDuration, 1);
-      
+
       const newTime = new Date(startTime.getTime() + duration * progress);
       setCurrentTime(newTime);
 
@@ -230,10 +249,12 @@ export default function AIDDMonitoringTool() {
     setCurrentTime(startTime);
   };
 
-  const renderTeamTimeline = (team: TeamData, index: number) => {
-    const svgId = `team-${index}`;
+  const TeamTimeline: React.FC<{
+    team: TeamData;
+    currentTime: Date | null;
+  }> = ({ team, currentTime }) => {
     const svgRef = useRef<SVGSVGElement | null>(null);
-    
+
     useEffect(() => {
       if (!currentTime || !svgRef.current) return;
 
@@ -243,12 +264,13 @@ export default function AIDDMonitoringTool() {
       const height = 80 - margin.top - margin.bottom;
 
       svg.selectAll('*').remove();
-      
+
       // 그라데이션 정의를 먼저 추가
       const defs = svg.append('defs');
-      
+
       if (!defs.select('#fingerGradient').node()) {
-        defs.append('linearGradient')
+        defs
+          .append('linearGradient')
           .attr('id', 'fingerGradient')
           .selectAll('stop')
           .data([
@@ -257,12 +279,13 @@ export default function AIDDMonitoringTool() {
           ])
           .enter()
           .append('stop')
-          .attr('offset', d => d.offset)
-          .attr('stop-color', d => d.color);
+          .attr('offset', (d) => d.offset)
+          .attr('stop-color', (d) => d.color);
       }
 
       if (!defs.select('#brainGradient').node()) {
-        defs.append('linearGradient')
+        defs
+          .append('linearGradient')
           .attr('id', 'brainGradient')
           .selectAll('stop')
           .data([
@@ -271,10 +294,10 @@ export default function AIDDMonitoringTool() {
           ])
           .enter()
           .append('stop')
-          .attr('offset', d => d.offset)
-          .attr('stop-color', d => d.color);
+          .attr('offset', (d) => d.offset)
+          .attr('stop-color', (d) => d.color);
       }
-      
+
       const g = svg
         .append('g')
         .attr('transform', `translate(${margin.left},${margin.top})`);
@@ -288,7 +311,9 @@ export default function AIDDMonitoringTool() {
         .domain([startTime, endTime])
         .range([0, width]);
 
-      const uniqueEmails = Array.from(new Set(team.members.map(d => d.email)));
+      const uniqueEmails = Array.from(
+        new Set(team.members.map((d) => d.email)),
+      );
       const yScale = d3
         .scaleBand()
         .domain(uniqueEmails)
@@ -297,20 +322,27 @@ export default function AIDDMonitoringTool() {
 
       // 시간 축
       g.append('g')
-        .call(d3.axisTop(xScale).ticks(4).tickFormat(d => d3.timeFormat('%H:%M')(d as Date)))
+        .call(
+          d3
+            .axisTop(xScale)
+            .ticks(4)
+            .tickFormat((d) => d3.timeFormat('%H:%M')(d as Date)),
+        )
         .selectAll('text')
         .style('fill', '#e0e0e0')
         .style('font-size', '10px');
 
       // 이메일 라벨 (이메일 앞부분만 표시)
       g.append('g')
-        .call(d3.axisLeft(yScale).tickFormat(d => (d as string).split('@')[0]))
+        .call(
+          d3.axisLeft(yScale).tickFormat((d) => (d as string).split('@')[0]),
+        )
         .selectAll('text')
         .style('fill', '#f0f0f0')
         .style('font-size', '9px');
 
       // 현재 시간까지의 데이터만 렌더링
-      const currentData = team.members.filter(item => {
+      const currentData = team.members.filter((item) => {
         const start = parseTime(item.start_time);
         return start && start <= currentTime;
       });
@@ -335,7 +367,12 @@ export default function AIDDMonitoringTool() {
             .attr('y', barY)
             .attr('width', barWidth)
             .attr('height', barHeight)
-            .attr('fill', item.type === 'fingertime' ? 'url(#fingerGradient)' : 'url(#brainGradient)')
+            .attr(
+              'fill',
+              item.type === 'fingertime'
+                ? 'url(#fingerGradient)'
+                : 'url(#brainGradient)',
+            )
             .attr('opacity', 0.9)
             .attr('rx', 2);
 
@@ -343,17 +380,28 @@ export default function AIDDMonitoringTool() {
           if (item.type === 'fingertime' && barWidth > 15) {
             try {
               const aiddMap = JSON.parse(item.recommend_types || '{}');
-              const entries = Object.entries(aiddMap).filter(([_, count]) => Number(count) > 0);
-              
+              const entries = Object.entries(aiddMap).filter(
+                ([_, count]) => Number(count) > 0,
+              );
+
               if (entries.length > 0) {
-                const bubbleSpacing = Math.min(barWidth / (entries.length + 1), 25);
-                
+                const bubbleSpacing = Math.min(
+                  barWidth / (entries.length + 1),
+                  25,
+                );
+
                 entries.forEach(([type, count], bubbleIndex) => {
                   const bubbleX = startX + bubbleSpacing * (bubbleIndex + 1);
                   const bubbleY = barY + barHeight / 2;
-                  const radius = Math.min(3 + Math.sqrt(Number(count)) * 1.5, barHeight / 3);
+                  const radius = Math.min(
+                    3 + Math.sqrt(Number(count)) * 1.5,
+                    barHeight / 3,
+                  );
 
-                  const colorIndex = Math.abs(type.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % d3.schemeSet2.length;
+                  const colorIndex =
+                    Math.abs(
+                      type.split('').reduce((a, b) => a + b.charCodeAt(0), 0),
+                    ) % d3.schemeSet2.length;
 
                   g.append('circle')
                     .attr('cx', bubbleX)
@@ -368,7 +416,7 @@ export default function AIDDMonitoringTool() {
                     g.append('text')
                       .attr('x', bubbleX)
                       .attr('y', bubbleY + 1)
-                      .text(count)
+                      .text(String(count))
                       .style('fill', 'white')
                       .style('font-size', `${Math.min(radius, 8)}px`)
                       .style('font-weight', 'bold')
@@ -383,7 +431,6 @@ export default function AIDDMonitoringTool() {
           }
         }
       });
-
     }, [currentTime, team]);
 
     return (
@@ -398,28 +445,26 @@ export default function AIDDMonitoringTool() {
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-r from-[#1c1b47] via-[#232664] to-[#2f1b47] p-8">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-center text-white mb-8">
+      <div className="mx-auto max-w-7xl">
+        <h1 className="mb-8 text-3xl font-bold text-center text-white">
           AIDD Monitoring Tool
         </h1>
-        
-        <div className="flex justify-center items-center gap-4 mb-8">
+
+        <div className="flex items-center justify-center gap-4 mb-8">
           <button
             onClick={startAnimation}
             disabled={isPlaying}
-            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-          >
+            className="px-6 py-2 text-white bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50">
             {isPlaying ? 'Playing...' : 'Start Animation'}
           </button>
           <button
             onClick={resetAnimation}
             disabled={isPlaying}
-            className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 disabled:opacity-50"
-          >
+            className="px-6 py-2 text-white bg-gray-600 rounded hover:bg-gray-700 disabled:opacity-50">
             Reset
           </button>
           {currentTime && (
-            <div className="text-white bg-gray-800 px-4 py-2 rounded">
+            <div className="px-4 py-2 text-white bg-gray-800 rounded">
               Current Time: {d3.timeFormat('%H:%M:%S')(currentTime)}
             </div>
           )}
@@ -427,38 +472,54 @@ export default function AIDDMonitoringTool() {
 
         <div className="grid gap-8">
           {teams.map((team, index) => (
-            <div key={team.teamName} className="bg-gray-900/50 rounded-lg p-6">
-              <h2 className="text-xl font-bold text-white mb-4">{team.teamName}</h2>
-              
+            <div key={team.teamName} className="p-6 rounded-lg bg-gray-900/50">
+              <h2 className="mb-4 text-xl font-bold text-white">
+                {team.teamName}
+              </h2>
+
               <div className="flex gap-8">
                 {/* Work Breakdown (Timeline) */}
                 <div className="flex-1">
-                  <h3 className="text-sm font-semibold text-gray-300 mb-2">Work Breakdown</h3>
-                  {renderTeamTimeline(team, index)}
+                  <h3 className="mb-2 text-sm font-semibold text-gray-300">
+                    Work Breakdown
+                  </h3>
+                  <TeamTimeline team={team} currentTime={currentTime} />
                 </div>
 
                 {/* F/B Breakdown */}
                 <div className="w-36">
-                  <h3 className="text-sm font-semibold text-gray-300 mb-2">F/B Breakdown</h3>
-                  <div className="bg-gradient-to-br from-teal-600 to-teal-700 rounded-lg p-4 text-center text-white shadow-lg">
-                    <div className="text-xs text-teal-100 mb-1">Finger/Brain</div>
+                  <h3 className="mb-2 text-sm font-semibold text-gray-300">
+                    F/B Breakdown
+                  </h3>
+                  <div className="p-4 text-center text-white rounded-lg shadow-lg bg-gradient-to-br from-teal-600 to-teal-700">
+                    <div className="mb-1 text-xs text-teal-100">
+                      Finger/Brain
+                    </div>
                     <div className="text-lg font-bold">
-                      {animatedStats[team.teamName]?.fbBreakdown.fingertime || 0} / {animatedStats[team.teamName]?.fbBreakdown.braintime || 0}
+                      {animatedStats[team.teamName]?.fbBreakdown.fingertime ||
+                        0}{' '}
+                      /{' '}
+                      {animatedStats[team.teamName]?.fbBreakdown.braintime || 0}
                     </div>
                   </div>
                 </div>
 
                 {/* AI Breakdown */}
                 <div className="w-36">
-                  <h3 className="text-sm font-semibold text-gray-300 mb-2">AI Breakdown</h3>
-                  <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg p-4 text-center text-white shadow-lg">
-                    <div className="text-xs text-blue-100 mb-1">상위 3개</div>
+                  <h3 className="mb-2 text-sm font-semibold text-gray-300">
+                    AI Breakdown
+                  </h3>
+                  <div className="p-4 text-center text-white rounded-lg shadow-lg bg-gradient-to-br from-blue-600 to-blue-700">
+                    <div className="mb-1 text-xs text-blue-100">상위 3개</div>
                     <div className="space-y-1">
-                      {Object.entries(animatedStats[team.teamName]?.aiBreakdown || {})
+                      {Object.entries(
+                        animatedStats[team.teamName]?.aiBreakdown || {},
+                      )
                         .slice(0, 3)
                         .map(([type, count], idx) => (
                           <div key={type} className="text-xs">
-                            {idx + 1}. {type.replace('Recommend', '').slice(0, 6)}: {count}
+                            {idx + 1}.{' '}
+                            {type.replace('Recommend', '').slice(0, 6)}: {count}
                           </div>
                         ))}
                     </div>
@@ -467,22 +528,34 @@ export default function AIDDMonitoringTool() {
 
                 {/* Task Completion */}
                 <div className="w-36">
-                  <h3 className="text-sm font-semibold text-gray-300 mb-2">Task Completion</h3>
-                  <div className="bg-gradient-to-br from-teal-700 to-teal-800 rounded-lg p-4 text-center text-white shadow-lg">
-                    <div className="text-2xl font-bold mb-1">
-                      {animatedStats[team.teamName]?.taskCompletion.completed || 0}/{team.taskCompletion.total}건
+                  <h3 className="mb-2 text-sm font-semibold text-gray-300">
+                    Task Completion
+                  </h3>
+                  <div className="p-4 text-center text-white rounded-lg shadow-lg bg-gradient-to-br from-teal-700 to-teal-800">
+                    <div className="mb-1 text-2xl font-bold">
+                      {animatedStats[team.teamName]?.taskCompletion.completed ||
+                        0}
+                      /{team.taskCompletion.total}건
                     </div>
                     <div className="text-xs text-teal-200">
-                      {Math.round(((animatedStats[team.teamName]?.taskCompletion.completed || 0) / team.taskCompletion.total) * 100)}%
+                      {Math.round(
+                        ((animatedStats[team.teamName]?.taskCompletion
+                          .completed || 0) /
+                          team.taskCompletion.total) *
+                          100,
+                      )}
+                      %
                     </div>
                   </div>
                 </div>
 
                 {/* Expected Quality */}
                 <div className="w-36">
-                  <h3 className="text-sm font-semibold text-gray-300 mb-2">Expected Quality</h3>
-                  <div className="bg-gradient-to-br from-blue-700 to-blue-800 rounded-lg p-4 text-center text-white shadow-lg">
-                    <div className="text-2xl font-bold mb-1">
+                  <h3 className="mb-2 text-sm font-semibold text-gray-300">
+                    Expected Quality
+                  </h3>
+                  <div className="p-4 text-center text-white rounded-lg shadow-lg bg-gradient-to-br from-blue-700 to-blue-800">
+                    <div className="mb-1 text-2xl font-bold">
                       {animatedStats[team.teamName]?.expectedQuality || 0}점
                     </div>
                   </div>
@@ -491,8 +564,6 @@ export default function AIDDMonitoringTool() {
             </div>
           ))}
         </div>
-
-
       </div>
     </div>
   );
