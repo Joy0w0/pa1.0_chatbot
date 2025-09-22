@@ -2,7 +2,7 @@
 
 import * as d3 from 'd3';
 import Papa from 'papaparse';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface Row {
   team_name: string;
@@ -18,8 +18,6 @@ interface Row {
 interface TeamData {
   teamName: string;
   members: Row[];
-  fbBreakdown: { fingertime: number; braintime: number };
-  aiBreakdown: { [key: string]: number };
   taskCompletion: { completed: number; total: number };
   expectedQuality: number;
 }
@@ -32,39 +30,175 @@ interface TeamStats {
 }
 
 export default function AIDDMonitoringTool() {
-  const svgRefs = useRef<{ [key: string]: SVGSVGElement | null }>({});
   const [data, setData] = useState<Row[]>([]);
   const [teams, setTeams] = useState<TeamData[]>([]);
   const [currentTime, setCurrentTime] = useState<Date | null>(null);
   const [animatedStats, setAnimatedStats] = useState<{ [key: string]: TeamStats }>({});
   const [isPlaying, setIsPlaying] = useState(false);
+  const animationRef = useRef<number | null>(null);
 
-  // 팀별 더미 데이터 (실제로는 API나 CSV에서 가져와야 함)
+  // 팀별 더미 데이터
   const teamMetrics = {
     'Project 01': { taskCompletion: { completed: 96, total: 96 }, expectedQuality: 32 },
     'Project 02': { taskCompletion: { completed: 77, total: 77 }, expectedQuality: 12 },
     'Project 03': { taskCompletion: { completed: 45, total: 60 }, expectedQuality: 8 }
   };
 
+  // 데이터 로딩 (현재는 더미 데이터 사용)
   useEffect(() => {
-    Papa.parse('/assets/data.csv', {
-      download: true,
-      header: true,
-      dynamicTyping: true,
-      complete: (result) => {
-        const rows = (result.data as any[])
-          .filter((d) => d.start_time && d.end_time && d.email && d.team_name)
-          .map((d) => ({
-            ...d,
-            recommend_types: d.recommend_types?.replace(/'/g, '"') || '{}',
-          }));
-        setData(rows as Row[]);
+    console.log('Loading demo data...');
+    
+    // 데모용 더미 데이터
+    const dummyData: Row[] = [
+      // TEAM061 데이터
+      {
+        team_name: 'TEAM061',
+        email: 'dev1@team061.com',
+        start_time: '16:00:00',
+        end_time: '16:30:00',
+        duration: 30,
+        type: 'fingertime',
+        aidd_count: 5,
+        recommend_types: '{"Query2CodeRecommend": 2, "AIPlayRecommend": 3}'
       },
-    });
+      {
+        team_name: 'TEAM061',
+        email: 'dev1@team061.com',
+        start_time: '16:30:00',
+        end_time: '16:45:00',
+        duration: 15,
+        type: 'braintime',
+        aidd_count: 0,
+        recommend_types: '{}'
+      },
+      {
+        team_name: 'TEAM061',
+        email: 'dev1@team061.com',
+        start_time: '16:45:00',
+        end_time: '17:15:00',
+        duration: 30,
+        type: 'fingertime',
+        aidd_count: 8,
+        recommend_types: '{"RevisionMaker": 4, "QueryMakerRecommend": 4}'
+      },
+      {
+        team_name: 'TEAM061',
+        email: 'dev2@team061.com',
+        start_time: '16:10:00',
+        end_time: '17:00:00',
+        duration: 50,
+        type: 'fingertime',
+        aidd_count: 12,
+        recommend_types: '{"AIPlayRecommend": 5, "RevisionMaker": 7}'
+      },
+      {
+        team_name: 'TEAM061',
+        email: 'dev2@team061.com',
+        start_time: '17:00:00',
+        end_time: '17:10:00',
+        duration: 10,
+        type: 'braintime',
+        aidd_count: 0,
+        recommend_types: '{}'
+      },
+      
+      // TEAM116 데이터
+      {
+        team_name: 'TEAM116',
+        email: 'dev1@team116.com',
+        start_time: '16:05:00',
+        end_time: '16:35:00',
+        duration: 30,
+        type: 'fingertime',
+        aidd_count: 6,
+        recommend_types: '{"QueryMakerRecommend": 3, "AIPlayRecommend": 3}'
+      },
+      {
+        team_name: 'TEAM116',
+        email: 'dev1@team116.com',
+        start_time: '16:35:00',
+        end_time: '16:50:00',
+        duration: 15,
+        type: 'braintime',
+        aidd_count: 0,
+        recommend_types: '{}'
+      },
+      {
+        team_name: 'TEAM116',
+        email: 'dev2@team116.com',
+        start_time: '16:15:00',
+        end_time: '17:30:00',
+        duration: 75,
+        type: 'fingertime',
+        aidd_count: 15,
+        recommend_types: '{"RevisionMaker": 8, "Query2CodeRecommend": 4, "AIPlayRecommend": 3}'
+      },
+      {
+        team_name: 'TEAM116',
+        email: 'dev3@team116.com',
+        start_time: '16:25:00',
+        end_time: '17:45:00',
+        duration: 80,
+        type: 'fingertime',
+        aidd_count: 9,
+        recommend_types: '{"AIPlayRecommend": 5, "RevisionMaker": 4}'
+      },
+      
+      // TEAM073 데이터
+      {
+        team_name: 'TEAM073',
+        email: 'dev1@team073.com',
+        start_time: '16:08:00',
+        end_time: '16:40:00',
+        duration: 32,
+        type: 'fingertime',
+        aidd_count: 4,
+        recommend_types: '{"AIPlayRecommend": 2, "RevisionMakerRecommend": 2}'
+      },
+      {
+        team_name: 'TEAM073',
+        email: 'dev1@team073.com',
+        start_time: '16:40:00',
+        end_time: '17:00:00',
+        duration: 20,
+        type: 'braintime',
+        aidd_count: 0,
+        recommend_types: '{}'
+      },
+      {
+        team_name: 'TEAM073',
+        email: 'dev2@team073.com',
+        start_time: '16:20:00',
+        end_time: '17:45:00',
+        duration: 85,
+        type: 'fingertime',
+        aidd_count: 10,
+        recommend_types: '{"RevisionMaker": 6, "QueryMakerRecommend": 4}'
+      },
+      {
+        team_name: 'TEAM073',
+        email: 'dev3@team073.com',
+        start_time: '16:25:00',
+        end_time: '17:20:00',
+        duration: 55,
+        type: 'fingertime',
+        aidd_count: 7,
+        recommend_types: '{"AIPlayRecommend": 4, "Query2CodeRecommend": 3}'
+      }
+    ];
+    
+    console.log('Demo data loaded:', dummyData.length, 'records');
+    setData(dummyData);
   }, []);
 
+  // 팀 데이터 설정
   useEffect(() => {
-    if (data.length === 0) return;
+    if (data.length === 0) {
+      console.log('No data available yet');
+      return;
+    }
+
+    console.log('Processing team data, total rows:', data.length);
 
     // 상위 3개 팀 추출
     const teamCounts = d3.rollup(data, v => v.length, d => d.team_name);
@@ -73,40 +207,18 @@ export default function AIDDMonitoringTool() {
       .slice(0, 3)
       .map(([team]) => team);
 
+    console.log('Top 3 teams:', topTeams);
+
     const teamData: TeamData[] = topTeams.map((teamName, index) => {
       const teamMembers = data.filter(d => d.team_name === teamName);
-      
-      // F/B Breakdown 계산
-      const fbBreakdown = {
-        fingertime: teamMembers.filter(d => d.type === 'fingertime').length,
-        braintime: teamMembers.filter(d => d.type === 'braintime').length,
-      };
-
-      // AI Breakdown 계산 (상위 3개)
-      const aiddMap: { [key: string]: number } = {};
-      teamMembers.forEach(item => {
-        try {
-          const parsed = JSON.parse(item.recommend_types || '{}');
-          Object.entries(parsed).forEach(([type, count]) => {
-            aiddMap[type] = (aiddMap[type] || 0) + Number(count);
-          });
-        } catch {}
-      });
-      
-      const aiBreakdown = Object.fromEntries(
-        Object.entries(aiddMap)
-          .sort(([,a], [,b]) => b - a)
-          .slice(0, 3)
-      );
-
       const projectName = `Project 0${index + 1}`;
       const metrics = teamMetrics[projectName as keyof typeof teamMetrics];
+
+      console.log(`${projectName} (${teamName}): ${teamMembers.length} members`);
 
       return {
         teamName: projectName,
         members: teamMembers,
-        fbBreakdown,
-        aiBreakdown,
         taskCompletion: metrics.taskCompletion,
         expectedQuality: metrics.expectedQuality
       };
@@ -114,35 +226,20 @@ export default function AIDDMonitoringTool() {
 
     setTeams(teamData);
 
-    // 초기 애니메이션 상태 설정
-    const initialStats: { [key: string]: TeamStats } = {};
-    teamData.forEach(team => {
-      initialStats[team.teamName] = {
-        fbBreakdown: { fingertime: 0, braintime: 0 },
-        aiBreakdown: {},
-        taskCompletion: { completed: 0, total: team.taskCompletion.total },
-        expectedQuality: 0
-      };
-    });
-    setAnimatedStats(initialStats);
-
-    // 시간 범위 설정
+    // 초기 시간 설정
     const parseTime = d3.timeParse('%H:%M:%S');
-    const allTimes = data
-      .flatMap((d) => [parseTime(d.start_time), parseTime(d.end_time)])
-      .filter(Boolean) as Date[];
-    
-    if (allTimes.length > 0) {
-      setCurrentTime(d3.min(allTimes)!);
-    }
+    const startTime = parseTime('16:00:00')!;
+    setCurrentTime(startTime);
+
+    console.log('Teams set:', teamData.length);
   }, [data]);
 
-  useEffect(() => {
-    if (!currentTime || teams.length === 0) return;
-
+  // 통계 계산
+  const calculateStats = useCallback((currentTime: Date, teams: TeamData[]): { [key: string]: TeamStats } => {
     const parseTime = d3.timeParse('%H:%M:%S');
+    const startTime = parseTime('16:00:00')!;
+    const endTime = parseTime('18:00:00')!;
     
-    // 현재 시간까지의 누적 통계 계산
     const newStats: { [key: string]: TeamStats } = {};
     
     teams.forEach(team => {
@@ -165,7 +262,9 @@ export default function AIDDMonitoringTool() {
           Object.entries(parsed).forEach(([type, count]) => {
             aiddMap[type] = (aiddMap[type] || 0) + Number(count);
           });
-        } catch {}
+        } catch (e) {
+          console.error('Error parsing recommend_types:', e);
+        }
       });
 
       const aiBreakdown = Object.fromEntries(
@@ -175,10 +274,9 @@ export default function AIDDMonitoringTool() {
       );
 
       // 시간 진행에 따른 비례 계산
-      const parseTimeRange = d3.timeParse('%H:%M:%S');
-      const startTime = parseTimeRange('16:00:00')!;
-      const endTime = parseTimeRange('18:00:00')!;
-      const progress = Math.min(1, (currentTime.getTime() - startTime.getTime()) / (endTime.getTime() - startTime.getTime()));
+      const progress = Math.max(0, Math.min(1, 
+        (currentTime.getTime() - startTime.getTime()) / (endTime.getTime() - startTime.getTime())
+      ));
 
       newStats[team.teamName] = {
         fbBreakdown,
@@ -191,20 +289,34 @@ export default function AIDDMonitoringTool() {
       };
     });
 
-    setAnimatedStats(newStats);
-  }, [currentTime, teams]);
+    return newStats;
+  }, []);
 
-  const startAnimation = () => {
-    if (teams.length === 0) return;
+  // 현재 시간 변경시 통계 업데이트
+  useEffect(() => {
+    if (!currentTime || teams.length === 0) return;
     
+    const newStats = calculateStats(currentTime, teams);
+    setAnimatedStats(newStats);
+    console.log('Stats updated for time:', d3.timeFormat('%H:%M:%S')(currentTime), newStats);
+  }, [currentTime, teams, calculateStats]);
+
+  const startAnimation = useCallback(() => {
+    if (teams.length === 0) {
+      console.log('No teams available for animation');
+      return;
+    }
+    
+    console.log('Starting animation...');
     setIsPlaying(true);
+    
     const parseTime = d3.timeParse('%H:%M:%S');
     const startTime = parseTime('16:00:00')!;
     const endTime = parseTime('18:00:00')!;
     const duration = endTime.getTime() - startTime.getTime();
-    const animationDuration = 10000; // 10초 동안 애니메이션
+    const animationDuration = 10000; // 10초
 
-    let startTimestamp = Date.now();
+    const startTimestamp = Date.now();
 
     const animate = () => {
       const elapsed = Date.now() - startTimestamp;
@@ -213,67 +325,78 @@ export default function AIDDMonitoringTool() {
       const newTime = new Date(startTime.getTime() + duration * progress);
       setCurrentTime(newTime);
 
-      if (progress < 1 && isPlaying) {
-        requestAnimationFrame(animate);
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
       } else {
         setIsPlaying(false);
+        animationRef.current = null;
+        console.log('Animation completed');
       }
     };
 
     animate();
-  };
+  }, [teams]);
 
-  const resetAnimation = () => {
+  const resetAnimation = useCallback(() => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
     setIsPlaying(false);
     const parseTime = d3.timeParse('%H:%M:%S');
     const startTime = parseTime('16:00:00')!;
     setCurrentTime(startTime);
-  };
+    console.log('Animation reset');
+  }, []);
 
-  const renderTeamTimeline = (team: TeamData, index: number) => {
-    const svgId = `team-${index}`;
+  // 컴포넌트 언마운트시 애니메이션 정리
+  useEffect(() => {
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, []);
+
+  const TeamTimeline = ({ team, teamIndex }: { team: TeamData; teamIndex: number }) => {
     const svgRef = useRef<SVGSVGElement | null>(null);
-    
+
     useEffect(() => {
       if (!currentTime || !svgRef.current) return;
 
       const svg = d3.select(svgRef.current);
       const margin = { top: 20, right: 10, bottom: 20, left: 150 };
       const width = 520 - margin.left - margin.right;
-      const height = 80 - margin.top - margin.bottom;
+      const height = 100 - margin.top - margin.bottom;
 
       svg.selectAll('*').remove();
       
-      // 그라데이션 정의를 먼저 추가
+      // 그라데이션 정의
       const defs = svg.append('defs');
       
-      if (!defs.select('#fingerGradient').node()) {
-        defs.append('linearGradient')
-          .attr('id', 'fingerGradient')
-          .selectAll('stop')
-          .data([
-            { offset: '0%', color: '#0bd1b9' },
-            { offset: '100%', color: '#1e7991' },
-          ])
-          .enter()
-          .append('stop')
-          .attr('offset', d => d.offset)
-          .attr('stop-color', d => d.color);
-      }
+      defs.append('linearGradient')
+        .attr('id', `fingerGradient-${teamIndex}`)
+        .selectAll('stop')
+        .data([
+          { offset: '0%', color: '#0bd1b9' },
+          { offset: '100%', color: '#1e7991' },
+        ])
+        .enter()
+        .append('stop')
+        .attr('offset', d => d.offset)
+        .attr('stop-color', d => d.color);
 
-      if (!defs.select('#brainGradient').node()) {
-        defs.append('linearGradient')
-          .attr('id', 'brainGradient')
-          .selectAll('stop')
-          .data([
-            { offset: '0%', color: '#f78aff' },
-            { offset: '100%', color: '#b13bff' },
-          ])
-          .enter()
-          .append('stop')
-          .attr('offset', d => d.offset)
-          .attr('stop-color', d => d.color);
-      }
+      defs.append('linearGradient')
+        .attr('id', `brainGradient-${teamIndex}`)
+        .selectAll('stop')
+        .data([
+          { offset: '0%', color: '#f78aff' },
+          { offset: '100%', color: '#b13bff' },
+        ])
+        .enter()
+        .append('stop')
+        .attr('offset', d => d.offset)
+        .attr('stop-color', d => d.color);
       
       const g = svg
         .append('g')
@@ -293,7 +416,7 @@ export default function AIDDMonitoringTool() {
         .scaleBand()
         .domain(uniqueEmails)
         .range([0, height])
-        .padding(0.1);
+        .padding(0.2);
 
       // 시간 축
       g.append('g')
@@ -302,7 +425,7 @@ export default function AIDDMonitoringTool() {
         .style('fill', '#e0e0e0')
         .style('font-size', '10px');
 
-      // 이메일 라벨 (이메일 앞부분만 표시)
+      // 이메일 라벨
       g.append('g')
         .call(d3.axisLeft(yScale).tickFormat(d => (d as string).split('@')[0]))
         .selectAll('text')
@@ -314,6 +437,8 @@ export default function AIDDMonitoringTool() {
         const start = parseTime(item.start_time);
         return start && start <= currentTime;
       });
+
+      console.log(`Rendering ${currentData.length} items for ${team.teamName} at ${d3.timeFormat('%H:%M:%S')(currentTime)}`);
 
       // 막대 그래프와 버블 렌더링
       currentData.forEach((item) => {
@@ -335,7 +460,10 @@ export default function AIDDMonitoringTool() {
             .attr('y', barY)
             .attr('width', barWidth)
             .attr('height', barHeight)
-            .attr('fill', item.type === 'fingertime' ? 'url(#fingerGradient)' : 'url(#brainGradient)')
+            .attr('fill', item.type === 'fingertime' 
+              ? `url(#fingerGradient-${teamIndex})` 
+              : `url(#brainGradient-${teamIndex})`
+            )
             .attr('opacity', 0.9)
             .attr('rx', 2);
 
@@ -378,23 +506,31 @@ export default function AIDDMonitoringTool() {
                 });
               }
             } catch (e) {
-              console.error('Error parsing recommend_types:', e);
+              console.error('Error parsing recommend_types:', e, item.recommend_types);
             }
           }
         }
       });
 
-    }, [currentTime, team]);
+    }, [currentTime, team, teamIndex]);
 
     return (
       <svg
         ref={svgRef}
         width={520}
-        height={80}
+        height={100}
         className="border border-gray-600 rounded bg-gray-800/30"
       />
     );
   };
+
+  if (data.length === 0) {
+    return (
+      <div className="w-full min-h-screen bg-gradient-to-r from-[#1c1b47] via-[#232664] to-[#2f1b47] p-8 flex items-center justify-center">
+        <div className="text-white text-xl">Loading CSV data...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full min-h-screen bg-gradient-to-r from-[#1c1b47] via-[#232664] to-[#2f1b47] p-8">
@@ -407,14 +543,14 @@ export default function AIDDMonitoringTool() {
           <button
             onClick={startAnimation}
             disabled={isPlaying}
-            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 transition-all"
           >
             {isPlaying ? 'Playing...' : 'Start Animation'}
           </button>
           <button
             onClick={resetAnimation}
             disabled={isPlaying}
-            className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 disabled:opacity-50"
+            className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 disabled:opacity-50 transition-all"
           >
             Reset
           </button>
@@ -427,14 +563,14 @@ export default function AIDDMonitoringTool() {
 
         <div className="grid gap-8">
           {teams.map((team, index) => (
-            <div key={team.teamName} className="bg-gray-900/50 rounded-lg p-6">
+            <div key={team.teamName} className="bg-gray-900/50 rounded-lg p-6 border border-gray-700">
               <h2 className="text-xl font-bold text-white mb-4">{team.teamName}</h2>
               
-              <div className="flex gap-8">
+              <div className="flex gap-8 items-start">
                 {/* Work Breakdown (Timeline) */}
                 <div className="flex-1">
                   <h3 className="text-sm font-semibold text-gray-300 mb-2">Work Breakdown</h3>
-                  {renderTeamTimeline(team, index)}
+                  <TeamTimeline team={team} teamIndex={index} />
                 </div>
 
                 {/* F/B Breakdown */}
@@ -461,6 +597,9 @@ export default function AIDDMonitoringTool() {
                             {idx + 1}. {type.replace('Recommend', '').slice(0, 6)}: {count}
                           </div>
                         ))}
+                      {Object.keys(animatedStats[team.teamName]?.aiBreakdown || {}).length === 0 && (
+                        <div className="text-xs text-blue-200">No data yet</div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -492,7 +631,11 @@ export default function AIDDMonitoringTool() {
           ))}
         </div>
 
-
+        {teams.length === 0 && (
+          <div className="text-center text-white text-lg mt-8">
+            No team data available. Please check the CSV file.
+          </div>
+        )}
       </div>
     </div>
   );
