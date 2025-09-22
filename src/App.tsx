@@ -23,23 +23,53 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
     const currentMinutes = (hours - 16) * 60 + minutes + seconds / 60;
     const totalMinutes = 120; // 16:00 to 18:00
 
-    // Sample data for each project
+    // Sample data for each project (더 많은 AIDD 유형 포함)
     const projectData = [
       // Project 01
       [
-        { start: 0, end: 30, type: 'fingertime', user: 'dev1@team061.com', bubbles: [{ type: 'Query2CodeRecommend', count: 3 }, { type: 'AIPlayRecommend', count: 2 }] },
+        { start: 0, end: 30, type: 'fingertime', user: 'dev1@team061.com', bubbles: [
+          { type: 'Query2CodeRecommend', count: 3 }, 
+          { type: 'AIPlayRecommend', count: 2 },
+          { type: 'RevisionMaker', count: 1 },
+          { type: 'QueryMakerRecommend', count: 2 }
+        ]},
         { start: 30, end: 45, type: 'braintime', user: 'dev1@team061.com', bubbles: [] },
-        { start: 10, end: 60, type: 'fingertime', user: 'dev2@team061.com', bubbles: [{ type: 'RevisionMaker', count: 5 }, { type: 'AIPlayRecommend', count: 3 }] },
+        { start: 10, end: 60, type: 'fingertime', user: 'dev2@team061.com', bubbles: [
+          { type: 'RevisionMaker', count: 5 }, 
+          { type: 'AIPlayRecommend', count: 3 },
+          { type: 'CommentRecommend', count: 2 },
+          { type: 'TestCaseRecommend', count: 1 }
+        ]},
       ],
       // Project 02  
       [
-        { start: 5, end: 35, type: 'fingertime', user: 'dev1@team116.com', bubbles: [{ type: 'QueryMakerRecommend', count: 4 }] },
-        { start: 15, end: 90, type: 'fingertime', user: 'dev2@team116.com', bubbles: [{ type: 'RevisionMaker', count: 6 }, { type: 'Query2CodeRecommend', count: 3 }] },
+        { start: 5, end: 35, type: 'fingertime', user: 'dev1@team116.com', bubbles: [
+          { type: 'QueryMakerRecommend', count: 4 },
+          { type: 'RevisionMaker', count: 2 },
+          { type: 'AIPlayRecommend', count: 1 }
+        ]},
+        { start: 15, end: 90, type: 'fingertime', user: 'dev2@team116.com', bubbles: [
+          { type: 'RevisionMaker', count: 6 }, 
+          { type: 'Query2CodeRecommend', count: 3 },
+          { type: 'CommentRecommend', count: 2 },
+          { type: 'TestCaseRecommend', count: 4 },
+          { type: 'AIPlayRecommend', count: 1 }
+        ]},
       ],
       // Project 03
       [
-        { start: 8, end: 40, type: 'fingertime', user: 'dev1@team073.com', bubbles: [{ type: 'AIPlayRecommend', count: 2 }] },
-        { start: 20, end: 105, type: 'fingertime', user: 'dev2@team073.com', bubbles: [{ type: 'RevisionMaker', count: 4 }, { type: 'QueryMakerRecommend', count: 2 }] },
+        { start: 8, end: 40, type: 'fingertime', user: 'dev1@team073.com', bubbles: [
+          { type: 'AIPlayRecommend', count: 2 },
+          { type: 'QueryMakerRecommend', count: 1 },
+          { type: 'RevisionMaker', count: 1 }
+        ]},
+        { start: 20, end: 105, type: 'fingertime', user: 'dev2@team073.com', bubbles: [
+          { type: 'RevisionMaker', count: 4 }, 
+          { type: 'QueryMakerRecommend', count: 2 },
+          { type: 'CommentRecommend', count: 3 },
+          { type: 'Query2CodeRecommend', count: 2 },
+          { type: 'TestCaseRecommend', count: 1 }
+        ]},
       ]
     ];
 
@@ -122,9 +152,11 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
       .style('fill', '#f0f0f0')
       .style('font-size', '9px');
 
-    // AIDD color scale (original style)
+    // AIDD color scale (original style) - 모든 유형 포함
     const aiddColors = d3.schemeSet2.concat(d3.schemeSet3).slice(0, 10);
-    const allAIDDTypes = ['Query2CodeRecommend', 'AIPlayRecommend', 'RevisionMaker', 'QueryMakerRecommend'];
+    const allAIDDTypes = Array.from(
+      new Set(data.flatMap(item => item.bubbles.map(b => b.type)))
+    );
     const aiddColorScale = d3.scaleOrdinal<string, string>()
       .domain(allAIDDTypes)
       .range(aiddColors);
@@ -171,11 +203,24 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
             rect.attr('filter', `url(#brainGlow-${projectIndex})`);
           }
 
-          // Add AIDD bubbles (original style)
+          // Add AIDD bubbles (original style with progressive growth)
           if (item.type === 'fingertime' && barWidth > 15) {
             const entries = item.bubbles;
             if (entries.length > 0) {
-              const radii = entries.map(bubble => 6 + Math.sqrt(bubble.count) * 3);
+              // Calculate progress within this fingertime period
+              const fingertimeStart = itemStartMinutes;
+              const fingertimeEnd = item.end;
+              const fingertimeProgress = fingertimeEnd > fingertimeStart 
+                ? Math.min(1, (currentMinutes - fingertimeStart) / (fingertimeEnd - fingertimeStart))
+                : 1;
+
+              // Calculate current bubble sizes based on progress
+              const currentBubbles = entries.map(bubble => ({
+                ...bubble,
+                currentCount: Math.floor(bubble.count * fingertimeProgress)
+              }));
+
+              const radii = currentBubbles.map(bubble => 6 + Math.sqrt(Math.max(1, bubble.currentCount)) * 3);
               const totalBubbleWidth = radii.reduce((sum, r) => sum + r * 2 + 6, -6);
               const scale = totalBubbleWidth > barWidth 
                 ? Math.max(1, barWidth / totalBubbleWidth) 
@@ -183,31 +228,35 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
               
               let currentX = startX + (barWidth - totalBubbleWidth * scale) / 2;
 
-              entries.forEach((bubble, index) => {
-                const rawR = 6 + Math.sqrt(bubble.count) * 3;
-                const r = Math.max(6, rawR * scale);
-                const cx = currentX + r;
-                const cy = centerY;
+              currentBubbles.forEach((bubble, index) => {
+                if (bubble.currentCount > 0) {
+                  const rawR = 6 + Math.sqrt(bubble.currentCount) * 3;
+                  const r = Math.max(6, rawR * scale);
+                  const cx = currentX + r;
+                  const cy = centerY;
 
-                g.append('circle')
-                  .attr('cx', cx)
-                  .attr('cy', cy)
-                  .attr('r', r)
-                  .attr('fill', aiddColorScale(bubble.type))
-                  .attr('stroke', '#fff')
-                  .attr('stroke-width', 0.8)
-                  .attr('opacity', 0.85);
+                  g.append('circle')
+                    .attr('cx', cx)
+                    .attr('cy', cy)
+                    .attr('r', r)
+                    .attr('fill', aiddColorScale(bubble.type))
+                    .attr('stroke', '#fff')
+                    .attr('stroke-width', 0.8)
+                    .attr('opacity', 0.85);
 
-                g.append('text')
-                  .attr('x', cx)
-                  .attr('y', cy + 4)
-                  .text(bubble.count)
-                  .style('fill', 'white')
-                  .style('font-size', `${Math.min(12 * scale, 12)}px`)
-                  .style('font-weight', 'bold')
-                  .style('text-anchor', 'middle');
+                  if (r > 8) {
+                    g.append('text')
+                      .attr('x', cx)
+                      .attr('y', cy + 4)
+                      .text(bubble.currentCount)
+                      .style('fill', 'white')
+                      .style('font-size', `${Math.min(12 * scale, 12)}px`)
+                      .style('font-weight', 'bold')
+                      .style('text-anchor', 'middle');
+                  }
 
-                currentX += r * 2 + 6 * scale;
+                  currentX += r * 2 + 6 * scale;
+                }
               });
             }
           }
@@ -341,12 +390,82 @@ export default function App() {
             const fingertimeCount = Math.floor(progress * (index + 3));
             const braintimeCount = Math.floor(progress * (index + 1));
             
-            // AI breakdown based on progress
-            const aiCounts = [
-              Math.floor(progress * (index + 4)),
-              Math.floor(progress * (index + 2)),
-              Math.floor(progress * (index + 1))
+            // AI breakdown based on progress - 해당 프로젝트의 실제 AIDD 사용량 계산
+            // TimelineVisualization에서 정의된 projectData에 접근하기 위해 동일한 구조 사용
+            const projectTeamData = [
+              // Project 01
+              [
+                { start: 0, end: 30, type: 'fingertime', user: 'dev1@team061.com', bubbles: [
+                  { type: 'Query2CodeRecommend', count: 3 }, 
+                  { type: 'AIPlayRecommend', count: 2 },
+                  { type: 'RevisionMaker', count: 1 },
+                  { type: 'QueryMakerRecommend', count: 2 }
+                ]},
+                { start: 30, end: 45, type: 'braintime', user: 'dev1@team061.com', bubbles: [] },
+                { start: 10, end: 60, type: 'fingertime', user: 'dev2@team061.com', bubbles: [
+                  { type: 'RevisionMaker', count: 5 }, 
+                  { type: 'AIPlayRecommend', count: 3 },
+                  { type: 'CommentRecommend', count: 2 },
+                  { type: 'TestCaseRecommend', count: 1 }
+                ]},
+              ],
+              // Project 02  
+              [
+                { start: 5, end: 35, type: 'fingertime', user: 'dev1@team116.com', bubbles: [
+                  { type: 'QueryMakerRecommend', count: 4 },
+                  { type: 'RevisionMaker', count: 2 },
+                  { type: 'AIPlayRecommend', count: 1 }
+                ]},
+                { start: 15, end: 90, type: 'fingertime', user: 'dev2@team116.com', bubbles: [
+                  { type: 'RevisionMaker', count: 6 }, 
+                  { type: 'Query2CodeRecommend', count: 3 },
+                  { type: 'CommentRecommend', count: 2 },
+                  { type: 'TestCaseRecommend', count: 4 },
+                  { type: 'AIPlayRecommend', count: 1 }
+                ]},
+              ],
+              // Project 03
+              [
+                { start: 8, end: 40, type: 'fingertime', user: 'dev1@team073.com', bubbles: [
+                  { type: 'AIPlayRecommend', count: 2 },
+                  { type: 'QueryMakerRecommend', count: 1 },
+                  { type: 'RevisionMaker', count: 1 }
+                ]},
+                { start: 20, end: 105, type: 'fingertime', user: 'dev2@team073.com', bubbles: [
+                  { type: 'RevisionMaker', count: 4 }, 
+                  { type: 'QueryMakerRecommend', count: 2 },
+                  { type: 'CommentRecommend', count: 3 },
+                  { type: 'Query2CodeRecommend', count: 2 },
+                  { type: 'TestCaseRecommend', count: 1 }
+                ]},
+              ]
             ];
+            
+            const currentProjectData = projectTeamData[index];
+            const relevantFingertime = currentProjectData.filter(item => {
+              const itemStartMinutes = item.start;
+              return item.type === 'fingertime' && itemStartMinutes <= currentMinutes;
+            });
+
+            // 모든 AIDD 유형별 누적 카운트 계산
+            const aiddTotals: { [key: string]: number } = {};
+            relevantFingertime.forEach(item => {
+              const itemStartMinutes = item.start;
+              const itemEndMinutes = Math.min(item.end, currentMinutes);
+              const itemProgress = Math.min(1, (currentMinutes - itemStartMinutes) / (item.end - itemStartMinutes));
+              
+              item.bubbles.forEach(bubble => {
+                const currentCount = Math.floor(bubble.count * itemProgress);
+                aiddTotals[bubble.type] = (aiddTotals[bubble.type] || 0) + currentCount;
+              });
+            });
+
+            // 상위 3개 AIDD 유형 추출
+            const topAIDDTypes = Object.entries(aiddTotals)
+              .sort(([,a], [,b]) => b - a)
+              .slice(0, 3);
+
+            const aiCounts = topAIDDTypes;
 
             return (
               <div key={projectName} className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
@@ -370,9 +489,14 @@ export default function App() {
                     <h3 className="text-xs text-gray-300 mb-1">AI Breakdown</h3>
                     <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded p-2 text-center text-white text-xs">
                       <div className="text-xs mb-1">상위 3개</div>
-                      <div>1. Query: {aiCounts[0]}</div>
-                      <div>2. AIPlay: {aiCounts[1]}</div>
-                      <div>3. Revision: {aiCounts[2]}</div>
+                      {aiCounts.slice(0, 3).map(([type, count], idx) => (
+                        <div key={type} className="text-xs">
+                          {idx + 1}. {type.replace('Recommend', '').slice(0, 6)}: {count}
+                        </div>
+                      ))}
+                      {aiCounts.length === 0 && (
+                        <div className="text-xs text-blue-200">No data yet</div>
+                      )}
                     </div>
                   </div>
 
