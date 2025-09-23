@@ -1,22 +1,4 @@
-TEAM065,HyeonHo1926@lgcns.com,16:00:00,16:11:30,11.5,fingertime,1,{'Query2CodeRecommend': 1}
-TEAM065,HyeonHo1926@lgcns.com,16:11:30,17:04:29,52.9833333333333,fingertime,66,"{'NextLine': 29, 'CodeMacro': 7, 'CodeMacroRecommend': 1, 'NextLineRecommend': 23, 'Query2CodeRecommend': 6}"
-TEAM065,HyeonHo1926@lgcns.com,17:04:29,17:05:06,0.62,braintime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:05:06,17:18:49,13.71,fingertime,28,"{'CodeMacro': 14, 'NextLine': 14}"
-TEAM065,HyeonHo1926@lgcns.com,17:18:49,17:19:21,0.53,closetime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:19:21,17:24:00,4.66,fingertime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:24:00,17:24:31,0.52,closetime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:24:31,17:24:45,0.23,fingertime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:24:45,17:25:22,0.62,closetime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:25:22,17:26:35,1.22,fingertime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:26:35,17:27:00,0.42,closetime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:27:00,17:48:20,21.33,fingertime,33,"{'NextLine': 17, 'Query2CodeRecommend': 1, 'NextLineRecommend': 15}"
-TEAM065,HyeonHo1926@lgcns.com,17:48:20,17:48:40,0.33,braintime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:48:40,17:50:30,1.84,fingertime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:50:30,17:50:45,0.25,braintime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:50:45,17:56:10,5.42,fingertime,3,{'NextLine': 3}
-TEAM065,HyeonHo1926@lgcns.com,17:56:10,17:56:58,0.81,braintime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:56:58,17:57:58,1.0,fingertime,0,{}
-TEAM065,HyeonHo1926@lgcns.com,17:57:58,18:00:00,2.02,closetime,0,{}
+team_name,email,start_time,end_time,duration,type,aidd_count,recommend_types
 TEAM119,datnt135296@lgcns.com,16:00:00,16:00:58,0.966666666666667,closetime,0,{}
 TEAM119,datnt135296@lgcns.com,16:00:58,16:11:38,10.6666666666667,fingertime,7,"{'NextLine': 5, 'NextLineRecommend': 1, 'AIPlayRecommend': 1}"
 TEAM119,datnt135296@lgcns.com,16:11:38,16:12:51,1.21,braintime,0,{}
@@ -44,34 +26,61 @@ TEAM119,datnt135296@lgcns.com,17:53:57,17:54:56,0.99,fingertime,0,{}
 TEAM119,datnt135296@lgcns.com,17:54:56,17:55:27,0.52,closetime,0,{}
 TEAM119,datnt135296@lgcns.com,17:55:27,17:58:13,2.75,fingertime,2,{'NextLine': 2}
 TEAM119,datnt135296@lgcns.com,17:58:13,18:00:00,1.78,closetime,0,{}
-TEAM065,hyeonho1926@lgcns.com,16:00:00,16:11:30,11.5,closetime,0,{}
-TEAM065,hyeonho1926@lgcns.com,16:11:30,17:04:29,52.9833333333333,fingertime,36,"{'NextLine': 29, 'CodeMacro': 7}"
-TEAM065,hyeonho1926@lgcns.com,17:04:29,17:05:06,0.62,braintime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:05:06,17:18:49,13.71,fingertime,28,"{'CodeMacro': 14, 'NextLine': 14}"
-TEAM065,hyeonho1926@lgcns.com,17:18:49,17:19:21,0.53,closetime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:19:21,17:24:00,4.66,fingertime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:24:00,17:24:31,0.52,closetime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:24:31,17:24:45,0.23,fingertime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:24:45,17:25:22,0.62,closetime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:25:22,17:26:35,1.22,fingertime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:26:35,17:27:00,0.42,closetime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:27:00,17:48:20,21.33,fingertime,17,{'NextLine': 17}
-TEAM065,hyeonho1926@lgcns.com,17:48:20,17:48:40,0.33,braintime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:48:40,17:50:30,1.84,fingertime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:50:30,17:50:45,0.25,braintime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:50:45,17:56:10,5.42,fingertime,3,{'NextLine': 3}
-TEAM065,hyeonho1926@lgcns.com,17:56:10,17:56:58,0.81,braintime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:56:58,17:57:58,1.0,fingertime,0,{}
-TEAM065,hyeonho1926@lgcns.com,17:57:58,18:00:00,2.02,closetime,0,{}
-TEAM065,lee.hanbyeol@lgcns.com,16:00:00,16:00:09,0.15,closetime,0,{}
-TEAM065,lee.hanbyeol@lgcns.com,16:00:09,16:18:03,17.9,fingertime,14,"{'NextLine': 9, 'CommentRecommend': 1, 'Query2CodeRecommend': 1, 'NextLineRecommend': 3}"
-TEAM065,lee.hanbyeol@lgcns.com,16:18:03,16:18:53,0.83,braintime,0,{}
-TEAM065,lee.hanbyeol@lgcns.com,16:18:53,16:19:53,1.0,fingertime,0,{}
-TEAM065,lee.hanbyeol@lgcns.com,16:19:53,16:20:03,0.16,braintime,0,{}
-TEAM065,lee.hanbyeol@lgcns.com,16:20:03,16:47:24,27.35,fingertime,27,"{'NextLine': 12, 'CodeMacro': 3, 'RevisionMaker': 1, 'AIPlayRecommend': 5, 'CodeMacroRecommend': 2, 'NextLineRecommend': 2, 'RevisionMakerRecommend': 1, 'QueryTuningRecommend': 1}"
-TEAM065,lee.hanbyeol@lgcns.com,16:47:24,16:47:24,0.0,braintime,0,{}
-TEAM065,lee.hanbyeol@lgcns.com,16:47:24,17:55:52,68.47,fingertime,143,"{'NextLine': 113, 'NextLineRecommend': 21, 'CommentRecommend': 2, 'Query2CodeRecommend': 2, 'QueryMakerRecommend': 4, 'AIPlayRecommend': 1}"
-TEAM065,lee.hanbyeol@lgcns.com,17:55:52,18:00:00,4.12,closetime,0,{}
+TEAM080,jinu@lgcns.com,16:00:00,16:14:14,14.24,fingertime,2,"{'QueryMakerRecommend': 1, 'CommentRecommend': 1}"
+TEAM080,jinu@lgcns.com,16:14:14,16:14:33,0.32,braintime,0,{}
+TEAM080,jinu@lgcns.com,16:14:33,16:17:03,2.5,fingertime,0,{}
+TEAM080,jinu@lgcns.com,16:17:03,16:17:59,0.94,braintime,0,{}
+TEAM080,jinu@lgcns.com,16:17:59,16:20:31,2.52,fingertime,0,{}
+TEAM080,jinu@lgcns.com,16:20:31,16:20:41,0.18,braintime,0,{}
+TEAM080,jinu@lgcns.com,16:20:41,16:23:07,2.42,fingertime,0,{}
+TEAM080,jinu@lgcns.com,16:23:07,16:23:09,0.04,braintime,0,{}
+TEAM080,jinu@lgcns.com,16:23:09,16:30:02,6.88,fingertime,2,"{'Marker': 1, 'MarkerRecommend': 1}"
+TEAM080,jinu@lgcns.com,16:30:02,16:32:02,2.0,braintime,0,{}
+TEAM080,jinu@lgcns.com,16:32:02,16:46:43,14.69,fingertime,2,"{'Marker': 1, 'MarkerRecommend': 1}"
+TEAM080,jinu@lgcns.com,16:46:43,16:46:58,0.25,braintime,0,{}
+TEAM080,jinu@lgcns.com,16:46:58,16:51:16,4.3,fingertime,0,{}
+TEAM080,jinu@lgcns.com,16:51:16,16:51:21,0.08,braintime,0,{}
+TEAM080,jinu@lgcns.com,16:51:21,16:54:46,3.42,fingertime,0,{}
+TEAM080,jinu@lgcns.com,16:54:46,16:55:25,0.65,braintime,0,{}
+TEAM080,jinu@lgcns.com,16:55:25,16:57:08,1.72,fingertime,0,{}
+TEAM080,jinu@lgcns.com,16:57:08,17:01:14,4.11,braintime,0,{}
+TEAM080,jinu@lgcns.com,17:01:14,17:03:13,1.97,fingertime,0,{}
+TEAM080,jinu@lgcns.com,17:03:13,17:03:30,0.29,braintime,0,{}
+TEAM080,jinu@lgcns.com,17:03:30,17:07:14,3.74,fingertime,0,{}
+TEAM080,jinu@lgcns.com,17:07:14,17:17:09,9.9,braintime,0,{}
+TEAM080,jinu@lgcns.com,17:17:09,17:19:12,2.05,fingertime,0,{}
+TEAM080,jinu@lgcns.com,17:19:12,17:20:42,1.51,braintime,0,{}
+TEAM080,jinu@lgcns.com,17:20:42,17:23:52,3.16,fingertime,0,{}
+TEAM080,jinu@lgcns.com,17:23:52,17:26:21,2.49,braintime,0,{}
+TEAM080,jinu@lgcns.com,17:26:21,17:30:28,4.12,fingertime,0,{}
+TEAM080,jinu@lgcns.com,17:30:28,18:00:00,29.52,closetime,0,{}
+TEAM080,kbg9305@lgcns.com,16:00:00,16:05:42,5.7,fingertime,3,{'CommentRecommend': 3}
+TEAM080,kbg9305@lgcns.com,16:05:42,16:14:00,8.3,fingertime,17,"{'RevisionMaker': 9, 'NextLine': 3, 'RevisionMakerRecommend': 3, 'NextLineRecommend': 2}"
+TEAM080,kbg9305@lgcns.com,16:14:00,16:14:21,0.35,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,16:14:21,16:19:51,5.51,fingertime,4,"{'RevisionMaker': 2, 'RevisionMakerRecommend': 2}"
+TEAM080,kbg9305@lgcns.com,16:19:51,16:20:50,0.99,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,16:20:50,16:22:38,1.79,fingertime,0,{}
+TEAM080,kbg9305@lgcns.com,16:22:38,16:24:22,1.74,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,16:24:22,16:39:38,15.26,fingertime,7,"{'RevisionMaker': 4, 'NextLine': 3}"
+TEAM080,kbg9305@lgcns.com,16:39:38,16:40:41,1.06,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,16:40:41,16:52:28,11.79,fingertime,6,"{'NextLine': 2, 'RevisionMaker': 2, 'Query2Code': 1, 'Query2CodeRecommend': 1}"
+TEAM080,kbg9305@lgcns.com,16:52:28,16:53:02,0.56,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,16:53:02,16:59:03,6.01,fingertime,3,"{'AIPlayRecommend': 1, 'QueryMakerRecommend': 2}"
+TEAM080,kbg9305@lgcns.com,16:59:03,17:00:38,1.58,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,17:00:38,17:01:40,1.04,fingertime,0,{}
+TEAM080,kbg9305@lgcns.com,17:01:40,17:03:58,2.29,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,17:03:58,17:05:00,1.04,fingertime,0,{}
+TEAM080,kbg9305@lgcns.com,17:05:00,17:06:41,1.69,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,17:06:41,17:07:41,1.0,fingertime,0,{}
+TEAM080,kbg9305@lgcns.com,17:07:41,17:12:10,4.49,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,17:12:10,17:14:45,2.58,fingertime,0,{}
+TEAM080,kbg9305@lgcns.com,17:14:45,17:15:44,0.98,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,17:15:44,17:17:29,1.74,fingertime,1,{'SummaryRecommend': 1}
+TEAM080,kbg9305@lgcns.com,17:17:29,17:18:06,0.62,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,17:18:06,17:19:06,1.0,fingertime,0,{}
+TEAM080,kbg9305@lgcns.com,17:19:06,17:21:22,2.28,braintime,0,{}
+TEAM080,kbg9305@lgcns.com,17:21:22,17:26:27,5.08,fingertime,0,{}
+TEAM080,kbg9305@lgcns.com,17:26:27,18:00:00,33.54,closetime,0,{}
 TEAM119,loinv@lgcns.com,16:00:00,16:15:24,15.4,fingertime,4,"{'QueryMakerRecommend': 3, 'Query2CodeRecommend': 1}"
 TEAM119,loinv@lgcns.com,16:15:24,16:15:39,0.26,braintime,0,{}
 TEAM119,loinv@lgcns.com,16:15:39,16:19:07,3.47,fingertime,0,{}
@@ -135,13 +144,6 @@ TEAM119,nguyen.xuan.tinh@lgcns.com,17:47:49,17:54:18,6.49,fingertime,0,{}
 TEAM119,nguyen.xuan.tinh@lgcns.com,17:54:18,17:54:19,0.0,braintime,0,{}
 TEAM119,nguyen.xuan.tinh@lgcns.com,17:54:19,17:56:13,1.9,fingertime,0,{}
 TEAM119,nguyen.xuan.tinh@lgcns.com,17:56:13,18:00:00,3.78,closetime,0,{}
-TEAM065,s1.park@lgcns.com,16:00:00,16:01:23,1.38333333333333,closetime,0,{}
-TEAM065,s1.park@lgcns.com,16:01:23,17:46:41,105.3,fingertime,946,"{'RevisionMaker': 643, 'CodeMacro': 270, 'AIPlayRecommend': 2, 'Query2CodeRecommend': 11, 'RevisionMakerRecommend': 11, 'CodeMacroRecommend': 7, 'QueryMakerRecommend': 2}"
-TEAM065,s1.park@lgcns.com,17:46:41,17:47:19,0.62,braintime,0,{}
-TEAM065,s1.park@lgcns.com,17:47:19,17:48:45,1.44,fingertime,9,"{'RevisionMaker': 6, 'CodeMacro': 3}"
-TEAM065,s1.park@lgcns.com,17:48:45,17:49:09,0.4,braintime,0,{}
-TEAM065,s1.park@lgcns.com,17:49:09,17:56:37,7.46,fingertime,78,"{'RevisionMaker': 50, 'CodeMacro': 26, 'CodeMacroRecommend': 1, 'AIPlayRecommend': 1}"
-TEAM065,s1.park@lgcns.com,17:56:37,18:00:00,3.38,closetime,0,{}
 TEAM044,saehoon0501@lgcns.com,16:00:00,16:24:18,24.31,fingertime,3,{'AIPlayRecommend': 3}
 TEAM044,saehoon0501@lgcns.com,16:24:18,16:25:05,0.78,braintime,0,{}
 TEAM044,saehoon0501@lgcns.com,16:25:05,16:41:06,16.02,fingertime,0,{}
@@ -219,6 +221,24 @@ TEAM044,sangwon.jung@lgcns.com,17:12:02,17:12:26,0.39,braintime,0,{}
 TEAM044,sangwon.jung@lgcns.com,17:12:26,17:13:40,1.24,fingertime,0,{}
 TEAM044,sangwon.jung@lgcns.com,17:13:40,17:14:05,0.41,braintime,0,{}
 TEAM044,sangwon.jung@lgcns.com,17:14:05,18:00:00,45.92,closetime,0,{}
+TEAM080,seoju@lgcns.com,16:00:00,16:24:47,24.79,fingertime,9,{'AIPlayRecommend': 9}
+TEAM080,seoju@lgcns.com,16:24:47,16:24:53,0.11,braintime,0,{}
+TEAM080,seoju@lgcns.com,16:24:53,16:38:54,14.0,fingertime,6,{'AIPlayRecommend': 6}
+TEAM080,seoju@lgcns.com,16:38:54,16:40:01,1.12,braintime,0,{}
+TEAM080,seoju@lgcns.com,16:40:01,16:58:09,18.14,fingertime,17,{'AIPlayRecommend': 17}
+TEAM080,seoju@lgcns.com,16:58:09,16:58:42,0.54,braintime,0,{}
+TEAM080,seoju@lgcns.com,16:58:42,17:00:18,1.6,fingertime,0,{}
+TEAM080,seoju@lgcns.com,17:00:18,17:00:36,0.3,braintime,0,{}
+TEAM080,seoju@lgcns.com,17:00:36,17:01:38,1.04,fingertime,0,{}
+TEAM080,seoju@lgcns.com,17:01:38,17:03:51,2.21,braintime,0,{}
+TEAM080,seoju@lgcns.com,17:03:51,17:06:23,2.54,fingertime,0,{}
+TEAM080,seoju@lgcns.com,17:06:23,17:13:09,6.76,braintime,0,{}
+TEAM080,seoju@lgcns.com,17:13:09,17:14:29,1.34,fingertime,0,{}
+TEAM080,seoju@lgcns.com,17:14:29,17:16:27,1.96,braintime,0,{}
+TEAM080,seoju@lgcns.com,17:16:27,17:19:01,2.57,fingertime,0,{}
+TEAM080,seoju@lgcns.com,17:19:01,17:20:34,1.56,braintime,0,{}
+TEAM080,seoju@lgcns.com,17:20:34,17:23:55,3.34,fingertime,0,{}
+TEAM080,seoju@lgcns.com,17:23:55,18:00:00,36.08,closetime,0,{}
 TEAM044,syoon0127@lgcns.com,16:00:00,16:05:48,5.81,closetime,0,{}
 TEAM044,syoon0127@lgcns.com,16:05:48,16:07:52,2.06,closetime,0,{}
 TEAM044,syoon0127@lgcns.com,16:07:52,16:09:42,1.84,fingertime,0,{}
@@ -275,36 +295,19 @@ TEAM119,thangld2407@lgcns.com,17:51:13,17:52:54,1.68,braintime,0,{}
 TEAM119,thangld2407@lgcns.com,17:52:54,17:55:45,2.85,fingertime,1,{'NextLine': 1}
 TEAM119,thangld2407@lgcns.com,17:55:45,17:56:39,0.9,braintime,0,{}
 TEAM119,thangld2407@lgcns.com,17:56:39,18:00:00,3.34,closetime,0,{}
-TEAM065,yeongwon@lgcns.com,16:00:00,16:00:21,0.36,closetime,0,{}
-TEAM065,yeongwon@lgcns.com,16:00:21,16:00:48,0.45,braintime,0,{}
-TEAM065,yeongwon@lgcns.com,16:00:48,16:09:51,9.05,fingertime,1,{'QueryMakerRecommend': 1}
-TEAM065,yeongwon@lgcns.com,16:09:51,16:10:26,0.58,closetime,0,{}
-TEAM065,yeongwon@lgcns.com,16:10:26,16:11:09,0.71,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,16:11:09,16:11:39,0.51,closetime,0,{}
-TEAM065,yeongwon@lgcns.com,16:11:39,16:14:12,2.55,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,16:14:12,16:17:31,3.32,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,16:17:31,16:18:39,1.12,closetime,0,{}
-TEAM065,yeongwon@lgcns.com,16:18:39,16:37:56,19.29,fingertime,4,"{'QueryMakerRecommend': 3, 'Query2CodeRecommend': 1}"
-TEAM065,yeongwon@lgcns.com,16:37:56,16:38:02,0.09,braintime,0,{}
-TEAM065,yeongwon@lgcns.com,16:38:02,17:12:47,34.75,fingertime,5,"{'QueryMakerRecommend': 3, 'Query2CodeRecommend': 2}"
-TEAM065,yeongwon@lgcns.com,17:12:47,17:13:05,0.3,braintime,0,{}
-TEAM065,yeongwon@lgcns.com,17:13:05,17:15:48,2.72,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,17:15:48,17:16:23,0.58,braintime,0,{}
-TEAM065,yeongwon@lgcns.com,17:16:23,17:17:24,1.03,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,17:17:24,17:17:25,0.0,braintime,0,{}
-TEAM065,yeongwon@lgcns.com,17:17:25,17:29:05,11.68,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,17:29:05,17:29:53,0.79,braintime,0,{}
-TEAM065,yeongwon@lgcns.com,17:29:53,17:36:17,6.41,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,17:36:17,17:36:45,0.46,braintime,0,{}
-TEAM065,yeongwon@lgcns.com,17:36:45,17:38:42,1.94,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,17:38:42,17:39:18,0.61,closetime,0,{}
-TEAM065,yeongwon@lgcns.com,17:39:18,17:40:48,1.51,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,17:40:48,17:41:19,0.51,closetime,0,{}
-TEAM065,yeongwon@lgcns.com,17:41:19,17:42:54,1.58,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,17:42:54,17:43:30,0.59,closetime,0,{}
-TEAM065,yeongwon@lgcns.com,17:43:30,17:45:02,1.54,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,17:45:02,17:50:59,5.95,braintime,0,{}
-TEAM065,yeongwon@lgcns.com,17:50:59,17:52:27,1.46,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,17:52:27,17:53:09,0.7,braintime,0,{}
-TEAM065,yeongwon@lgcns.com,17:53:09,17:54:19,1.17,fingertime,0,{}
-TEAM065,yeongwon@lgcns.com,17:54:19,18:00:00,5.67,closetime,0,{}
+TEAM080,wonsun.bang@lgcns.com,16:00:00,16:24:57,24.97,fingertime,6,{'AIPlayRecommend': 6}
+TEAM080,wonsun.bang@lgcns.com,16:24:57,16:25:21,0.39,braintime,0,{}
+TEAM080,wonsun.bang@lgcns.com,16:25:21,16:55:37,30.26,fingertime,41,"{'Query2Code': 34, 'AIPlayRecommend': 4, 'Query2CodeRecommend': 3}"
+TEAM080,wonsun.bang@lgcns.com,16:55:37,16:56:45,1.14,braintime,0,{}
+TEAM080,wonsun.bang@lgcns.com,16:56:45,17:00:22,3.62,fingertime,14,"{'Query2Code': 11, 'TestCaseRecommend': 2, 'AIPlayRecommend': 1}"
+TEAM080,wonsun.bang@lgcns.com,17:00:22,17:00:33,0.18,braintime,0,{}
+TEAM080,wonsun.bang@lgcns.com,17:00:33,17:06:26,5.89,fingertime,3,"{'TestCaseRecommend': 2, 'AIPlayRecommend': 1}"
+TEAM080,wonsun.bang@lgcns.com,17:06:26,17:09:44,3.29,braintime,0,{}
+TEAM080,wonsun.bang@lgcns.com,17:09:44,17:10:50,1.1,fingertime,0,{}
+TEAM080,wonsun.bang@lgcns.com,17:10:50,17:11:07,0.29,braintime,0,{}
+TEAM080,wonsun.bang@lgcns.com,17:11:07,17:15:17,4.17,fingertime,0,{}
+TEAM080,wonsun.bang@lgcns.com,17:15:17,17:16:44,1.46,braintime,0,{}
+TEAM080,wonsun.bang@lgcns.com,17:16:44,17:27:50,11.09,fingertime,2,{'AIPlayRecommend': 2}
+TEAM080,wonsun.bang@lgcns.com,17:27:50,17:31:08,3.3,braintime,0,{}
+TEAM080,wonsun.bang@lgcns.com,17:31:08,17:31:09,0.02,fingertime,0,{}
+TEAM080,wonsun.bang@lgcns.com,17:31:09,18:00:00,28.84,closetime,0,{}

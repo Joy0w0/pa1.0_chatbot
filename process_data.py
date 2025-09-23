@@ -16,7 +16,7 @@ def process_team_data():
     team_mapping = {
         'TEAM119': {'project': 'Project01', 'max_quality': 77, 'max_tasks': 96},
         'TEAM044': {'project': 'Project02', 'max_quality': 41, 'max_tasks': 77}, 
-        'TEAM065': {'project': 'Project03', 'max_quality': 11, 'max_tasks': 60}
+        'TEAM080': {'project': 'Project03', 'max_quality': 11, 'max_tasks': 60}  # Changed from TEAM065 to TEAM080
     }
     
     projects_data = {}
