@@ -393,7 +393,7 @@ const TimelineVisualization = ({
   }, [projectIndex, currentTime]);
 
   return (
-    <div className="w-full h-32 overflow-visible">
+    <div className="w-full h-52 overflow-visible">  {/* Increased height to h-52 for larger visualization */}
       <svg ref={svgRef}></svg>
     </div>
   );
@@ -593,15 +593,9 @@ export default function App() {
                 <div className="w-[1600px] mx-auto p-6 border border-gray-700 rounded-lg bg-gray-900/50">
                   {' '}
                   {/* Increased width and padding */}
-                  <h2 className="mb-3 text-lg font-bold text-white">
-                    {projectKey} ({projectData.team_name})
+                  <h2 className="mb-4 text-lg font-bold text-white">
+                    {projectKey}
                   </h2>
-                  <div className="mb-2 text-sm text-gray-400">
-                    Developers:{' '}
-                    {projectData.developers
-                      .map((email) => email.split('@')[0])
-                      .join(', ')}
-                  </div>
                   <div className="w-full overflow-x-auto">
                     <div className="flex items-center gap-8 min-w-max">
                       {' '}
@@ -610,7 +604,7 @@ export default function App() {
                         {' '}
                         {/* Added minimum width for timeline */}
                         <h3 className="mb-2 text-sm text-gray-300">
-                          Work Breakdown - Timeline
+                          Work Breakdown
                         </h3>
                         <TimelineVisualization
                           projectIndex={index}
@@ -628,9 +622,6 @@ export default function App() {
                             Finger/Brain
                           </div>
                           <div className="text-lg font-bold leading-none">
-                            {fingertimeEntries} / {braintimeEntries}
-                          </div>
-                          <div className="mt-1 text-xs leading-none text-teal-100">
                             {fingertimePercent}% / {braintimePercent}%
                           </div>
                         </div>
