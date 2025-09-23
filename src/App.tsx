@@ -12,8 +12,8 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
     svg.selectAll('*').remove();
 
     const width = 800;
-    const height = 100;
-    const margin = { top: 40, right: 240, bottom: 20, left: 150 };
+    const height = 120;
+    const margin = { top: 50, right: 240, bottom: 20, left: 150 };
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
     const barHeight = 10;
@@ -323,7 +323,7 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
   }, [projectIndex, currentTime]);
 
   return (
-    <div className="w-full h-24 overflow-visible">
+    <div className="w-full h-32 overflow-visible">
       <svg ref={svgRef}></svg>
     </div>
   );
@@ -573,7 +573,7 @@ export default function App() {
                   </div>
 
                   <div className="w-32 flex-shrink-0">
-                    <h3 className="text-xs text-gray-300 mb-1 h-4 flex items-center">Expected Quality</h3>
+                    <h3 className="text-xs text-gray-300 mb-1 h-4 flex items-center">Quality</h3>
                     <div className="bg-gradient-to-br from-blue-700 to-blue-800 rounded p-3 text-center text-white h-20 flex flex-col justify-center">
                       <div className="text-lg font-bold leading-none">
                         {currentQuality}점
