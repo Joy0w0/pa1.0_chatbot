@@ -315,16 +315,24 @@ export default function DeveloperTimeline() {
     <div className="w-full overflow-auto bg-gradient-to-r from-[#1c1b47] via-[rgb(35,38,100)] to-[#2f1b47] p-8 min-h-screen">
       <div className="relative mb-8">
         <h1 className="text-2xl font-bold text-center text-white">
-          개발자 Fingertime / Braintime 및 AIDD 사용 시각화
+          AIDD Monitoring Tool - All Data
         </h1>
         {/* Navigation Button to AIDD Monitoring Tool */}
         <button
           onClick={() => navigate('/aidd-monitoring')}
-          className="absolute left-0 top-0 flex items-center gap-2 px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700 transition-all"
-          title="Switch to AIDD Monitoring Tool"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+          className="absolute top-0 left-0 flex items-center gap-2 px-4 py-2 text-white transition-all bg-green-600 rounded-lg hover:bg-green-700"
+          title="Switch to AIDD Monitoring Tool">
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M11 17l-5-5m0 0l5-5m-5 5h12"
+            />
           </svg>
           <span className="text-sm font-medium">Monitoring Tool</span>
         </button>

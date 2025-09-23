@@ -1,6 +1,6 @@
 {
   "Project01": {
-    "team_name": "TEAM119",
+    "team_name": "Project01",
     "developers": [
       "datnt135296@lgcns.com",
       "loinv@lgcns.com",
@@ -1084,18 +1084,9 @@
       "fingertime_percent": 87,
       "braintime_percent": 13,
       "top_aidd_types": [
-        [
-          "NextLine",
-          79
-        ],
-        [
-          "AIPlayRecommend",
-          33
-        ],
-        [
-          "QueryMakerRecommend",
-          31
-        ]
+        ["NextLine", 79],
+        ["AIPlayRecommend", 33],
+        ["QueryMakerRecommend", 31]
       ],
       "all_aidd_types": {
         "NextLine": 79,
@@ -1109,7 +1100,7 @@
     "max_tasks": 96
   },
   "Project02": {
-    "team_name": "TEAM044",
+    "team_name": "Project02",
     "developers": [
       "minwoo_cho@lgcns.com",
       "saehoon0501@lgcns.com",
@@ -2276,14 +2267,8 @@
       "fingertime_percent": 84,
       "braintime_percent": 16,
       "top_aidd_types": [
-        [
-          "AIPlayRecommend",
-          24
-        ],
-        [
-          "QueryMakerRecommend",
-          4
-        ]
+        ["AIPlayRecommend", 24],
+        ["QueryMakerRecommend", 4]
       ],
       "all_aidd_types": {
         "AIPlayRecommend": 24,
@@ -2294,7 +2279,7 @@
     "max_tasks": 77
   },
   "Project03": {
-    "team_name": "TEAM080",
+    "team_name": "Project03",
     "developers": [
       "jinu@lgcns.com",
       "kbg9305@lgcns.com",
@@ -3269,18 +3254,9 @@
       "fingertime_percent": 81,
       "braintime_percent": 19,
       "top_aidd_types": [
-        [
-          "AIPlayRecommend",
-          47
-        ],
-        [
-          "Query2Code",
-          46
-        ],
-        [
-          "RevisionMaker",
-          17
-        ]
+        ["AIPlayRecommend", 47],
+        ["Query2Code", 46],
+        ["RevisionMaker", 17]
       ],
       "all_aidd_types": {
         "QueryMakerRecommend": 3,

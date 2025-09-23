@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import AIDDMonitoringTool from './components/AIDDMonitoringTool';
 import DeveloperTimeline from './components/DeveloperTimeline';
 

@@ -79,9 +79,16 @@ const TimelineVisualization = ({
     const svg = d3.select(svgRef.current);
     svg.selectAll('*').remove();
 
-    const width = 800;
-    const height = 120;
-    const margin = { top: 50, right: 240, bottom: 20, left: 150 };
+    // 반응형 크기 계산
+    const containerWidth = svgRef.current.parentElement?.clientWidth || 1000;
+    const width = containerWidth; // 컴포넌트에 맞게 조정
+    const height = window.innerWidth < 768 ? 180 : 220; // 레전드를 위해 높이 증가
+    const margin = {
+      top: 60, // 레전드 공간을 위해 증가
+      right: window.innerWidth < 768 ? 40 : 60,
+      bottom: 20,
+      left: window.innerWidth < 768 ? 80 : 100 // 개발자 이름이 보이도록 여백 확보
+    };
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
     const barHeight = 10;
@@ -123,7 +130,7 @@ const TimelineVisualization = ({
       .scaleBand()
       .domain(users)
       .range([0, chartHeight])
-      .padding(0.3);
+      .padding(0.9);
 
     // Add gradients (original DeveloperTimeline style)
     const defs = svg.append('defs');
@@ -194,7 +201,7 @@ const TimelineVisualization = ({
       .call(d3.axisLeft(yScale).tickFormat((d) => (d as string).split('@')[0]))
       .selectAll('text')
       .style('fill', '#f0f0f0')
-      .style('font-size', '9px');
+      .style('font-size', '12px');
 
     // AIDD color scale (original style) - 모든 유형 포함
     const aiddColors = d3.schemeSet2.concat(d3.schemeSet3).slice(0, 10);
@@ -269,10 +276,10 @@ const TimelineVisualization = ({
               const fingertimeProgress =
                 fingertimeEnd > fingertimeStart
                   ? Math.min(
-                      1,
-                      (currentMinutes - fingertimeStart) /
-                        (fingertimeEnd - fingertimeStart),
-                    )
+                    1,
+                    (currentMinutes - fingertimeStart) /
+                    (fingertimeEnd - fingertimeStart),
+                  )
                   : 1;
 
               // Calculate current bubble sizes based on progress
@@ -343,7 +350,7 @@ const TimelineVisualization = ({
 
     const legend = svg
       .append('g')
-      .attr('transform', `translate(${margin.left}, 8)`); // 상단으로 이동
+      .attr('transform', `translate(10, 15)`); // 레전드를 더 왼쪽으로 이동
 
     const legendItems = [
       { label: 'Fingertime', color: '#0bd1b9', shape: 'rect' },
@@ -393,7 +400,7 @@ const TimelineVisualization = ({
   }, [projectIndex, currentTime]);
 
   return (
-    <div className="w-full h-52 overflow-visible">  {/* Increased height to h-52 for larger visualization */}
+    <div className="w-full h-52 md:h-56 overflow-x-auto overflow-y-visible">
       <svg ref={svgRef}></svg>
     </div>
   );
@@ -411,7 +418,7 @@ export default function App() {
 
     let seconds = 0;
     const id = setInterval(() => {
-      seconds += 20; // 20초씩 증가 (더 빠르게)
+      seconds += 60; // 60초씩 증가 (매우 빠르게)
       const hours = 16 + Math.floor(seconds / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
       const secs = seconds % 60;
@@ -424,7 +431,7 @@ export default function App() {
         setIsPlaying(false);
         setIntervalId(null);
       }
-    }, 50); // 50ms마다 업데이트 (더 부드럽게)
+    }, 20); // 20ms마다 업데이트 (매우 빠르고 부드럽게)
 
     setIntervalId(id);
   };
@@ -445,12 +452,12 @@ export default function App() {
   const projectKeys = Object.keys(realData);
 
   return (
-    <div className="w-full overflow-auto bg-gradient-to-r from-[#1c1b47] via-[rgb(35,38,100)] to-[#2f1b47] p-8 min-h-screen">
-      <div className="px-4 mx-auto max-w-none">
+    <div className="w-full overflow-auto bg-gradient-to-r from-[#1c1b47] via-[rgb(35,38,100)] to-[#2f1b47] p-4 md:p-8 min-h-screen">
+      <div className="px-2 md:px-4 mx-auto max-w-none">
         {' '}
         {/* Removed max-width constraint for wider layout */}
-        <div className="relative mb-8">
-          <h1 className="text-3xl font-bold text-center text-white">
+        <div className="relative mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-center text-white">
             AIDD Monitoring Tool
           </h1>
           {/* Navigation Button to Developer Timeline */}
@@ -458,7 +465,7 @@ export default function App() {
             onClick={() => navigate('/developer-timeline')}
             className="absolute top-0 right-0 flex items-center gap-2 px-4 py-2 text-white transition-all bg-purple-600 rounded-lg hover:bg-purple-700"
             title="Switch to Developer Timeline View">
-            <span className="text-sm font-medium">Timeline View</span>
+            <span className="text-sm font-medium">All Data</span>
             <svg
               className="w-5 h-5"
               fill="none"
@@ -473,22 +480,22 @@ export default function App() {
             </svg>
           </button>
         </div>
-        <div className="flex items-center justify-center gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 md:gap-4 mb-6 md:mb-8">
           <button
             onClick={isPlaying ? stopAnimation : startAnimation}
-            className="px-6 py-2 text-white transition-all bg-blue-600 rounded hover:bg-blue-700">
+            className="px-4 md:px-6 py-2 text-sm md:text-base text-white transition-all bg-blue-600 rounded hover:bg-blue-700">
             {isPlaying ? 'Stop' : 'Start'}
           </button>
           <button
             onClick={resetAnimation}
-            className="px-6 py-2 text-white transition-all bg-gray-600 rounded hover:bg-gray-700">
+            className="px-4 md:px-6 py-2 text-sm md:text-base text-white transition-all bg-gray-600 rounded hover:bg-gray-700">
             Reset
           </button>
-          <div className="px-4 py-2 text-white bg-gray-800 rounded">
+          <div className="px-3 md:px-4 py-2 text-xs md:text-sm text-white bg-gray-800 rounded">
             Current Time: {currentTime}
           </div>
         </div>
-        <div className="space-y-6">
+        <div className="space-y-4 md:space-y-6">
           {projectKeys.map((projectKey, index) => {
             const projectData = realData[projectKey];
 
@@ -571,7 +578,7 @@ export default function App() {
               const itemProgress = Math.min(
                 1,
                 (currentMinutes - itemStartMinutes) /
-                  (item.end - itemStartMinutes),
+                (item.end - itemStartMinutes),
               );
 
               item.bubbles.forEach((bubble) => {
@@ -590,61 +597,52 @@ export default function App() {
 
             return (
               <div className="flex justify-center w-full" key={projectKey}>
-                <div className="w-[1600px] mx-auto p-6 border border-gray-700 rounded-lg bg-gray-900/50">
+                <div className="w-full max-w-[1600px] mx-auto p-4 md:p-6 border border-gray-700 rounded-lg bg-gray-900/50 overflow-hidden">
                   {' '}
                   {/* Increased width and padding */}
-                  <h2 className="mb-4 text-lg font-bold text-white">
-                    {projectKey}
+                  <h2 className="mb-3 text-lg font-bold text-white">
+                    {projectData.team_name}
                   </h2>
                   <div className="w-full overflow-x-auto">
-                    <div className="flex items-center gap-8 min-w-max">
+                    <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-6 min-w-max">
                       {' '}
                       {/* Increased gap from 6 to 8 */}
-                      <div className="flex-1 min-w-[1000px]">
-                        {' '}
-                        {/* Added minimum width for timeline */}
-                        <h3 className="mb-2 text-sm text-gray-300">
-                          Work Breakdown
-                        </h3>
+                      <div className="w-full lg:flex-1">
                         <TimelineVisualization
                           projectIndex={index}
                           currentTime={currentTime}
                         />
                       </div>
-                      <div className="flex-shrink-0 w-36">
-                        {' '}
-                        {/* Increased width from w-32 to w-36 */}
+                      <div className="flex-shrink-0 w-full sm:w-32 lg:w-36">
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           F/B Breakdown
                         </h3>
-                        <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded bg-gradient-to-br from-teal-600 to-teal-700">
-                          <div className="mb-1 text-xs text-teal-100">
+                        <div className="flex flex-col justify-center h-20 md:h-24 p-3 md:p-4 text-center text-white rounded bg-gradient-to-br from-teal-600 to-teal-700">
+                          <div className="mb-2 text-xs text-teal-100">
                             Finger/Brain
                           </div>
-                          <div className="text-lg font-bold leading-none">
+                          <div className="text-lg font-bold leading-tight">
                             {fingertimePercent}% / {braintimePercent}%
                           </div>
                         </div>
                       </div>
-                      <div className="flex-shrink-0 w-44">
-                        {' '}
-                        {/* Increased width from w-36 to w-44 for longer AIDD names */}
-                        <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
+                      <div className="flex-shrink-0 w-full sm:w-40 lg:w-48">
+                        <h3 className="flex items-center h-4 mb-1 text-sm text-gray-300">
                           AI Breakdown
                         </h3>
-                        <div className="flex flex-col justify-center h-20 p-2 text-center text-white rounded bg-gradient-to-br from-blue-600 to-blue-700">
-                          {' '}
-                          {/* Reduced padding for more space */}
-                          <div className="mb-1 text-xs text-blue-100">
-                            상위 3개
+                        <div className="flex flex-col justify-center h-20 md:h-24 p-2 md:p-3 text-center text-white rounded bg-gradient-to-br from-blue-600 to-blue-700">
+                          <div className="mb-2 text-sm text-blue-100">
+                            상위 기능
                           </div>
-                          <div className="space-y-0.5">
-                            {aiCounts.slice(0, 3).map(([type, count], idx) => (
-                              <div key={type} className="text-xs leading-tight">
-                                {`${idx + 1}. ${type.replace('Recommend', '')}: ${count}`}
-                                {/* Changed to leading-tight for better line spacing */}
-                              </div>
-                            ))}
+                          <div className="space-y-1">
+                            {aiCounts.slice(0, 3).map(([type, count], idx) => {
+                              const shortType = type.replace('Recommend', '');
+                              return (
+                                <div key={type} className="text-xs md:text-sm leading-relaxed break-words">
+                                  {`${idx + 1}. ${shortType}: ${count}`}
+                                </div>
+                              );
+                            })}
                             {aiCounts.length === 0 && (
                               <div className="text-xs text-blue-200">
                                 No data yet
@@ -653,29 +651,25 @@ export default function App() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex-shrink-0 w-36">
-                        {' '}
-                        {/* Increased width from w-32 to w-36 */}
+                      <div className="flex-shrink-0 w-full sm:w-32 lg:w-36">
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           Task Completion
                         </h3>
-                        <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded bg-gradient-to-br from-teal-700 to-teal-800">
-                          <div className="text-lg font-bold leading-none">
+                        <div className="flex flex-col justify-center h-20 md:h-24 p-3 md:p-4 text-center text-white rounded bg-gradient-to-br from-teal-700 to-teal-800">
+                          <div className="text-lg font-bold leading-tight">
                             {currentTasks}/{maxTasks}건
                           </div>
-                          <div className="mt-1 text-xs text-teal-200">
+                          <div className="mt-2 text-xs text-teal-200">
                             {Math.round(progress * 100)}%
                           </div>
                         </div>
                       </div>
-                      <div className="flex-shrink-0 w-36">
-                        {' '}
-                        {/* Increased width from w-32 to w-36 */}
+                      <div className="flex-shrink-0 w-full sm:w-32 lg:w-36">
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           Expected Quality
                         </h3>
-                        <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded bg-gradient-to-br from-blue-700 to-blue-800">
-                          <div className="text-lg font-bold leading-none">
+                        <div className="flex flex-col justify-center h-20 md:h-24 p-3 md:p-4 text-center text-white rounded bg-gradient-to-br from-blue-700 to-blue-800">
+                          <div className="text-lg font-bold leading-tight">
                             {currentQuality}점
                           </div>
                         </div>
