@@ -456,12 +456,20 @@ export default function App() {
           {/* Navigation Button to Developer Timeline */}
           <button
             onClick={() => navigate('/developer-timeline')}
-            className="absolute right-0 top-0 flex items-center gap-2 px-4 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-all"
-            title="Switch to Developer Timeline View"
-          >
+            className="absolute top-0 right-0 flex items-center gap-2 px-4 py-2 text-white transition-all bg-purple-600 rounded-lg hover:bg-purple-700"
+            title="Switch to Developer Timeline View">
             <span className="text-sm font-medium">Timeline View</span>
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
             </svg>
           </button>
         </div>
@@ -582,7 +590,7 @@ export default function App() {
 
             return (
               <div className="flex justify-center w-full" key={projectKey}>
-                <div className="w-[1800px] mx-auto p-6 border border-gray-700 rounded-lg bg-gray-900/50">
+                <div className="w-[1600px] mx-auto p-6 border border-gray-700 rounded-lg bg-gray-900/50">
                   {' '}
                   {/* Increased width and padding */}
                   <h2 className="mb-3 text-lg font-bold text-white">
