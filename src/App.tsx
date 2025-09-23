@@ -408,10 +408,6 @@ export default function App() {
             const currentTasks = Math.floor(progress * maxTasks);
             const currentQuality = Math.floor(progress * maxQuality);
             
-            // F/B breakdown based on progress
-            const fingertimeCount = Math.floor(progress * (index + 3));
-            const braintimeCount = Math.floor(progress * (index + 1));
-            
             // AI breakdown based on progress - 해당 프로젝트의 실제 AIDD 사용량 계산
             // TimelineVisualization에서 정의된 projectData에 접근하기 위해 동일한 구조 사용
             const projectTeamData = [
@@ -424,12 +420,14 @@ export default function App() {
                   { type: 'QueryMakerRecommend', count: 2 }
                 ]},
                 { start: 30, end: 45, type: 'braintime', user: 'dev1@team061.com', bubbles: [] },
+                { start: 45, end: 55, type: 'closetime', user: 'dev1@team061.com', bubbles: [] },
                 { start: 10, end: 60, type: 'fingertime', user: 'dev2@team061.com', bubbles: [
                   { type: 'RevisionMaker', count: 5 }, 
                   { type: 'AIPlayRecommend', count: 3 },
                   { type: 'CommentRecommend', count: 2 },
                   { type: 'TestCaseRecommend', count: 1 }
                 ]},
+                { start: 60, end: 75, type: 'braintime', user: 'dev2@team061.com', bubbles: [] },
               ],
               // Project 02  
               [
@@ -438,6 +436,8 @@ export default function App() {
                   { type: 'RevisionMaker', count: 2 },
                   { type: 'AIPlayRecommend', count: 1 }
                 ]},
+                { start: 35, end: 50, type: 'braintime', user: 'dev1@team116.com', bubbles: [] },
+                { start: 50, end: 60, type: 'closetime', user: 'dev1@team116.com', bubbles: [] },
                 { start: 15, end: 90, type: 'fingertime', user: 'dev2@team116.com', bubbles: [
                   { type: 'RevisionMaker', count: 6 }, 
                   { type: 'Query2CodeRecommend', count: 3 },
@@ -445,6 +445,7 @@ export default function App() {
                   { type: 'TestCaseRecommend', count: 4 },
                   { type: 'AIPlayRecommend', count: 1 }
                 ]},
+                { start: 90, end: 105, type: 'braintime', user: 'dev2@team116.com', bubbles: [] },
               ],
               // Project 03
               [
@@ -453,6 +454,8 @@ export default function App() {
                   { type: 'QueryMakerRecommend', count: 1 },
                   { type: 'RevisionMaker', count: 1 }
                 ]},
+                { start: 40, end: 55, type: 'braintime', user: 'dev1@team073.com', bubbles: [] },
+                { start: 55, end: 65, type: 'closetime', user: 'dev1@team073.com', bubbles: [] },
                 { start: 20, end: 105, type: 'fingertime', user: 'dev2@team073.com', bubbles: [
                   { type: 'RevisionMaker', count: 4 }, 
                   { type: 'QueryMakerRecommend', count: 2 },
@@ -460,10 +463,44 @@ export default function App() {
                   { type: 'Query2CodeRecommend', count: 2 },
                   { type: 'TestCaseRecommend', count: 1 }
                 ]},
+                { start: 105, end: 120, type: 'braintime', user: 'dev2@team073.com', bubbles: [] },
               ]
             ];
             
             const currentProjectData = projectTeamData[index];
+            
+            // F/B breakdown based on actual data - Calculate actual fingertime and braintime durations
+            let totalFingertimeDuration = 0;
+            let totalBraintimeDuration = 0;
+            let totalClosetimeDuration = 0;
+            
+            currentProjectData.forEach(item => {
+              const itemStartMinutes = item.start;
+              const itemEndMinutes = item.end;
+              
+              if (itemStartMinutes <= currentMinutes) {
+                const actualEndMinutes = Math.min(itemEndMinutes, currentMinutes);
+                const duration = Math.max(0, actualEndMinutes - itemStartMinutes);
+                
+                if (item.type === 'fingertime') {
+                  totalFingertimeDuration += duration;
+                } else if (item.type === 'braintime') {
+                  totalBraintimeDuration += duration;
+                } else if (item.type === 'closetime') {
+                  totalClosetimeDuration += duration;
+                }
+              }
+            });
+            
+            // Count of activities (keeping the original logic for counts)
+            const fingertimeCount = Math.floor(progress * (index + 3));
+            const braintimeCount = Math.floor(progress * (index + 1));
+            
+            // Calculate percentages (excluding closetime)
+            const totalActiveTime = totalFingertimeDuration + totalBraintimeDuration;
+            const fingertimePercent = totalActiveTime > 0 ? Math.round((totalFingertimeDuration / totalActiveTime) * 100) : 0;
+            const braintimePercent = totalActiveTime > 0 ? Math.round((totalBraintimeDuration / totalActiveTime) * 100) : 0;
+            
             const relevantFingertime = currentProjectData.filter(item => {
               const itemStartMinutes = item.start;
               return item.type === 'fingertime' && itemStartMinutes <= currentMinutes;
@@ -504,6 +541,7 @@ export default function App() {
                     <div className="bg-gradient-to-br from-teal-600 to-teal-700 rounded p-3 text-center text-white h-20 flex flex-col justify-center">
                       <div className="text-xs text-teal-100 mb-1">Finger/Brain</div>
                       <div className="text-lg font-bold leading-none">{fingertimeCount} / {braintimeCount}</div>
+                      <div className="text-xs text-teal-100 mt-1 leading-none">{fingertimePercent}% / {braintimePercent}%</div>
                     </div>
                   </div>
 
