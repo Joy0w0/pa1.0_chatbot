@@ -504,9 +504,16 @@ export default function App() {
             const currentMinutes = (hours - 16) * 60 + minutes + seconds / 60;
             const progress = Math.max(0, Math.min(1, currentMinutes / 120)); // 120 minutes from 16:00 to 18:00
 
-            const maxTasks = projectData.max_tasks;
+            const maxTasks = 100; // 모든 프로젝트 100건으로 통일
             const maxQuality = projectData.max_quality;
-            const currentTasks = Math.floor(progress * maxTasks);
+            let currentTasks;
+            if (projectKey === 'Project01') {
+              currentTasks = 96; // Project01은 96건으로 고정
+            } else if (projectKey === 'Project02') {
+              currentTasks = 77; // Project02는 77건으로 고정
+            } else {
+              currentTasks = 60; // Project03은 60건으로 고정
+            }
             const currentQuality = Math.floor(progress * maxQuality);
 
             // Calculate real-time F/B breakdown based on actual CSV data
@@ -650,7 +657,7 @@ export default function App() {
                             {currentTasks}/{maxTasks}건
                           </div>
                           <div className="mt-2 text-xs text-teal-200">
-                            {Math.round(progress * 100)}%
+                            {currentTasks}%
                           </div>
                         </div>
                       </div>
