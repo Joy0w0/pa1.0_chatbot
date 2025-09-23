@@ -38,7 +38,29 @@ type ProcessedData = {
   [projectName: string]: ProjectData;
 };
 
-const realData: ProcessedData = processedData as ProcessedData;
+// Parse and validate the data structure
+const validateTopAIDDTypes = (data: any[]): [string, number][] => {
+  return data.map(([type, count]) => [String(type), Number(count)]);
+};
+
+const realData: ProcessedData = Object.entries(processedData).reduce(
+  (acc, [key, value]) => {
+    const projectData = value as any;
+    return {
+      ...acc,
+      [key]: {
+        ...projectData,
+        summary: {
+          ...projectData.summary,
+          top_aidd_types: validateTopAIDDTypes(
+            projectData.summary.top_aidd_types,
+          ),
+        },
+      },
+    };
+  },
+  {} as ProcessedData,
+);
 
 const TimelineVisualization = ({
   projectIndex,
@@ -66,13 +88,13 @@ const TimelineVisualization = ({
     // Convert current time to minutes from 16:00
     const [hours, minutes, seconds] = currentTime.split(':').map(Number);
     const currentMinutes = (hours - 16) * 60 + minutes + seconds / 60;
-    const totalMinutes = 120; // 16:00 to 18:00
+    // Total duration in minutes (16:00 to 18:00)
 
     // Get project data from real data
     const projectKeys = Object.keys(realData);
     const projectKey = projectKeys[projectIndex];
     const projectData = realData[projectKey];
-    
+
     if (!projectData) return;
 
     const data = projectData.timeline_data;
@@ -187,7 +209,7 @@ const TimelineVisualization = ({
     data.forEach((item) => {
       const userY = yScale(item.user);
       if (!userY) return;
-      
+
       const barY = userY + (yScale.bandwidth() - barHeight) / 2;
       const centerY = barY + barHeight / 2;
 
@@ -259,27 +281,28 @@ const TimelineVisualization = ({
               }));
 
               const radii = currentBubbles.map(
-                (bubble) => 8 + Math.sqrt(Math.max(1, bubble.currentCount)) * 2.5,  // Adjusted bubble size calculation
+                (bubble) =>
+                  8 + Math.sqrt(Math.max(1, bubble.currentCount)) * 2.5, // Adjusted bubble size calculation
               );
               const totalBubbleWidth = radii.reduce(
-                (sum, r) => sum + r * 2 + 10,  // Increased spacing between bubbles
+                (sum, r) => sum + r * 2 + 10, // Increased spacing between bubbles
                 -10,
               );
               const scale =
                 totalBubbleWidth > barWidth
-                  ? Math.max(0.8, barWidth / totalBubbleWidth)  // Better minimum scale
+                  ? Math.max(0.8, barWidth / totalBubbleWidth) // Better minimum scale
                   : 1;
 
               // 버블을 막대 위에 균등하게 분배
-              let currentBubbleX = startX;
+              // Position bubbles along the bar
 
               const visibleBubbles = currentBubbles.filter(
                 (bubble) => bubble.currentCount > 0,
               );
 
               visibleBubbles.forEach((bubble, index) => {
-                const rawR = 8 + Math.sqrt(bubble.currentCount) * 2.5;  // Consistent with radii calculation
-                const r = Math.max(8, rawR * scale);  // Minimum radius increased
+                const rawR = 8 + Math.sqrt(bubble.currentCount) * 2.5; // Consistent with radii calculation
+                const r = Math.max(8, rawR * scale); // Minimum radius increased
 
                 // 버블을 막대 위에 균등하게 배치
                 const bubbleSpacing = barWidth / (visibleBubbles.length + 1);
@@ -333,7 +356,7 @@ const TimelineVisualization = ({
 
     // 가로로 배치하기 위한 계산
     let currentX = 0;
-    legendItems.forEach((item, i) => {
+    legendItems.forEach((item) => {
       const x = currentX;
       const y = 0;
 
@@ -354,7 +377,7 @@ const TimelineVisualization = ({
           .attr('fill', item.color);
       }
 
-      const text = legend
+      legend
         .append('text')
         .attr('x', x + 16)
         .attr('y', y + 4)
@@ -421,11 +444,12 @@ export default function App() {
 
   return (
     <div className="w-full overflow-auto bg-gradient-to-r from-[#1c1b47] via-[rgb(35,38,100)] to-[#2f1b47] p-8 min-h-screen">
-      <div className="mx-auto max-w-none px-4">  {/* Removed max-width constraint for wider layout */
+      <div className="px-4 mx-auto max-w-none">
+        {' '}
+        {/* Removed max-width constraint for wider layout */}
         <h1 className="mb-8 text-3xl font-bold text-center text-white">
           AIDD Monitoring Tool - Real Data
         </h1>
-
         <div className="flex items-center justify-center gap-4 mb-8">
           <button
             onClick={isPlaying ? stopAnimation : startAnimation}
@@ -441,11 +465,10 @@ export default function App() {
             Current Time: {currentTime}
           </div>
         </div>
-
         <div className="space-y-6">
           {projectKeys.map((projectKey, index) => {
             const projectData = realData[projectKey];
-            
+
             // Calculate progress based on current time
             const [hours, minutes, seconds] = currentTime
               .split(':')
@@ -492,9 +515,7 @@ export default function App() {
               totalFingertimeDuration + totalBraintimeDuration;
             const fingertimePercent =
               totalActiveTime > 0
-                ? Math.round(
-                    (totalFingertimeDuration / totalActiveTime) * 100,
-                  )
+                ? Math.round((totalFingertimeDuration / totalActiveTime) * 100)
                 : 0;
             const braintimePercent =
               totalActiveTime > 0
@@ -503,25 +524,27 @@ export default function App() {
 
             // Count of activities for display
             const fingertimeEntries = projectData.timeline_data.filter(
-              (item) => item.type === 'fingertime' && item.start <= currentMinutes
+              (item) =>
+                item.type === 'fingertime' && item.start <= currentMinutes,
             ).length;
             const braintimeEntries = projectData.timeline_data.filter(
-              (item) => item.type === 'braintime' && item.start <= currentMinutes
+              (item) =>
+                item.type === 'braintime' && item.start <= currentMinutes,
             ).length;
 
             // Calculate real-time AIDD usage
-            const relevantFingertime = projectData.timeline_data.filter((item) => {
-              return (
-                item.type === 'fingertime' &&
-                item.start <= currentMinutes
-              );
-            });
+            const relevantFingertime = projectData.timeline_data.filter(
+              (item) => {
+                return (
+                  item.type === 'fingertime' && item.start <= currentMinutes
+                );
+              },
+            );
 
             // 모든 AIDD 유형별 누적 카운트 계산
             const aiddTotals: { [key: string]: number } = {};
             relevantFingertime.forEach((item) => {
               const itemStartMinutes = item.start;
-              const itemEndMinutes = Math.min(item.end, currentMinutes);
               const itemProgress = Math.min(
                 1,
                 (currentMinutes - itemStartMinutes) /
@@ -544,17 +567,25 @@ export default function App() {
 
             return (
               <div className="flex justify-center w-full" key={projectKey}>
-                <div className="w-[1800px] mx-auto p-6 border border-gray-700 rounded-lg bg-gray-900/50">  {/* Increased width and padding */
+                <div className="w-[1800px] mx-auto p-6 border border-gray-700 rounded-lg bg-gray-900/50">
+                  {' '}
+                  {/* Increased width and padding */}
                   <h2 className="mb-3 text-lg font-bold text-white">
                     {projectKey} ({projectData.team_name})
                   </h2>
                   <div className="mb-2 text-sm text-gray-400">
-                    Developers: {projectData.developers.map(email => email.split('@')[0]).join(', ')}
+                    Developers:{' '}
+                    {projectData.developers
+                      .map((email) => email.split('@')[0])
+                      .join(', ')}
                   </div>
-
                   <div className="w-full overflow-x-auto">
-                    <div className="flex items-center gap-8 min-w-max">  {/* Increased gap from 6 to 8 */
-                      <div className="flex-1 min-w-[1000px]">  {/* Added minimum width for timeline */
+                    <div className="flex items-center gap-8 min-w-max">
+                      {' '}
+                      {/* Increased gap from 6 to 8 */}
+                      <div className="flex-1 min-w-[1000px]">
+                        {' '}
+                        {/* Added minimum width for timeline */}
                         <h3 className="mb-2 text-sm text-gray-300">
                           Work Breakdown - Timeline
                         </h3>
@@ -563,8 +594,9 @@ export default function App() {
                           currentTime={currentTime}
                         />
                       </div>
-
-                      <div className="flex-shrink-0 w-36">  {/* Increased width from w-32 to w-36 */
+                      <div className="flex-shrink-0 w-36">
+                        {' '}
+                        {/* Increased width from w-32 to w-36 */}
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           F/B Breakdown
                         </h3>
@@ -580,8 +612,9 @@ export default function App() {
                           </div>
                         </div>
                       </div>
-
-                      <div className="flex-shrink-0 w-36">  {/* Increased width from w-32 to w-36 */
+                      <div className="flex-shrink-0 w-36">
+                        {' '}
+                        {/* Increased width from w-32 to w-36 */}
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           AI Breakdown
                         </h3>
@@ -590,17 +623,13 @@ export default function App() {
                             상위 3개
                           </div>
                           <div className="space-y-0.5">
-                            {aiCounts
-                              .slice(0, 3)
-                              .map(([type, count], idx) => (
-                                <div
-                                  key={type}
-                                  className="text-xs leading-none">
-                                  {idx + 1}.{' '}
-                                  {type.replace('Recommend', '').slice(0, 6)}:{' '}
-                                  {count}
-                                </div>
-                              ))}
+                            {aiCounts.slice(0, 3).map(([type, count], idx) => (
+                              <div key={type} className="text-xs leading-none">
+                                {idx + 1}.{' '}
+                                {type.replace('Recommend', '').slice(0, 6)}:{' '}
+                                {count}
+                              </div>
+                            ))}
                             {aiCounts.length === 0 && (
                               <div className="text-xs text-blue-200">
                                 No data yet
@@ -609,8 +638,9 @@ export default function App() {
                           </div>
                         </div>
                       </div>
-
-                      <div className="flex-shrink-0 w-36">  {/* Increased width from w-32 to w-36 */
+                      <div className="flex-shrink-0 w-36">
+                        {' '}
+                        {/* Increased width from w-32 to w-36 */}
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           Task Completion
                         </h3>
@@ -623,8 +653,9 @@ export default function App() {
                           </div>
                         </div>
                       </div>
-
-                      <div className="flex-shrink-0 w-36">  {/* Increased width from w-32 to w-36 */
+                      <div className="flex-shrink-0 w-36">
+                        {' '}
+                        {/* Increased width from w-32 to w-36 */}
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           Expected Quality
                         </h3>
