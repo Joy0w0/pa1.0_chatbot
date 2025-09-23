@@ -451,7 +451,7 @@ export default function App() {
         {/* Removed max-width constraint for wider layout */}
         <div className="relative mb-8">
           <h1 className="text-3xl font-bold text-center text-white">
-            AIDD Monitoring Tool - Real Data
+            AIDD Monitoring Tool
           </h1>
           {/* Navigation Button to Developer Timeline */}
           <button
