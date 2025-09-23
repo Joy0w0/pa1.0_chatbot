@@ -1097,7 +1097,7 @@
       }
     },
     "max_quality": 77,
-    "max_tasks": 96
+    "max_tasks": 100
   },
   "Project02": {
     "team_name": "Project02",
@@ -2276,7 +2276,7 @@
       }
     },
     "max_quality": 41,
-    "max_tasks": 77
+    "max_tasks": 100
   },
   "Project03": {
     "team_name": "Project03",
@@ -3275,6 +3275,6 @@
       }
     },
     "max_quality": 11,
-    "max_tasks": 60
+    "max_tasks": 100
   }
 }
