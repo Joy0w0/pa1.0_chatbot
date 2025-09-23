@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as d3 from 'd3';
 import processedData from '../../processed_team_data.json';
 
@@ -399,6 +400,7 @@ const TimelineVisualization = ({
 };
 
 export default function App() {
+  const navigate = useNavigate();
   const [currentTime, setCurrentTime] = useState('16:00:00');
   const [isPlaying, setIsPlaying] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
@@ -447,9 +449,22 @@ export default function App() {
       <div className="px-4 mx-auto max-w-none">
         {' '}
         {/* Removed max-width constraint for wider layout */}
-        <h1 className="mb-8 text-3xl font-bold text-center text-white">
-          AIDD Monitoring Tool - Real Data
-        </h1>
+        <div className="relative mb-8">
+          <h1 className="text-3xl font-bold text-center text-white">
+            AIDD Monitoring Tool - Real Data
+          </h1>
+          {/* Navigation Button to Developer Timeline */}
+          <button
+            onClick={() => navigate('/developer-timeline')}
+            className="absolute right-0 top-0 flex items-center gap-2 px-4 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-all"
+            title="Switch to Developer Timeline View"
+          >
+            <span className="text-sm font-medium">Timeline View</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </button>
+        </div>
         <div className="flex items-center justify-center gap-4 mb-8">
           <button
             onClick={isPlaying ? stopAnimation : startAnimation}

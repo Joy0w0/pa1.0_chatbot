@@ -3,6 +3,7 @@
 import * as d3 from 'd3';
 import Papa from 'papaparse';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface Row {
   team_name: string;
@@ -16,6 +17,7 @@ interface Row {
 }
 
 export default function DeveloperTimeline() {
+  const navigate = useNavigate();
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [data, setData] = useState<Row[]>([]);
 
@@ -311,9 +313,22 @@ export default function DeveloperTimeline() {
 
   return (
     <div className="w-full overflow-auto bg-gradient-to-r from-[#1c1b47] via-[rgb(35,38,100)] to-[#2f1b47] p-8 min-h-screen">
-      <h1 className="justify-center text-2xl font-bold text-center text-white">
-        개발자 Fingertime / Braintime 및 AIDD 사용 시각화
-      </h1>
+      <div className="relative mb-8">
+        <h1 className="text-2xl font-bold text-center text-white">
+          개발자 Fingertime / Braintime 및 AIDD 사용 시각화
+        </h1>
+        {/* Navigation Button to AIDD Monitoring Tool */}
+        <button
+          onClick={() => navigate('/aidd-monitoring')}
+          className="absolute left-0 top-0 flex items-center gap-2 px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700 transition-all"
+          title="Switch to AIDD Monitoring Tool"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+          </svg>
+          <span className="text-sm font-medium">Monitoring Tool</span>
+        </button>
+      </div>
       <svg ref={svgRef}></svg>
     </div>
   );
