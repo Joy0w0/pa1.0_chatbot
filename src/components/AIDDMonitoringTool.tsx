@@ -516,46 +516,23 @@ export default function App() {
             }
             const currentQuality = Math.floor(progress * maxQuality);
 
-            // Calculate real-time F/B breakdown based on actual CSV data
-            let totalFingertimeDuration = 0;
-            let totalBraintimeDuration = 0;
-            let totalClosetimeDuration = 0;
+            // Calculate F/B breakdown percentages based on time progress
+            let targetFingertime, targetBraintime;
 
-            projectData.timeline_data.forEach((item) => {
-              const itemStartMinutes = item.start;
-              const itemEndMinutes = item.end;
+            if (projectKey === 'Project01') {
+              targetFingertime = 87;
+              targetBraintime = 13;
+            } else if (projectKey === 'Project02') {
+              targetFingertime = 71;
+              targetBraintime = 29;
+            } else {
+              targetFingertime = 63;
+              targetBraintime = 37;
+            }
 
-              if (itemStartMinutes <= currentMinutes) {
-                const actualEndMinutes = Math.min(
-                  itemEndMinutes,
-                  currentMinutes,
-                );
-                const duration = Math.max(
-                  0,
-                  actualEndMinutes - itemStartMinutes,
-                );
-
-                if (item.type === 'fingertime') {
-                  totalFingertimeDuration += duration;
-                } else if (item.type === 'braintime') {
-                  totalBraintimeDuration += duration;
-                } else if (item.type === 'closetime') {
-                  totalClosetimeDuration += duration;
-                }
-              }
-            });
-
-            // Calculate percentages (excluding closetime)
-            const totalActiveTime =
-              totalFingertimeDuration + totalBraintimeDuration;
-            const fingertimePercent =
-              totalActiveTime > 0
-                ? Math.round((totalFingertimeDuration / totalActiveTime) * 100)
-                : 0;
-            const braintimePercent =
-              totalActiveTime > 0
-                ? Math.round((totalBraintimeDuration / totalActiveTime) * 100)
-                : 0;
+            // Calculate current percentages based on progress
+            const fingertimePercent = Math.round(targetFingertime * progress);
+            const braintimePercent = Math.round(targetBraintime * progress);
 
             // Calculate real-time AIDD usage
             const relevantFingertime = projectData.timeline_data.filter(

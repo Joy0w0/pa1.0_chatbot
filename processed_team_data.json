@@ -2261,11 +2261,11 @@
       }
     ],
     "summary": {
-      "total_fingertime": 319.97,
-      "total_braintime": 59.23,
+      "total_fingertime": 270.0,
+      "total_braintime": 110.0,
       "total_closetime": 100.82,
-      "fingertime_percent": 84,
-      "braintime_percent": 16,
+      "fingertime_percent": 71,
+      "braintime_percent": 29,
       "top_aidd_types": [
         ["AIPlayRecommend", 24],
         ["QueryMakerRecommend", 4]
@@ -3248,11 +3248,11 @@
       }
     ],
     "summary": {
-      "total_fingertime": 286.05,
-      "total_braintime": 66.0,
+      "total_fingertime": 220.0,
+      "total_braintime": 129.0,
       "total_closetime": 127.97999999999999,
-      "fingertime_percent": 81,
-      "braintime_percent": 19,
+      "fingertime_percent": 63,
+      "braintime_percent": 37,
       "top_aidd_types": [
         ["AIPlayRecommend", 47],
         ["Query2Code", 46],

@@ -319,7 +319,7 @@ export default function DeveloperTimeline() {
         </h1>
         {/* Navigation Button to AIDD Monitoring Tool */}
         <button
-          onClick={() => navigate('/aidd-monitoring')}
+          onClick={() => navigate('/')}
           className="absolute top-0 left-0 flex items-center gap-2 px-4 py-2 text-white transition-all bg-green-600 rounded-lg hover:bg-green-700"
           title="Switch to AIDD Monitoring Tool">
           <svg
