@@ -1,513 +1,260 @@
-'use client';
-
+import { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import Papa from 'papaparse';
-import { useEffect, useRef, useState, useCallback } from 'react';
 
-interface Row {
-  team_name: string;
-  email: string;
-  start_time: string;
-  end_time: string;
-  duration: number;
-  type: 'fingertime' | 'braintime' | 'close_time';
-  aidd_count: number;
-  recommend_types: string;
-}
+const TimelineVisualization = ({
+  projectIndex,
+  currentTime,
+}: {
+  projectIndex: number;
+  currentTime: string;
+}) => {
+  const svgRef = useRef<SVGSVGElement>(null);
 
-interface TeamData {
-  teamName: string;
-  members: Row[];
-  taskCompletion: { completed: number; total: number };
-  expectedQuality: number;
-}
-
-interface TeamStats {
-  fbBreakdown: { fingertime: number; braintime: number };
-  aiBreakdown: { [key: string]: number };
-  taskCompletion: { completed: number; total: number };
-  expectedQuality: number;
-}
-
-export default function AIDDMonitoringTool() {
-  const [data, setData] = useState<Row[]>([]);
-  const [teams, setTeams] = useState<TeamData[]>([]);
-  const [currentTime, setCurrentTime] = useState<Date | null>(null);
-  const [animatedStats, setAnimatedStats] = useState<{
-    [key: string]: TeamStats;
-  }>({});
-  const [isPlaying, setIsPlaying] = useState(false);
-  const animationRef = useRef<number | null>(null);
-
-  // 팀별 더미 데이터
-  const teamMetrics = {
-    'Project 01': {
-      taskCompletion: { completed: 96, total: 96 },
-      expectedQuality: 32,
-    },
-    'Project 02': {
-      taskCompletion: { completed: 77, total: 77 },
-      expectedQuality: 12,
-    },
-    'Project 03': {
-      taskCompletion: { completed: 45, total: 60 },
-      expectedQuality: 8,
-    },
-  };
-
-  // 데이터 로딩 (현재는 더미 데이터 사용)
   useEffect(() => {
-    console.log('Loading demo data...');
+    if (!svgRef.current) return;
 
-    // 데모용 더미 데이터
-    const dummyData: Row[] = [
-      // TEAM061 데이터
-      {
-        team_name: 'TEAM061',
-        email: 'dev1@team061.com',
-        start_time: '16:00:00',
-        end_time: '16:30:00',
-        duration: 30,
-        type: 'fingertime',
-        aidd_count: 5,
-        recommend_types: '{"Query2CodeRecommend": 2, "AIPlayRecommend": 3}',
-      },
-      {
-        team_name: 'TEAM061',
-        email: 'dev1@team061.com',
-        start_time: '16:30:00',
-        end_time: '16:45:00',
-        duration: 15,
-        type: 'braintime',
-        aidd_count: 0,
-        recommend_types: '{}',
-      },
-      {
-        team_name: 'TEAM061',
-        email: 'dev1@team061.com',
-        start_time: '16:45:00',
-        end_time: '17:15:00',
-        duration: 30,
-        type: 'fingertime',
-        aidd_count: 8,
-        recommend_types: '{"RevisionMaker": 4, "QueryMakerRecommend": 4}',
-      },
-      {
-        team_name: 'TEAM061',
-        email: 'dev2@team061.com',
-        start_time: '16:10:00',
-        end_time: '17:00:00',
-        duration: 50,
-        type: 'fingertime',
-        aidd_count: 12,
-        recommend_types: '{"AIPlayRecommend": 5, "RevisionMaker": 7}',
-      },
-      {
-        team_name: 'TEAM061',
-        email: 'dev2@team061.com',
-        start_time: '17:00:00',
-        end_time: '17:10:00',
-        duration: 10,
-        type: 'braintime',
-        aidd_count: 0,
-        recommend_types: '{}',
-      },
+    // Use D3.js for consistent styling with original DeveloperTimeline
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
 
-      // TEAM116 데이터
-      {
-        team_name: 'TEAM116',
-        email: 'dev1@team116.com',
-        start_time: '16:05:00',
-        end_time: '16:35:00',
-        duration: 30,
-        type: 'fingertime',
-        aidd_count: 6,
-        recommend_types: '{"QueryMakerRecommend": 3, "AIPlayRecommend": 3}',
-      },
-      {
-        team_name: 'TEAM116',
-        email: 'dev1@team116.com',
-        start_time: '16:35:00',
-        end_time: '16:50:00',
-        duration: 15,
-        type: 'braintime',
-        aidd_count: 0,
-        recommend_types: '{}',
-      },
-      {
-        team_name: 'TEAM116',
-        email: 'dev2@team116.com',
-        start_time: '16:15:00',
-        end_time: '17:30:00',
-        duration: 75,
-        type: 'fingertime',
-        aidd_count: 15,
-        recommend_types:
-          '{"RevisionMaker": 8, "Query2CodeRecommend": 4, "AIPlayRecommend": 3}',
-      },
-      {
-        team_name: 'TEAM116',
-        email: 'dev3@team116.com',
-        start_time: '16:25:00',
-        end_time: '17:45:00',
-        duration: 80,
-        type: 'fingertime',
-        aidd_count: 9,
-        recommend_types: '{"AIPlayRecommend": 5, "RevisionMaker": 4}',
-      },
+    const width = 800;
+    const height = 120;
+    const margin = { top: 50, right: 240, bottom: 20, left: 150 };
+    const chartWidth = width - margin.left - margin.right;
+    const chartHeight = height - margin.top - margin.bottom;
+    const barHeight = 10;
 
-      // TEAM073 데이터
-      {
-        team_name: 'TEAM073',
-        email: 'dev1@team073.com',
-        start_time: '16:08:00',
-        end_time: '16:40:00',
-        duration: 32,
-        type: 'fingertime',
-        aidd_count: 4,
-        recommend_types: '{"AIPlayRecommend": 2, "RevisionMakerRecommend": 2}',
-      },
-      {
-        team_name: 'TEAM073',
-        email: 'dev1@team073.com',
-        start_time: '16:40:00',
-        end_time: '17:00:00',
-        duration: 20,
-        type: 'braintime',
-        aidd_count: 0,
-        recommend_types: '{}',
-      },
-      {
-        team_name: 'TEAM073',
-        email: 'dev2@team073.com',
-        start_time: '16:20:00',
-        end_time: '17:45:00',
-        duration: 85,
-        type: 'fingertime',
-        aidd_count: 10,
-        recommend_types: '{"RevisionMaker": 6, "QueryMakerRecommend": 4}',
-      },
-      {
-        team_name: 'TEAM073',
-        email: 'dev3@team073.com',
-        start_time: '16:25:00',
-        end_time: '17:20:00',
-        duration: 55,
-        type: 'fingertime',
-        aidd_count: 7,
-        recommend_types: '{"AIPlayRecommend": 4, "Query2CodeRecommend": 3}',
-      },
+    // Convert current time to minutes from 16:00
+    const [hours, minutes, seconds] = currentTime.split(':').map(Number);
+    const currentMinutes = (hours - 16) * 60 + minutes + seconds / 60;
+    const totalMinutes = 120; // 16:00 to 18:00
+
+    // Sample data for each project (더 많은 AIDD 유형 포함)
+    const projectData = [
+      // Project 01
+      [
+        {
+          start: 0,
+          end: 30,
+          type: 'fingertime',
+          user: 'dev1@team061.com',
+          bubbles: [
+            { type: 'Query2CodeRecommend', count: 3 },
+            { type: 'AIPlayRecommend', count: 2 },
+            { type: 'RevisionMaker', count: 1 },
+            { type: 'QueryMakerRecommend', count: 2 },
+          ],
+        },
+        {
+          start: 30,
+          end: 45,
+          type: 'braintime',
+          user: 'dev1@team061.com',
+          bubbles: [],
+        },
+        {
+          start: 10,
+          end: 60,
+          type: 'fingertime',
+          user: 'dev2@team061.com',
+          bubbles: [
+            { type: 'RevisionMaker', count: 5 },
+            { type: 'AIPlayRecommend', count: 3 },
+            { type: 'CommentRecommend', count: 2 },
+            { type: 'TestCaseRecommend', count: 1 },
+          ],
+        },
+      ],
+      // Project 02
+      [
+        {
+          start: 5,
+          end: 35,
+          type: 'fingertime',
+          user: 'dev1@team116.com',
+          bubbles: [
+            { type: 'QueryMakerRecommend', count: 4 },
+            { type: 'RevisionMaker', count: 2 },
+            { type: 'AIPlayRecommend', count: 1 },
+          ],
+        },
+        {
+          start: 15,
+          end: 90,
+          type: 'fingertime',
+          user: 'dev2@team116.com',
+          bubbles: [
+            { type: 'RevisionMaker', count: 6 },
+            { type: 'Query2CodeRecommend', count: 3 },
+            { type: 'CommentRecommend', count: 2 },
+            { type: 'TestCaseRecommend', count: 4 },
+            { type: 'AIPlayRecommend', count: 1 },
+          ],
+        },
+      ],
+      // Project 03
+      [
+        {
+          start: 8,
+          end: 40,
+          type: 'fingertime',
+          user: 'dev1@team073.com',
+          bubbles: [
+            { type: 'AIPlayRecommend', count: 2 },
+            { type: 'QueryMakerRecommend', count: 1 },
+            { type: 'RevisionMaker', count: 1 },
+          ],
+        },
+        {
+          start: 20,
+          end: 105,
+          type: 'fingertime',
+          user: 'dev2@team073.com',
+          bubbles: [
+            { type: 'RevisionMaker', count: 4 },
+            { type: 'QueryMakerRecommend', count: 2 },
+            { type: 'CommentRecommend', count: 3 },
+            { type: 'Query2CodeRecommend', count: 2 },
+            { type: 'TestCaseRecommend', count: 1 },
+          ],
+        },
+      ],
     ];
 
-    console.log('Demo data loaded:', dummyData.length, 'records');
-    setData(dummyData);
-  }, []);
+    const data = projectData[projectIndex];
+    const users = Array.from(new Set(data.map((d) => d.user)));
 
-  // 팀 데이터 설정
-  useEffect(() => {
-    if (data.length === 0) {
-      console.log('No data available yet');
-      return;
-    }
+    // Set up SVG dimensions
+    svg.attr('width', width).attr('height', height);
 
-    console.log('Processing team data, total rows:', data.length);
+    // Create main group
+    const g = svg
+      .append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // 상위 3개 팀 추출
-    const teamCounts = d3.rollup(
-      data,
-      (v) => v.length,
-      (d) => d.team_name,
-    );
-    const topTeams = Array.from(teamCounts.entries())
-      .sort(([, a], [, b]) => b - a)
-      .slice(0, 3)
-      .map(([team]) => team);
-
-    console.log('Top 3 teams:', topTeams);
-
-    const teamData: TeamData[] = topTeams.map((teamName, index) => {
-      const teamMembers = data.filter((d) => d.team_name === teamName);
-      const projectName = `Project 0${index + 1}`;
-      const metrics = teamMetrics[projectName as keyof typeof teamMetrics];
-
-      console.log(
-        `${projectName} (${teamName}): ${teamMembers.length} members`,
-      );
-
-      return {
-        teamName: projectName,
-        members: teamMembers,
-        taskCompletion: metrics.taskCompletion,
-        expectedQuality: metrics.expectedQuality,
-      };
-    });
-
-    setTeams(teamData);
-
-    // 초기 시간 설정
-    const parseTime = d3.timeParse('%H:%M:%S');
-    const startTime = parseTime('16:00:00')!;
-    setCurrentTime(startTime);
-
-    console.log('Teams set:', teamData.length);
-  }, [data]);
-
-  // 통계 계산
-  const calculateStats = useCallback(
-    (currentTime: Date, teams: TeamData[]): { [key: string]: TeamStats } => {
-      const parseTime = d3.timeParse('%H:%M:%S');
-      const startTime = parseTime('16:00:00')!;
-      const endTime = parseTime('18:00:00')!;
-
-      const newStats: { [key: string]: TeamStats } = {};
-
-      teams.forEach((team) => {
-        const relevantData = team.members.filter((item) => {
-          const start = parseTime(item.start_time);
-          return start && start <= currentTime;
-        });
-
-        // F/B Breakdown
-        const fbBreakdown = {
-          fingertime: relevantData.filter((d) => d.type === 'fingertime')
-            .length,
-          braintime: relevantData.filter((d) => d.type === 'braintime').length,
-        };
-
-        // AI Breakdown
-        const aiddMap: { [key: string]: number } = {};
-        relevantData.forEach((item) => {
-          try {
-            const parsed = JSON.parse(item.recommend_types || '{}');
-            Object.entries(parsed).forEach(([type, count]) => {
-              aiddMap[type] = (aiddMap[type] || 0) + Number(count);
-            });
-          } catch (e) {
-            console.error('Error parsing recommend_types:', e);
-          }
-        });
-
-        const aiBreakdown = Object.fromEntries(
-          Object.entries(aiddMap)
-            .sort(([, a], [, b]) => b - a)
-            .slice(0, 3),
-        );
-
-        // 시간 진행에 따른 비례 계산
-        const progress = Math.max(
-          0,
-          Math.min(
-            1,
-            (currentTime.getTime() - startTime.getTime()) /
-              (endTime.getTime() - startTime.getTime()),
-          ),
-        );
-
-        newStats[team.teamName] = {
-          fbBreakdown,
-          aiBreakdown,
-          taskCompletion: {
-            completed: Math.floor(team.taskCompletion.completed * progress),
-            total: team.taskCompletion.total,
-          },
-          expectedQuality: Math.floor(team.expectedQuality * progress),
-        };
-      });
-
-      return newStats;
-    },
-    [],
-  );
-
-  // 현재 시간 변경시 통계 업데이트
-  useEffect(() => {
-    if (!currentTime || teams.length === 0) return;
-
-    const newStats = calculateStats(currentTime, teams);
-    setAnimatedStats(newStats);
-    console.log(
-      'Stats updated for time:',
-      d3.timeFormat('%H:%M:%S')(currentTime),
-      newStats,
-    );
-  }, [currentTime, teams, calculateStats]);
-
-  const startAnimation = useCallback(() => {
-    if (teams.length === 0) {
-      console.log('No teams available for animation');
-      return;
-    }
-
-    console.log('Starting animation...');
-    setIsPlaying(true);
-
+    // Create scales
     const parseTime = d3.timeParse('%H:%M:%S');
     const startTime = parseTime('16:00:00')!;
     const endTime = parseTime('18:00:00')!;
-    const duration = endTime.getTime() - startTime.getTime();
-    const animationDuration = 10000; // 10초
 
-    const startTimestamp = Date.now();
+    const xScale = d3
+      .scaleTime()
+      .domain([startTime, endTime])
+      .range([0, chartWidth]);
 
-    const animate = () => {
-      const elapsed = Date.now() - startTimestamp;
-      const progress = Math.min(elapsed / animationDuration, 1);
+    const yScale = d3
+      .scaleBand()
+      .domain(users)
+      .range([0, chartHeight])
+      .padding(0.3);
 
-      const newTime = new Date(startTime.getTime() + duration * progress);
-      setCurrentTime(newTime);
+    // Add gradients (original DeveloperTimeline style)
+    const defs = svg.append('defs');
 
-      if (progress < 1) {
-        animationRef.current = requestAnimationFrame(animate);
-      } else {
-        setIsPlaying(false);
-        animationRef.current = null;
-        console.log('Animation completed');
-      }
-    };
+    defs
+      .append('linearGradient')
+      .attr('id', `fingerGradient-${projectIndex}`)
+      .attr('x1', '0%')
+      .attr('y1', '0%')
+      .attr('x2', '100%')
+      .attr('y2', '0%')
+      .selectAll('stop')
+      .data([
+        { offset: '0%', color: '#0bd1b9' },
+        { offset: '100%', color: '#1e7991' },
+      ])
+      .enter()
+      .append('stop')
+      .attr('offset', (d) => d.offset)
+      .attr('stop-color', (d) => d.color);
 
-    animate();
-  }, [teams]);
+    defs
+      .append('linearGradient')
+      .attr('id', `brainGradient-${projectIndex}`)
+      .attr('x1', '0%')
+      .attr('y1', '0%')
+      .attr('x2', '100%')
+      .attr('y2', '0%')
+      .selectAll('stop')
+      .data([
+        { offset: '0%', color: '#f78aff' },
+        { offset: '100%', color: '#b13bff' },
+      ])
+      .enter()
+      .append('stop')
+      .attr('offset', (d) => d.offset)
+      .attr('stop-color', (d) => d.color);
 
-  const resetAnimation = useCallback(() => {
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = null;
-    }
-    setIsPlaying(false);
-    const parseTime = d3.timeParse('%H:%M:%S');
-    const startTime = parseTime('16:00:00')!;
-    setCurrentTime(startTime);
-    console.log('Animation reset');
-  }, []);
+    // Add brain glow filter
+    defs
+      .append('filter')
+      .attr('id', `brainGlow-${projectIndex}`)
+      .attr('x', '-50%')
+      .attr('y', '-50%')
+      .attr('width', '200%')
+      .attr('height', '200%').html(`
+        <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      `);
 
-  // 컴포넌트 언마운트시 애니메이션 정리
-  useEffect(() => {
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, []);
+    // Time axis
+    g.append('g')
+      .call(
+        d3
+          .axisTop(xScale)
+          .ticks(4)
+          .tickFormat((d) => d3.timeFormat('%H:%M')(d as Date)),
+      )
+      .selectAll('text')
+      .style('fill', '#e0e0e0')
+      .style('font-size', '10px');
 
-  const TeamTimeline = ({
-    team,
-    teamIndex,
-    currentTime,
-  }: {
-    team: TeamData;
-    teamIndex: number;
-    currentTime: Date | null;
-  }) => {
-    const svgRef = useRef<SVGSVGElement | null>(null);
+    // User labels
+    g.append('g')
+      .call(d3.axisLeft(yScale).tickFormat((d) => (d as string).split('@')[0]))
+      .selectAll('text')
+      .style('fill', '#f0f0f0')
+      .style('font-size', '9px');
 
-    useEffect(() => {
-      if (!currentTime || !svgRef.current) return;
+    // AIDD color scale (original style) - 모든 유형 포함
+    const aiddColors = d3.schemeSet2.concat(d3.schemeSet3).slice(0, 10);
+    const allAIDDTypes = Array.from(
+      new Set(data.flatMap((item) => item.bubbles.map((b) => b.type))),
+    );
+    const aiddColorScale = d3
+      .scaleOrdinal<string, string>()
+      .domain(allAIDDTypes)
+      .range(aiddColors);
 
-      const svg = d3.select(svgRef.current);
-      const margin = { top: 20, right: 10, bottom: 20, left: 150 };
-      const width = 520 - margin.left - margin.right;
-      const height = 100 - margin.top - margin.bottom;
+    // Draw timeline bars
+    data.forEach((item) => {
+      const userY = yScale(item.user)!;
+      const barY = userY + (yScale.bandwidth() - barHeight) / 2;
+      const centerY = barY + barHeight / 2;
 
-      svg.selectAll('*').remove();
+      // Calculate bar width based on current time
+      const itemStartMinutes = item.start;
+      const itemEndMinutes = Math.min(item.end, currentMinutes);
 
-      // 그라데이션 정의
-      const defs = svg.append('defs');
+      if (itemEndMinutes > itemStartMinutes) {
+        const itemStartTime = new Date(
+          startTime.getTime() + itemStartMinutes * 60000,
+        );
+        const itemEndTime = new Date(
+          startTime.getTime() + itemEndMinutes * 60000,
+        );
 
-      defs
-        .append('linearGradient')
-        .attr('id', `fingerGradient-${teamIndex}`)
-        .selectAll('stop')
-        .data([
-          { offset: '0%', color: '#0bd1b9' },
-          { offset: '100%', color: '#1e7991' },
-        ])
-        .enter()
-        .append('stop')
-        .attr('offset', (d) => d.offset)
-        .attr('stop-color', (d) => d.color);
-
-      defs
-        .append('linearGradient')
-        .attr('id', `brainGradient-${teamIndex}`)
-        .selectAll('stop')
-        .data([
-          { offset: '0%', color: '#f78aff' },
-          { offset: '100%', color: '#b13bff' },
-        ])
-        .enter()
-        .append('stop')
-        .attr('offset', (d) => d.offset)
-        .attr('stop-color', (d) => d.color);
-
-      const g = svg
-        .append('g')
-        .attr('transform', `translate(${margin.left},${margin.top})`);
-
-      const parseTime = d3.timeParse('%H:%M:%S');
-      const startTime = parseTime('16:00:00')!;
-      const endTime = parseTime('18:00:00')!;
-
-      const xScale = d3
-        .scaleTime()
-        .domain([startTime, endTime])
-        .range([0, width]);
-
-      const uniqueEmails = Array.from(
-        new Set(team.members.map((d) => d.email)),
-      );
-      const yScale = d3
-        .scaleBand()
-        .domain(uniqueEmails)
-        .range([0, height])
-        .padding(0.2);
-
-      // 시간 축
-      g.append('g')
-        .call(
-          d3
-            .axisTop(xScale)
-            .ticks(4)
-            .tickFormat((d) => d3.timeFormat('%H:%M')(d as Date)),
-        )
-        .selectAll('text')
-        .style('fill', '#e0e0e0')
-        .style('font-size', '10px');
-
-      // 이메일 라벨
-      g.append('g')
-        .call(
-          d3.axisLeft(yScale).tickFormat((d) => (d as string).split('@')[0]),
-        )
-        .selectAll('text')
-        .style('fill', '#f0f0f0')
-        .style('font-size', '9px');
-
-      // 현재 시간까지의 데이터만 렌더링
-      const currentData = team.members.filter((item) => {
-        const start = parseTime(item.start_time);
-        return start && start <= currentTime;
-      });
-
-      console.log(
-        `Rendering ${currentData.length} items for ${team.teamName} at ${d3.timeFormat('%H:%M:%S')(currentTime)}`,
-      );
-
-      // 막대 그래프와 버블 렌더링
-      currentData.forEach((item) => {
-        const start = parseTime(item.start_time);
-        const end = parseTime(item.end_time);
-        if (!start || !end || item.type === 'close_time') return;
-
-        const actualEnd = end <= currentTime ? end : currentTime;
-        const startX = xScale(start);
-        const endX = xScale(actualEnd);
-        const barWidth = Math.max(0, endX - startX);
-        const barY = yScale(item.email)!;
-        const barHeight = yScale.bandwidth();
+        const startX = xScale(itemStartTime);
+        const endX = xScale(itemEndTime);
+        const barWidth = endX - startX;
 
         if (barWidth > 1) {
-          // 막대 그래프
-          g.append('rect')
+          // Create bar with original gradient style
+          const rect = g
+            .append('rect')
             .attr('x', startX)
             .attr('y', barY)
             .attr('width', barWidth)
@@ -515,93 +262,207 @@ export default function AIDDMonitoringTool() {
             .attr(
               'fill',
               item.type === 'fingertime'
-                ? `url(#fingerGradient-${teamIndex})`
-                : `url(#brainGradient-${teamIndex})`,
+                ? `url(#fingerGradient-${projectIndex})`
+                : `url(#brainGradient-${projectIndex})`,
             )
+            .attr('rx', 0)
             .attr('opacity', 0.9)
-            .attr('rx', 2);
+            .attr('stroke', item.type === 'braintime' ? '#f78aff' : 'none')
+            .attr('stroke-width', item.type === 'braintime' ? 2 : 0)
+            .style(
+              'filter',
+              item.type === 'braintime'
+                ? 'drop-shadow(0 0 5px #f78aff) drop-shadow(0 0 10px #f78aff)'
+                : 'none',
+            );
 
-          // AIDD 버블 (fingertime인 경우에만)
+          if (item.type === 'braintime') {
+            rect.attr('filter', `url(#brainGlow-${projectIndex})`);
+          }
+
+          // Add AIDD bubbles (original style with progressive growth)
           if (item.type === 'fingertime' && barWidth > 15) {
-            try {
-              const aiddMap = JSON.parse(item.recommend_types || '{}');
-              const entries = Object.entries(aiddMap).filter(
-                ([_, count]) => Number(count) > 0,
+            const entries = item.bubbles;
+            if (entries.length > 0) {
+              // Calculate progress within this fingertime period
+              const fingertimeStart = itemStartMinutes;
+              const fingertimeEnd = item.end;
+              const fingertimeProgress =
+                fingertimeEnd > fingertimeStart
+                  ? Math.min(
+                      1,
+                      (currentMinutes - fingertimeStart) /
+                        (fingertimeEnd - fingertimeStart),
+                    )
+                  : 1;
+
+              // Calculate current bubble sizes based on progress
+              const currentBubbles = entries.map((bubble) => ({
+                ...bubble,
+                currentCount: Math.floor(bubble.count * fingertimeProgress),
+              }));
+
+              const radii = currentBubbles.map(
+                (bubble) => 6 + Math.sqrt(Math.max(1, bubble.currentCount)) * 3,
+              );
+              const totalBubbleWidth = radii.reduce(
+                (sum, r) => sum + r * 2 + 6,
+                -6,
+              );
+              const scale =
+                totalBubbleWidth > barWidth
+                  ? Math.max(1, barWidth / totalBubbleWidth)
+                  : 1;
+
+              // 버블을 막대 위에 균등하게 분배
+              let currentBubbleX = startX;
+
+              const visibleBubbles = currentBubbles.filter(
+                (bubble) => bubble.currentCount > 0,
               );
 
-              if (entries.length > 0) {
-                const bubbleSpacing = Math.min(
-                  barWidth / (entries.length + 1),
-                  25,
-                );
+              visibleBubbles.forEach((bubble, index) => {
+                const rawR = 6 + Math.sqrt(bubble.currentCount) * 3;
+                const r = Math.max(6, rawR * scale);
 
-                entries.forEach(([type, count], bubbleIndex) => {
-                  const bubbleX = startX + bubbleSpacing * (bubbleIndex + 1);
-                  const bubbleY = barY + barHeight / 2;
-                  const radius = Math.min(
-                    3 + Math.sqrt(Number(count)) * 1.5,
-                    barHeight / 3,
-                  );
+                // 버블을 막대 위에 균등하게 배치
+                const bubbleSpacing = barWidth / (visibleBubbles.length + 1);
+                const cx = startX + bubbleSpacing * (index + 1);
+                const cy = centerY;
 
-                  const colorIndex =
-                    Math.abs(
-                      type.split('').reduce((a, b) => a + b.charCodeAt(0), 0),
-                    ) % d3.schemeSet2.length;
+                g.append('circle')
+                  .attr('cx', cx)
+                  .attr('cy', cy)
+                  .attr('r', r)
+                  .attr('fill', aiddColorScale(bubble.type))
+                  .attr('stroke', '#fff')
+                  .attr('stroke-width', 0.8)
+                  .attr('opacity', 0.85);
 
-                  g.append('circle')
-                    .attr('cx', bubbleX)
-                    .attr('cy', bubbleY)
-                    .attr('r', radius)
-                    .attr('fill', d3.schemeSet2[colorIndex])
-                    .attr('stroke', '#fff')
-                    .attr('stroke-width', 0.5)
-                    .attr('opacity', 0.9);
-
-                  if (radius > 4) {
-                    g.append('text')
-                      .attr('x', bubbleX)
-                      .attr('y', bubbleY + 1)
-                      .text(String(count))
-                      .style('fill', 'white')
-                      .style('font-size', `${Math.min(radius, 8)}px`)
-                      .style('font-weight', 'bold')
-                      .style('text-anchor', 'middle')
-                      .style('pointer-events', 'none');
-                  }
-                });
-              }
-            } catch (e) {
-              console.error(
-                'Error parsing recommend_types:',
-                e,
-                item.recommend_types,
-              );
+                if (r > 8) {
+                  g.append('text')
+                    .attr('x', cx)
+                    .attr('y', cy + 4)
+                    .text(bubble.currentCount)
+                    .style('fill', 'white')
+                    .style('font-size', `${Math.min(12 * scale, 12)}px`)
+                    .style('font-weight', 'bold')
+                    .style('text-anchor', 'middle');
+                }
+              });
             }
           }
         }
-      });
-    }, [currentTime, team, teamIndex]);
+      }
+    });
 
-    return (
-      <svg
-        ref={svgRef}
-        width={520}
-        height={100}
-        className="border border-gray-600 rounded bg-gray-800/30"
-      />
+    // Add legend at the top (해당 팀의 AIDD 유형만 표시)
+    const teamAIDDTypes = Array.from(
+      new Set(data.flatMap((item) => item.bubbles.map((b) => b.type))),
     );
-  };
 
-  if (data.length === 0) {
-    return (
-      <div className="w-full min-h-screen bg-gradient-to-r from-[#1c1b47] via-[#232664] to-[#2f1b47] p-8 flex items-center justify-center">
-        <div className="text-xl text-white">Loading CSV data...</div>
-      </div>
-    );
-  }
+    const legend = svg
+      .append('g')
+      .attr('transform', `translate(${margin.left}, 8)`); // 상단으로 이동
+
+    const legendItems = [
+      { label: 'Fingertime', color: '#0bd1b9', shape: 'rect' },
+      { label: 'Braintime', color: '#f78aff', shape: 'rect' },
+      ...teamAIDDTypes.map((key) => ({
+        label: key,
+        color: aiddColorScale(key),
+        shape: 'circle',
+      })),
+    ];
+
+    // 가로로 배치하기 위한 계산
+    let currentX = 0;
+    legendItems.forEach((item, i) => {
+      const x = currentX;
+      const y = 0;
+
+      if (item.shape === 'rect') {
+        legend
+          .append('rect')
+          .attr('x', x - 6)
+          .attr('y', y - 6)
+          .attr('width', 12)
+          .attr('height', 12)
+          .attr('fill', item.color);
+      } else {
+        legend
+          .append('circle')
+          .attr('cx', x)
+          .attr('cy', y)
+          .attr('r', 6)
+          .attr('fill', item.color);
+      }
+
+      const text = legend
+        .append('text')
+        .attr('x', x + 16)
+        .attr('y', y + 4)
+        .text(item.label)
+        .style('fill', 'white')
+        .style('font-size', '10px');
+
+      // 다음 아이템 위치 계산
+      const textWidth = item.label.length * 6 + 30; // 대략적인 텍스트 너비
+      currentX += textWidth;
+    });
+  }, [projectIndex, currentTime]);
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-r from-[#1c1b47] via-[#232664] to-[#2f1b47] p-8">
+    <div className="w-full h-32 overflow-visible">
+      <svg ref={svgRef}></svg>
+    </div>
+  );
+};
+
+export default function App() {
+  const [currentTime, setCurrentTime] = useState('16:00:00');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+
+  const startAnimation = () => {
+    console.log('Animation started!');
+    setIsPlaying(true);
+
+    let seconds = 0;
+    const id = setInterval(() => {
+      seconds += 20; // 20초씩 증가 (더 빠르게)
+      const hours = 16 + Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+
+      const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      setCurrentTime(timeString);
+
+      if (hours >= 18) {
+        clearInterval(id);
+        setIsPlaying(false);
+        setIntervalId(null);
+      }
+    }, 50); // 50ms마다 업데이트 (더 부드럽게)
+
+    setIntervalId(id);
+  };
+
+  const stopAnimation = () => {
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+    setIsPlaying(false);
+  };
+
+  const resetAnimation = () => {
+    stopAnimation();
+    setCurrentTime('16:00:00');
+  };
+
+  return (
+    <div className="w-full overflow-auto bg-gradient-to-r from-[#1c1b47] via-[rgb(35,38,100)] to-[#2f1b47] p-8 min-h-screen">
       <div className="mx-auto max-w-7xl">
         <h1 className="mb-8 text-3xl font-bold text-center text-white">
           AIDD Monitoring Tool
@@ -609,135 +470,365 @@ export default function AIDDMonitoringTool() {
 
         <div className="flex items-center justify-center gap-4 mb-8">
           <button
-            onClick={startAnimation}
-            disabled={isPlaying}
-            className="px-6 py-2 text-white transition-all bg-blue-600 rounded hover:bg-blue-700 disabled:opacity-50">
-            {isPlaying ? 'Playing...' : 'Start Animation'}
+            onClick={isPlaying ? stopAnimation : startAnimation}
+            className="px-6 py-2 text-white transition-all bg-blue-600 rounded hover:bg-blue-700">
+            {isPlaying ? 'Stop' : 'Start'}
           </button>
           <button
             onClick={resetAnimation}
-            disabled={isPlaying}
-            className="px-6 py-2 text-white transition-all bg-gray-600 rounded hover:bg-gray-700 disabled:opacity-50">
+            className="px-6 py-2 text-white transition-all bg-gray-600 rounded hover:bg-gray-700">
             Reset
           </button>
-          {currentTime && (
-            <div className="px-4 py-2 text-white bg-gray-800 rounded">
-              Current Time: {d3.timeFormat('%H:%M:%S')(currentTime)}
-            </div>
+          <div className="px-4 py-2 text-white bg-gray-800 rounded">
+            Current Time: {currentTime}
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          {['Project 01', 'Project 02', 'Project 03'].map(
+            (projectName, index) => {
+              // Calculate progress based on current time
+              const [hours, minutes, seconds] = currentTime
+                .split(':')
+                .map(Number);
+              const currentMinutes = (hours - 16) * 60 + minutes + seconds / 60;
+              const progress = Math.max(0, Math.min(1, currentMinutes / 120)); // 120 minutes from 16:00 to 18:00
+
+              const maxTasks = [96, 77, 60][index];
+              const maxQuality = [32, 12, 8][index];
+              const currentTasks = Math.floor(progress * maxTasks);
+              const currentQuality = Math.floor(progress * maxQuality);
+
+              // AI breakdown based on progress - 해당 프로젝트의 실제 AIDD 사용량 계산
+              // TimelineVisualization에서 정의된 projectData에 접근하기 위해 동일한 구조 사용
+              const projectTeamData = [
+                // Project 01
+                [
+                  {
+                    start: 0,
+                    end: 30,
+                    type: 'fingertime',
+                    user: 'dev1@team061.com',
+                    bubbles: [
+                      { type: 'Query2CodeRecommend', count: 3 },
+                      { type: 'AIPlayRecommend', count: 2 },
+                      { type: 'RevisionMaker', count: 1 },
+                      { type: 'QueryMakerRecommend', count: 2 },
+                    ],
+                  },
+                  {
+                    start: 30,
+                    end: 45,
+                    type: 'braintime',
+                    user: 'dev1@team061.com',
+                    bubbles: [],
+                  },
+                  {
+                    start: 45,
+                    end: 55,
+                    type: 'closetime',
+                    user: 'dev1@team061.com',
+                    bubbles: [],
+                  },
+                  {
+                    start: 10,
+                    end: 60,
+                    type: 'fingertime',
+                    user: 'dev2@team061.com',
+                    bubbles: [
+                      { type: 'RevisionMaker', count: 5 },
+                      { type: 'AIPlayRecommend', count: 3 },
+                      { type: 'CommentRecommend', count: 2 },
+                      { type: 'TestCaseRecommend', count: 1 },
+                    ],
+                  },
+                  {
+                    start: 60,
+                    end: 75,
+                    type: 'braintime',
+                    user: 'dev2@team061.com',
+                    bubbles: [],
+                  },
+                ],
+                // Project 02
+                [
+                  {
+                    start: 5,
+                    end: 35,
+                    type: 'fingertime',
+                    user: 'dev1@team116.com',
+                    bubbles: [
+                      { type: 'QueryMakerRecommend', count: 4 },
+                      { type: 'RevisionMaker', count: 2 },
+                      { type: 'AIPlayRecommend', count: 1 },
+                    ],
+                  },
+                  {
+                    start: 35,
+                    end: 50,
+                    type: 'braintime',
+                    user: 'dev1@team116.com',
+                    bubbles: [],
+                  },
+                  {
+                    start: 50,
+                    end: 60,
+                    type: 'closetime',
+                    user: 'dev1@team116.com',
+                    bubbles: [],
+                  },
+                  {
+                    start: 15,
+                    end: 90,
+                    type: 'fingertime',
+                    user: 'dev2@team116.com',
+                    bubbles: [
+                      { type: 'RevisionMaker', count: 6 },
+                      { type: 'Query2CodeRecommend', count: 3 },
+                      { type: 'CommentRecommend', count: 2 },
+                      { type: 'TestCaseRecommend', count: 4 },
+                      { type: 'AIPlayRecommend', count: 1 },
+                    ],
+                  },
+                  {
+                    start: 90,
+                    end: 105,
+                    type: 'braintime',
+                    user: 'dev2@team116.com',
+                    bubbles: [],
+                  },
+                ],
+                // Project 03
+                [
+                  {
+                    start: 8,
+                    end: 40,
+                    type: 'fingertime',
+                    user: 'dev1@team073.com',
+                    bubbles: [
+                      { type: 'AIPlayRecommend', count: 2 },
+                      { type: 'QueryMakerRecommend', count: 1 },
+                      { type: 'RevisionMaker', count: 1 },
+                    ],
+                  },
+                  {
+                    start: 40,
+                    end: 55,
+                    type: 'braintime',
+                    user: 'dev1@team073.com',
+                    bubbles: [],
+                  },
+                  {
+                    start: 55,
+                    end: 65,
+                    type: 'closetime',
+                    user: 'dev1@team073.com',
+                    bubbles: [],
+                  },
+                  {
+                    start: 20,
+                    end: 105,
+                    type: 'fingertime',
+                    user: 'dev2@team073.com',
+                    bubbles: [
+                      { type: 'RevisionMaker', count: 4 },
+                      { type: 'QueryMakerRecommend', count: 2 },
+                      { type: 'CommentRecommend', count: 3 },
+                      { type: 'Query2CodeRecommend', count: 2 },
+                      { type: 'TestCaseRecommend', count: 1 },
+                    ],
+                  },
+                  {
+                    start: 105,
+                    end: 120,
+                    type: 'braintime',
+                    user: 'dev2@team073.com',
+                    bubbles: [],
+                  },
+                ],
+              ];
+
+              const currentProjectData = projectTeamData[index];
+
+              // F/B breakdown based on actual data - Calculate actual fingertime and braintime durations
+              let totalFingertimeDuration = 0;
+              let totalBraintimeDuration = 0;
+              let totalClosetimeDuration = 0;
+
+              currentProjectData.forEach((item) => {
+                const itemStartMinutes = item.start;
+                const itemEndMinutes = item.end;
+
+                if (itemStartMinutes <= currentMinutes) {
+                  const actualEndMinutes = Math.min(
+                    itemEndMinutes,
+                    currentMinutes,
+                  );
+                  const duration = Math.max(
+                    0,
+                    actualEndMinutes - itemStartMinutes,
+                  );
+
+                  if (item.type === 'fingertime') {
+                    totalFingertimeDuration += duration;
+                  } else if (item.type === 'braintime') {
+                    totalBraintimeDuration += duration;
+                  } else if (item.type === 'closetime') {
+                    totalClosetimeDuration += duration;
+                  }
+                }
+              });
+
+              // Count of activities (keeping the original logic for counts)
+              const fingertimeCount = Math.floor(progress * (index + 3));
+              const braintimeCount = Math.floor(progress * (index + 1));
+
+              // Calculate percentages (excluding closetime)
+              const totalActiveTime =
+                totalFingertimeDuration + totalBraintimeDuration;
+              const fingertimePercent =
+                totalActiveTime > 0
+                  ? Math.round(
+                      (totalFingertimeDuration / totalActiveTime) * 100,
+                    )
+                  : 0;
+              const braintimePercent =
+                totalActiveTime > 0
+                  ? Math.round((totalBraintimeDuration / totalActiveTime) * 100)
+                  : 0;
+
+              const relevantFingertime = currentProjectData.filter((item) => {
+                const itemStartMinutes = item.start;
+                return (
+                  item.type === 'fingertime' &&
+                  itemStartMinutes <= currentMinutes
+                );
+              });
+
+              // 모든 AIDD 유형별 누적 카운트 계산
+              const aiddTotals: { [key: string]: number } = {};
+              relevantFingertime.forEach((item) => {
+                const itemStartMinutes = item.start;
+                const itemEndMinutes = Math.min(item.end, currentMinutes);
+                const itemProgress = Math.min(
+                  1,
+                  (currentMinutes - itemStartMinutes) /
+                    (item.end - itemStartMinutes),
+                );
+
+                item.bubbles.forEach((bubble) => {
+                  const currentCount = Math.floor(bubble.count * itemProgress);
+                  aiddTotals[bubble.type] =
+                    (aiddTotals[bubble.type] || 0) + currentCount;
+                });
+              });
+
+              // 상위 3개 AIDD 유형 추출
+              const topAIDDTypes = Object.entries(aiddTotals)
+                .sort(([, a], [, b]) => b - a)
+                .slice(0, 3);
+
+              const aiCounts = topAIDDTypes;
+
+              return (
+                <div className="flex justify-center w-full">
+                  <div
+                    key={projectName}
+                    className="w-[1500px] mx-auto p-4 border border-gray-700 rounded-lg bg-gray-900/50">
+                    <h2 className="mb-3 text-lg font-bold text-white">
+                      {projectName}
+                    </h2>
+
+                    <div className="w-full overflow-x-auto">
+                      <div className="flex items-center gap-6 min-w-max">
+                        <div className="flex-1">
+                          <h3 className="mb-2 text-sm text-gray-300">
+                            Work Breakdown
+                          </h3>
+                          <TimelineVisualization
+                            projectIndex={index}
+                            currentTime={currentTime}
+                          />
+                        </div>
+
+                        <div className="flex-shrink-0 w-32">
+                          <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
+                            F/B Breakdown
+                          </h3>
+                          <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded bg-gradient-to-br from-teal-600 to-teal-700">
+                            <div className="mb-1 text-xs text-teal-100">
+                              Finger/Brain
+                            </div>
+                            <div className="text-lg font-bold leading-none">
+                              {fingertimeCount} / {braintimeCount}
+                            </div>
+                            <div className="mt-1 text-xs leading-none text-teal-100">
+                              {fingertimePercent}% / {braintimePercent}%
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex-shrink-0 w-32">
+                          <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
+                            AI Breakdown
+                          </h3>
+                          <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded bg-gradient-to-br from-blue-600 to-blue-700">
+                            <div className="mb-1 text-xs text-blue-100">
+                              상위 3개
+                            </div>
+                            <div className="space-y-0.5">
+                              {aiCounts
+                                .slice(0, 3)
+                                .map(([type, count], idx) => (
+                                  <div
+                                    key={type}
+                                    className="text-xs leading-none">
+                                    {idx + 1}.{' '}
+                                    {type.replace('Recommend', '').slice(0, 6)}:{' '}
+                                    {count}
+                                  </div>
+                                ))}
+                              {aiCounts.length === 0 && (
+                                <div className="text-xs text-blue-200">
+                                  No data yet
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex-shrink-0 w-32">
+                          <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
+                            Task Completion
+                          </h3>
+                          <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded bg-gradient-to-br from-teal-700 to-teal-800">
+                            <div className="text-lg font-bold leading-none">
+                              {currentTasks}/{maxTasks}건
+                            </div>
+                            <div className="mt-1 text-xs text-teal-200">
+                              {Math.round(progress * 100)}%
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex-shrink-0 w-32">
+                          <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
+                            Expected Quality
+                          </h3>
+                          <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded bg-gradient-to-br from-blue-700 to-blue-800">
+                            <div className="text-lg font-bold leading-none">
+                              {currentQuality}점
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            },
           )}
         </div>
-
-        <div className="grid gap-8">
-          {teams.map((team, index) => (
-            <div
-              key={team.teamName}
-              className="p-6 border border-gray-700 rounded-lg bg-gray-900/50">
-              <h2 className="mb-4 text-xl font-bold text-white">
-                {team.teamName}
-              </h2>
-
-              <div className="flex items-start gap-8">
-                {/* Work Breakdown (Timeline) */}
-                <div className="flex-1">
-                  <h3 className="mb-2 text-sm font-semibold text-gray-300">
-                    Work Breakdown
-                  </h3>
-                  <TeamTimeline
-                    team={team}
-                    teamIndex={index}
-                    currentTime={currentTime}
-                  />
-                </div>
-
-                {/* F/B Breakdown */}
-                <div className="w-36">
-                  <h3 className="mb-2 text-sm font-semibold text-gray-300">
-                    F/B Breakdown
-                  </h3>
-                  <div className="p-4 text-center text-white rounded-lg shadow-lg bg-gradient-to-br from-teal-600 to-teal-700">
-                    <div className="mb-1 text-xs text-teal-100">
-                      Finger/Brain
-                    </div>
-                    <div className="text-lg font-bold">
-                      {animatedStats[team.teamName]?.fbBreakdown.fingertime ||
-                        0}{' '}
-                      /{' '}
-                      {animatedStats[team.teamName]?.fbBreakdown.braintime || 0}
-                    </div>
-                  </div>
-                </div>
-
-                {/* AI Breakdown */}
-                <div className="w-36">
-                  <h3 className="mb-2 text-sm font-semibold text-gray-300">
-                    AI Breakdown
-                  </h3>
-                  <div className="p-4 text-center text-white rounded-lg shadow-lg bg-gradient-to-br from-blue-600 to-blue-700">
-                    <div className="mb-1 text-xs text-blue-100">상위 3개</div>
-                    <div className="space-y-1">
-                      {Object.entries(
-                        animatedStats[team.teamName]?.aiBreakdown || {},
-                      )
-                        .slice(0, 3)
-                        .map(([type, count], idx) => (
-                          <div key={type} className="text-xs">
-                            {idx + 1}.{' '}
-                            {type.replace('Recommend', '').slice(0, 6)}: {count}
-                          </div>
-                        ))}
-                      {Object.keys(
-                        animatedStats[team.teamName]?.aiBreakdown || {},
-                      ).length === 0 && (
-                        <div className="text-xs text-blue-200">No data yet</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Task Completion */}
-                <div className="w-36">
-                  <h3 className="mb-2 text-sm font-semibold text-gray-300">
-                    Task Completion
-                  </h3>
-                  <div className="p-4 text-center text-white rounded-lg shadow-lg bg-gradient-to-br from-teal-700 to-teal-800">
-                    <div className="mb-1 text-2xl font-bold">
-                      {animatedStats[team.teamName]?.taskCompletion.completed ||
-                        0}
-                      /{team.taskCompletion.total}건
-                    </div>
-                    <div className="text-xs text-teal-200">
-                      {Math.round(
-                        ((animatedStats[team.teamName]?.taskCompletion
-                          .completed || 0) /
-                          team.taskCompletion.total) *
-                          100,
-                      )}
-                      %
-                    </div>
-                  </div>
-                </div>
-
-                {/* Expected Quality */}
-                <div className="w-36">
-                  <h3 className="mb-2 text-sm font-semibold text-gray-300">
-                    Expected Quality
-                  </h3>
-                  <div className="p-4 text-center text-white rounded-lg shadow-lg bg-gradient-to-br from-blue-700 to-blue-800">
-                    <div className="mb-1 text-2xl font-bold">
-                      {animatedStats[team.teamName]?.expectedQuality || 0}점
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {teams.length === 0 && (
-          <div className="mt-8 text-lg text-center text-white">
-            No team data available. Please check the CSV file.
-          </div>
-        )}
       </div>
     </div>
   );
