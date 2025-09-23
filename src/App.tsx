@@ -332,14 +332,15 @@ const TimelineVisualization = ({ projectIndex, currentTime }: { projectIndex: nu
 export default function App() {
   const [currentTime, setCurrentTime] = useState('16:00:00');
   const [isPlaying, setIsPlaying] = useState(false);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   const startAnimation = () => {
     console.log('Animation started!');
     setIsPlaying(true);
     
     let seconds = 0;
-    const interval = setInterval(() => {
-      seconds += 10; // 10초씩 증가
+    const id = setInterval(() => {
+      seconds += 20; // 20초씩 증가 (더 빠르게)
       const hours = 16 + Math.floor(seconds / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
       const secs = seconds % 60;
@@ -348,15 +349,26 @@ export default function App() {
       setCurrentTime(timeString);
       
       if (hours >= 18) {
-        clearInterval(interval);
+        clearInterval(id);
         setIsPlaying(false);
+        setIntervalId(null);
       }
-    }, 100); // 100ms마다 업데이트
+    }, 50); // 50ms마다 업데이트 (더 부드럽게)
+    
+    setIntervalId(id);
+  };
+
+  const stopAnimation = () => {
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+    setIsPlaying(false);
   };
 
   const resetAnimation = () => {
+    stopAnimation();
     setCurrentTime('16:00:00');
-    setIsPlaying(false);
   };
 
   return (
@@ -368,16 +380,14 @@ export default function App() {
         
         <div className="flex justify-center items-center gap-4 mb-8">
           <button
-            onClick={startAnimation}
-            disabled={isPlaying}
-            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+            onClick={isPlaying ? stopAnimation : startAnimation}
+            className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-all"
           >
-            {isPlaying ? 'Playing...' : 'Start Animation'}
+            {isPlaying ? 'Stop' : 'Start'}
           </button>
           <button
             onClick={resetAnimation}
-            disabled={isPlaying}
-            className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 disabled:opacity-50"
+            className="px-6 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-all"
           >
             Reset
           </button>
@@ -489,43 +499,45 @@ export default function App() {
                     <TimelineVisualization projectIndex={index} currentTime={currentTime} />
                   </div>
 
-                  <div className="w-28">
-                    <h3 className="text-xs text-gray-300 mb-1">F/B Breakdown</h3>
-                    <div className="bg-gradient-to-br from-teal-600 to-teal-700 rounded p-2 text-center text-white text-sm">
-                      <div className="text-xs">Finger/Brain</div>
-                      <div className="text-lg font-bold">{fingertimeCount} / {braintimeCount}</div>
+                  <div className="w-32 flex-shrink-0">
+                    <h3 className="text-xs text-gray-300 mb-1 h-4 flex items-center">F/B Breakdown</h3>
+                    <div className="bg-gradient-to-br from-teal-600 to-teal-700 rounded p-3 text-center text-white h-20 flex flex-col justify-center">
+                      <div className="text-xs text-teal-100 mb-1">Finger/Brain</div>
+                      <div className="text-lg font-bold leading-none">{fingertimeCount} / {braintimeCount}</div>
                     </div>
                   </div>
 
-                  <div className="w-28">
-                    <h3 className="text-xs text-gray-300 mb-1">AI Breakdown</h3>
-                    <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded p-2 text-center text-white text-xs">
-                      <div className="text-xs mb-1">상위 3개</div>
-                      {aiCounts.slice(0, 3).map(([type, count], idx) => (
-                        <div key={type} className="text-xs">
-                          {idx + 1}. {type.replace('Recommend', '').slice(0, 6)}: {count}
-                        </div>
-                      ))}
-                      {aiCounts.length === 0 && (
-                        <div className="text-xs text-blue-200">No data yet</div>
-                      )}
+                  <div className="w-32 flex-shrink-0">
+                    <h3 className="text-xs text-gray-300 mb-1 h-4 flex items-center">AI Breakdown</h3>
+                    <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded p-3 text-center text-white h-20 flex flex-col justify-center">
+                      <div className="text-xs text-blue-100 mb-1">상위 3개</div>
+                      <div className="space-y-0.5">
+                        {aiCounts.slice(0, 3).map(([type, count], idx) => (
+                          <div key={type} className="text-xs leading-none">
+                            {idx + 1}. {type.replace('Recommend', '').slice(0, 6)}: {count}
+                          </div>
+                        ))}
+                        {aiCounts.length === 0 && (
+                          <div className="text-xs text-blue-200">No data yet</div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="w-28">
-                    <h3 className="text-xs text-gray-300 mb-1">Task Completion</h3>
-                    <div className="bg-gradient-to-br from-teal-700 to-teal-800 rounded p-2 text-center text-white">
-                      <div className="text-xl font-bold">
+                  <div className="w-32 flex-shrink-0">
+                    <h3 className="text-xs text-gray-300 mb-1 h-4 flex items-center">Task Completion</h3>
+                    <div className="bg-gradient-to-br from-teal-700 to-teal-800 rounded p-3 text-center text-white h-20 flex flex-col justify-center">
+                      <div className="text-lg font-bold leading-none">
                         {currentTasks}/{maxTasks}건
                       </div>
-                      <div className="text-xs">{Math.round(progress * 100)}%</div>
+                      <div className="text-xs text-teal-200 mt-1">{Math.round(progress * 100)}%</div>
                     </div>
                   </div>
 
-                  <div className="w-28">
-                    <h3 className="text-xs text-gray-300 mb-1">Expected Quality</h3>
-                    <div className="bg-gradient-to-br from-blue-700 to-blue-800 rounded p-2 text-center text-white">
-                      <div className="text-xl font-bold">
+                  <div className="w-32 flex-shrink-0">
+                    <h3 className="text-xs text-gray-300 mb-1 h-4 flex items-center">Expected Quality</h3>
+                    <div className="bg-gradient-to-br from-blue-700 to-blue-800 rounded p-3 text-center text-white h-20 flex flex-col justify-center">
+                      <div className="text-lg font-bold leading-none">
                         {currentQuality}점
                       </div>
                     </div>
