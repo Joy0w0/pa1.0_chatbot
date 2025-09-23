@@ -259,15 +259,15 @@ const TimelineVisualization = ({
               }));
 
               const radii = currentBubbles.map(
-                (bubble) => 6 + Math.sqrt(Math.max(1, bubble.currentCount)) * 3,
+                (bubble) => 8 + Math.sqrt(Math.max(1, bubble.currentCount)) * 2.5,  // Adjusted bubble size calculation
               );
               const totalBubbleWidth = radii.reduce(
-                (sum, r) => sum + r * 2 + 6,
-                -6,
+                (sum, r) => sum + r * 2 + 10,  // Increased spacing between bubbles
+                -10,
               );
               const scale =
                 totalBubbleWidth > barWidth
-                  ? Math.max(1, barWidth / totalBubbleWidth)
+                  ? Math.max(0.8, barWidth / totalBubbleWidth)  // Better minimum scale
                   : 1;
 
               // 버블을 막대 위에 균등하게 분배
@@ -278,8 +278,8 @@ const TimelineVisualization = ({
               );
 
               visibleBubbles.forEach((bubble, index) => {
-                const rawR = 6 + Math.sqrt(bubble.currentCount) * 3;
-                const r = Math.max(6, rawR * scale);
+                const rawR = 8 + Math.sqrt(bubble.currentCount) * 2.5;  // Consistent with radii calculation
+                const r = Math.max(8, rawR * scale);  // Minimum radius increased
 
                 // 버블을 막대 위에 균등하게 배치
                 const bubbleSpacing = barWidth / (visibleBubbles.length + 1);
@@ -421,7 +421,7 @@ export default function App() {
 
   return (
     <div className="w-full overflow-auto bg-gradient-to-r from-[#1c1b47] via-[rgb(35,38,100)] to-[#2f1b47] p-8 min-h-screen">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-none px-4">  {/* Removed max-width constraint for wider layout */
         <h1 className="mb-8 text-3xl font-bold text-center text-white">
           AIDD Monitoring Tool - Real Data
         </h1>
@@ -544,7 +544,7 @@ export default function App() {
 
             return (
               <div className="flex justify-center w-full" key={projectKey}>
-                <div className="w-[1500px] mx-auto p-4 border border-gray-700 rounded-lg bg-gray-900/50">
+                <div className="w-[1800px] mx-auto p-6 border border-gray-700 rounded-lg bg-gray-900/50">  {/* Increased width and padding */
                   <h2 className="mb-3 text-lg font-bold text-white">
                     {projectKey} ({projectData.team_name})
                   </h2>
@@ -553,8 +553,8 @@ export default function App() {
                   </div>
 
                   <div className="w-full overflow-x-auto">
-                    <div className="flex items-center gap-6 min-w-max">
-                      <div className="flex-1">
+                    <div className="flex items-center gap-8 min-w-max">  {/* Increased gap from 6 to 8 */
+                      <div className="flex-1 min-w-[1000px]">  {/* Added minimum width for timeline */
                         <h3 className="mb-2 text-sm text-gray-300">
                           Work Breakdown - Timeline
                         </h3>
@@ -564,7 +564,7 @@ export default function App() {
                         />
                       </div>
 
-                      <div className="flex-shrink-0 w-32">
+                      <div className="flex-shrink-0 w-36">  {/* Increased width from w-32 to w-36 */
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           F/B Breakdown
                         </h3>
@@ -581,7 +581,7 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="flex-shrink-0 w-32">
+                      <div className="flex-shrink-0 w-36">  {/* Increased width from w-32 to w-36 */
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           AI Breakdown
                         </h3>
@@ -610,7 +610,7 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="flex-shrink-0 w-32">
+                      <div className="flex-shrink-0 w-36">  {/* Increased width from w-32 to w-36 */
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           Task Completion
                         </h3>
@@ -624,7 +624,7 @@ export default function App() {
                         </div>
                       </div>
 
-                      <div className="flex-shrink-0 w-32">
+                      <div className="flex-shrink-0 w-36">  {/* Increased width from w-32 to w-36 */
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           Expected Quality
                         </h3>
