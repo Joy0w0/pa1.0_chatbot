@@ -78,7 +78,7 @@ export default function DeveloperTimeline() {
     const typeColor = {
       fingertime: 'url(#fingerGradient)',
       braintime: 'url(#brainGradient)',
-      close_time: 'transparent',
+      close_time: 'rgba(0, 0, 0, 0)',
     };
 
     const aiddColors = d3.schemeSet2.concat(d3.schemeSet3).slice(0, 10);
@@ -337,7 +337,11 @@ export default function DeveloperTimeline() {
           <span className="text-sm font-medium">Monitoring Tool</span>
         </button>
       </div>
-      <svg ref={svgRef}></svg>
+      <div className="flex items-center justify-center">
+        <div className="inline-block">
+          <svg ref={svgRef}></svg>
+        </div>
+      </div>
     </div>
   );
 }
