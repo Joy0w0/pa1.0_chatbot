@@ -612,24 +612,24 @@ export default function App() {
                           </div>
                         </div>
                       </div>
-                      <div className="flex-shrink-0 w-36">
-                        {' '}
-                        {/* Increased width from w-32 to w-36 */}
+                      <div className="flex-shrink-0 w-44">  {/* Increased width from w-36 to w-44 for longer AIDD names */
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           AI Breakdown
                         </h3>
-                        <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded bg-gradient-to-br from-blue-600 to-blue-700">
+                        <div className="flex flex-col justify-center h-20 p-2 text-center text-white rounded bg-gradient-to-br from-blue-600 to-blue-700">  {/* Reduced padding for more space */
                           <div className="mb-1 text-xs text-blue-100">
                             상위 3개
                           </div>
                           <div className="space-y-0.5">
-                            {aiCounts.slice(0, 3).map(([type, count], idx) => (
-                              <div key={type} className="text-xs leading-none">
-                                {idx + 1}.{' '}
-                                {type.replace('Recommend', '').slice(0, 6)}:{' '}
-                                {count}
-                              </div>
-                            ))}
+                            {aiCounts
+                              .slice(0, 3)
+                              .map(([type, count], idx) => (
+                                <div
+                                  key={type}
+                                  className="text-xs leading-tight">  {/* Changed to leading-tight for better line spacing */
+                                  {idx + 1}. {type.replace('Recommend', '')}: {count}  {/* Removed extra spaces for cleaner look */
+                                </div>
+                              ))}
                             {aiCounts.length === 0 && (
                               <div className="text-xs text-blue-200">
                                 No data yet
