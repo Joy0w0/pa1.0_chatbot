@@ -1,0 +1,3347 @@
+{
+  "Project01": {
+    "team_name": "TEAM119",
+    "developers": [
+      "datnt135296@lgcns.com",
+      "loinv@lgcns.com",
+      "nguyen.xuan.tinh@lgcns.com",
+      "thangld2407@lgcns.com"
+    ],
+    "timeline_data": [
+      {
+        "start": 0,
+        "end": 0.9666666666666667,
+        "type": "closetime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 0.966666666666667,
+        "aidd_count": 0
+      },
+      {
+        "start": 0,
+        "end": 15.4,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [
+          {
+            "type": "QueryMakerRecommend",
+            "count": 3
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 15.4,
+        "aidd_count": 4
+      },
+      {
+        "start": 0,
+        "end": 19.55,
+        "type": "fingertime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [
+          {
+            "type": "QueryMakerRecommend",
+            "count": 4
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 2
+          }
+        ],
+        "duration": 19.56,
+        "aidd_count": 6
+      },
+      {
+        "start": 0,
+        "end": 19.666666666666668,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [
+          {
+            "type": "QueryMakerRecommend",
+            "count": 4
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 1
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 4
+          }
+        ],
+        "duration": 19.6666666666667,
+        "aidd_count": 9
+      },
+      {
+        "start": 0.9666666666666667,
+        "end": 11.633333333333333,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 5
+          },
+          {
+            "type": "NextLineRecommend",
+            "count": 1
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 10.6666666666667,
+        "aidd_count": 7
+      },
+      {
+        "start": 11.633333333333333,
+        "end": 12.85,
+        "type": "braintime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 1.21,
+        "aidd_count": 0
+      },
+      {
+        "start": 12.85,
+        "end": 15.55,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 2.7,
+        "aidd_count": 0
+      },
+      {
+        "start": 15.4,
+        "end": 15.65,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.26,
+        "aidd_count": 0
+      },
+      {
+        "start": 15.55,
+        "end": 15.566666666666666,
+        "type": "braintime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 0.03,
+        "aidd_count": 0
+      },
+      {
+        "start": 15.566666666666666,
+        "end": 19.016666666666666,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [
+          {
+            "type": "AIPlayRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 3.44,
+        "aidd_count": 1
+      },
+      {
+        "start": 15.65,
+        "end": 19.116666666666667,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 3.47,
+        "aidd_count": 0
+      },
+      {
+        "start": 19.016666666666666,
+        "end": 20.05,
+        "type": "braintime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 1.03,
+        "aidd_count": 0
+      },
+      {
+        "start": 19.116666666666667,
+        "end": 19.366666666666667,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.25,
+        "aidd_count": 0
+      },
+      {
+        "start": 19.366666666666667,
+        "end": 20.366666666666667,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 19.55,
+        "end": 20.216666666666665,
+        "type": "braintime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 0.66,
+        "aidd_count": 0
+      },
+      {
+        "start": 19.666666666666668,
+        "end": 38.31666666666667,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 4
+          },
+          {
+            "type": "NextLineRecommend",
+            "count": 1
+          },
+          {
+            "type": "QueryMakerRecommend",
+            "count": 2
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 12
+          }
+        ],
+        "duration": 18.65,
+        "aidd_count": 19
+      },
+      {
+        "start": 20.05,
+        "end": 64.3,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 13
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 6
+          }
+        ],
+        "duration": 44.26,
+        "aidd_count": 19
+      },
+      {
+        "start": 20.216666666666665,
+        "end": 62.31666666666667,
+        "type": "fingertime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [
+          {
+            "type": "Query2CodeRecommend",
+            "count": 2
+          },
+          {
+            "type": "QueryMakerRecommend",
+            "count": 5
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 42.11,
+        "aidd_count": 8
+      },
+      {
+        "start": 20.366666666666667,
+        "end": 23.783333333333335,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 3.42,
+        "aidd_count": 0
+      },
+      {
+        "start": 23.783333333333335,
+        "end": 39.6,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [
+          {
+            "type": "QueryMakerRecommend",
+            "count": 6
+          }
+        ],
+        "duration": 15.82,
+        "aidd_count": 6
+      },
+      {
+        "start": 38.31666666666667,
+        "end": 38.93333333333333,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 0.63,
+        "aidd_count": 0
+      },
+      {
+        "start": 38.93333333333333,
+        "end": 79.93333333333334,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 38
+          },
+          {
+            "type": "QueryMakerRecommend",
+            "count": 1
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 4
+          },
+          {
+            "type": "NextLineRecommend",
+            "count": 4
+          }
+        ],
+        "duration": 40.99,
+        "aidd_count": 47
+      },
+      {
+        "start": 39.6,
+        "end": 40.68333333333333,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 1.08,
+        "aidd_count": 0
+      },
+      {
+        "start": 40.68333333333333,
+        "end": 50.3,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [
+          {
+            "type": "Query2CodeRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 9.61,
+        "aidd_count": 1
+      },
+      {
+        "start": 50.3,
+        "end": 50.4,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.09,
+        "aidd_count": 0
+      },
+      {
+        "start": 50.4,
+        "end": 67.01666666666667,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [
+          {
+            "type": "AIPlayRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 16.62,
+        "aidd_count": 1
+      },
+      {
+        "start": 62.31666666666667,
+        "end": 62.43333333333333,
+        "type": "braintime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 0.12,
+        "aidd_count": 0
+      },
+      {
+        "start": 62.43333333333333,
+        "end": 67.73333333333333,
+        "type": "fingertime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 5.29,
+        "aidd_count": 0
+      },
+      {
+        "start": 64.3,
+        "end": 64.4,
+        "type": "braintime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 0.1,
+        "aidd_count": 0
+      },
+      {
+        "start": 64.4,
+        "end": 79.05,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 9
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 3
+          }
+        ],
+        "duration": 14.64,
+        "aidd_count": 12
+      },
+      {
+        "start": 67.01666666666667,
+        "end": 67.38333333333334,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.36,
+        "aidd_count": 0
+      },
+      {
+        "start": 67.38333333333334,
+        "end": 68.48333333333333,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 1.1,
+        "aidd_count": 0
+      },
+      {
+        "start": 67.73333333333333,
+        "end": 68.38333333333334,
+        "type": "braintime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 0.65,
+        "aidd_count": 0
+      },
+      {
+        "start": 68.38333333333334,
+        "end": 86.18333333333334,
+        "type": "fingertime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 17.8,
+        "aidd_count": 0
+      },
+      {
+        "start": 68.48333333333333,
+        "end": 68.71666666666667,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.24,
+        "aidd_count": 0
+      },
+      {
+        "start": 68.71666666666667,
+        "end": 77.05,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 8.33,
+        "aidd_count": 0
+      },
+      {
+        "start": 77.05,
+        "end": 77.58333333333333,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.55,
+        "aidd_count": 0
+      },
+      {
+        "start": 77.58333333333333,
+        "end": 83.9,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 6.32,
+        "aidd_count": 0
+      },
+      {
+        "start": 79.05,
+        "end": 79.73333333333333,
+        "type": "braintime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 0.69,
+        "aidd_count": 0
+      },
+      {
+        "start": 79.73333333333333,
+        "end": 82.45,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 2.71,
+        "aidd_count": 0
+      },
+      {
+        "start": 79.93333333333334,
+        "end": 81.66666666666667,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 1.74,
+        "aidd_count": 0
+      },
+      {
+        "start": 81.66666666666667,
+        "end": 82.98333333333333,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 1.31,
+        "aidd_count": 0
+      },
+      {
+        "start": 82.45,
+        "end": 84.41666666666667,
+        "type": "braintime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 1.97,
+        "aidd_count": 0
+      },
+      {
+        "start": 82.98333333333333,
+        "end": 84.65,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 1.67,
+        "aidd_count": 0
+      },
+      {
+        "start": 83.9,
+        "end": 84.53333333333333,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.63,
+        "aidd_count": 0
+      },
+      {
+        "start": 84.41666666666667,
+        "end": 86.38333333333334,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 1.96,
+        "aidd_count": 0
+      },
+      {
+        "start": 84.53333333333333,
+        "end": 86.26666666666667,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 1.73,
+        "aidd_count": 0
+      },
+      {
+        "start": 84.65,
+        "end": 85.65,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 85.65,
+        "end": 91.63333333333334,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 5.99,
+        "aidd_count": 0
+      },
+      {
+        "start": 86.18333333333334,
+        "end": 87.78333333333333,
+        "type": "braintime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 1.59,
+        "aidd_count": 0
+      },
+      {
+        "start": 86.26666666666667,
+        "end": 86.65,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.38,
+        "aidd_count": 0
+      },
+      {
+        "start": 86.38333333333334,
+        "end": 87.38333333333334,
+        "type": "closetime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 86.65,
+        "end": 89.53333333333333,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 2.88,
+        "aidd_count": 0
+      },
+      {
+        "start": 87.38333333333334,
+        "end": 92.78333333333333,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 2
+          }
+        ],
+        "duration": 5.39,
+        "aidd_count": 2
+      },
+      {
+        "start": 87.78333333333333,
+        "end": 93.26666666666667,
+        "type": "fingertime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 5.49,
+        "aidd_count": 0
+      },
+      {
+        "start": 89.53333333333333,
+        "end": 89.66666666666667,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.13,
+        "aidd_count": 0
+      },
+      {
+        "start": 89.66666666666667,
+        "end": 91.05,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 1.38,
+        "aidd_count": 0
+      },
+      {
+        "start": 91.05,
+        "end": 91.1,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.05,
+        "aidd_count": 0
+      },
+      {
+        "start": 91.1,
+        "end": 106.01666666666667,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [
+          {
+            "type": "QueryMakerRecommend",
+            "count": 6
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 14.92,
+        "aidd_count": 7
+      },
+      {
+        "start": 91.63333333333334,
+        "end": 92.63333333333334,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 92.63333333333334,
+        "end": 93.35,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 0.7,
+        "aidd_count": 0
+      },
+      {
+        "start": 92.78333333333333,
+        "end": 99.31666666666666,
+        "type": "braintime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 6.54,
+        "aidd_count": 0
+      },
+      {
+        "start": 93.26666666666667,
+        "end": 94.31666666666666,
+        "type": "braintime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 1.05,
+        "aidd_count": 0
+      },
+      {
+        "start": 93.35,
+        "end": 95.38333333333334,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 2.04,
+        "aidd_count": 0
+      },
+      {
+        "start": 94.31666666666666,
+        "end": 95.33333333333333,
+        "type": "fingertime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 1.01,
+        "aidd_count": 0
+      },
+      {
+        "start": 95.33333333333333,
+        "end": 95.46666666666667,
+        "type": "braintime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 0.13,
+        "aidd_count": 0
+      },
+      {
+        "start": 95.38333333333334,
+        "end": 95.43333333333334,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 0.06,
+        "aidd_count": 0
+      },
+      {
+        "start": 95.43333333333334,
+        "end": 103.43333333333334,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 2
+          }
+        ],
+        "duration": 8.0,
+        "aidd_count": 2
+      },
+      {
+        "start": 95.46666666666667,
+        "end": 99.0,
+        "type": "fingertime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 3.54,
+        "aidd_count": 0
+      },
+      {
+        "start": 99.0,
+        "end": 99.43333333333334,
+        "type": "braintime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 0.43,
+        "aidd_count": 0
+      },
+      {
+        "start": 99.31666666666666,
+        "end": 100.35,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 1.03,
+        "aidd_count": 0
+      },
+      {
+        "start": 99.43333333333334,
+        "end": 107.31666666666666,
+        "type": "fingertime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 7.87,
+        "aidd_count": 0
+      },
+      {
+        "start": 100.35,
+        "end": 101.13333333333334,
+        "type": "braintime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 0.79,
+        "aidd_count": 0
+      },
+      {
+        "start": 101.13333333333334,
+        "end": 103.33333333333333,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 2
+          }
+        ],
+        "duration": 2.19,
+        "aidd_count": 2
+      },
+      {
+        "start": 103.33333333333333,
+        "end": 107.2,
+        "type": "braintime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 3.87,
+        "aidd_count": 0
+      },
+      {
+        "start": 103.43333333333334,
+        "end": 103.76666666666667,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 0.32,
+        "aidd_count": 0
+      },
+      {
+        "start": 103.76666666666667,
+        "end": 104.88333333333334,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 1.12,
+        "aidd_count": 0
+      },
+      {
+        "start": 104.88333333333334,
+        "end": 106.41666666666667,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 1.54,
+        "aidd_count": 0
+      },
+      {
+        "start": 106.01666666666667,
+        "end": 115.65,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 9.62,
+        "aidd_count": 0
+      },
+      {
+        "start": 106.41666666666667,
+        "end": 109.9,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 1
+          }
+        ],
+        "duration": 3.48,
+        "aidd_count": 1
+      },
+      {
+        "start": 107.2,
+        "end": 108.38333333333334,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 1.19,
+        "aidd_count": 0
+      },
+      {
+        "start": 107.31666666666666,
+        "end": 107.81666666666666,
+        "type": "braintime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 0.5,
+        "aidd_count": 0
+      },
+      {
+        "start": 107.81666666666666,
+        "end": 114.3,
+        "type": "fingertime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 6.49,
+        "aidd_count": 0
+      },
+      {
+        "start": 108.38333333333334,
+        "end": 113.95,
+        "type": "braintime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 5.56,
+        "aidd_count": 0
+      },
+      {
+        "start": 109.9,
+        "end": 110.21666666666667,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 0.32,
+        "aidd_count": 0
+      },
+      {
+        "start": 110.21666666666667,
+        "end": 111.21666666666667,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 111.21666666666667,
+        "end": 112.9,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 1.68,
+        "aidd_count": 0
+      },
+      {
+        "start": 112.9,
+        "end": 115.75,
+        "type": "fingertime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 1
+          }
+        ],
+        "duration": 2.85,
+        "aidd_count": 1
+      },
+      {
+        "start": 113.95,
+        "end": 114.93333333333334,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 0.99,
+        "aidd_count": 0
+      },
+      {
+        "start": 114.3,
+        "end": 114.31666666666666,
+        "type": "braintime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 0.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 114.31666666666666,
+        "end": 116.21666666666667,
+        "type": "fingertime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 1.9,
+        "aidd_count": 0
+      },
+      {
+        "start": 114.93333333333334,
+        "end": 115.45,
+        "type": "closetime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 0.52,
+        "aidd_count": 0
+      },
+      {
+        "start": 115.45,
+        "end": 118.21666666666667,
+        "type": "fingertime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 2
+          }
+        ],
+        "duration": 2.75,
+        "aidd_count": 2
+      },
+      {
+        "start": 115.65,
+        "end": 116.65,
+        "type": "fingertime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 115.75,
+        "end": 116.65,
+        "type": "braintime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 0.9,
+        "aidd_count": 0
+      },
+      {
+        "start": 116.21666666666667,
+        "end": 120,
+        "type": "closetime",
+        "user": "nguyen.xuan.tinh@lgcns.com",
+        "bubbles": [],
+        "duration": 3.78,
+        "aidd_count": 0
+      },
+      {
+        "start": 116.65,
+        "end": 119.7,
+        "type": "braintime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 3.06,
+        "aidd_count": 0
+      },
+      {
+        "start": 116.65,
+        "end": 120,
+        "type": "closetime",
+        "user": "thangld2407@lgcns.com",
+        "bubbles": [],
+        "duration": 3.34,
+        "aidd_count": 0
+      },
+      {
+        "start": 118.21666666666667,
+        "end": 120,
+        "type": "closetime",
+        "user": "datnt135296@lgcns.com",
+        "bubbles": [],
+        "duration": 1.78,
+        "aidd_count": 0
+      },
+      {
+        "start": 119.7,
+        "end": 120,
+        "type": "closetime",
+        "user": "loinv@lgcns.com",
+        "bubbles": [],
+        "duration": 0.28,
+        "aidd_count": 0
+      }
+    ],
+    "summary": {
+      "total_fingertime": 405.6633333333334,
+      "total_braintime": 62.589999999999996,
+      "total_closetime": 11.666666666666666,
+      "fingertime_percent": 87,
+      "braintime_percent": 13,
+      "top_aidd_types": [
+        [
+          "NextLine",
+          79
+        ],
+        [
+          "AIPlayRecommend",
+          33
+        ],
+        [
+          "QueryMakerRecommend",
+          31
+        ]
+      ],
+      "all_aidd_types": {
+        "NextLine": 79,
+        "NextLineRecommend": 6,
+        "AIPlayRecommend": 33,
+        "QueryMakerRecommend": 31,
+        "Query2CodeRecommend": 8
+      }
+    },
+    "max_quality": 77,
+    "max_tasks": 96
+  },
+  "Project02": {
+    "team_name": "TEAM044",
+    "developers": [
+      "minwoo_cho@lgcns.com",
+      "saehoon0501@lgcns.com",
+      "sangwon.jung@lgcns.com",
+      "syoon0127@lgcns.com"
+    ],
+    "timeline_data": [
+      {
+        "start": 0,
+        "end": 43.2,
+        "type": "fingertime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [
+          {
+            "type": "AIPlayRecommend",
+            "count": 3
+          }
+        ],
+        "duration": 43.21,
+        "aidd_count": 3
+      },
+      {
+        "start": 0,
+        "end": 24.3,
+        "type": "fingertime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [
+          {
+            "type": "AIPlayRecommend",
+            "count": 3
+          }
+        ],
+        "duration": 24.31,
+        "aidd_count": 3
+      },
+      {
+        "start": 0,
+        "end": 1.3833333333333333,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.39,
+        "aidd_count": 0
+      },
+      {
+        "start": 0,
+        "end": 5.8,
+        "type": "closetime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 5.81,
+        "aidd_count": 0
+      },
+      {
+        "start": 1.3833333333333333,
+        "end": 1.5166666666666666,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.15,
+        "aidd_count": 0
+      },
+      {
+        "start": 1.5166666666666666,
+        "end": 4.15,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 2.62,
+        "aidd_count": 0
+      },
+      {
+        "start": 4.15,
+        "end": 4.183333333333334,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.03,
+        "aidd_count": 0
+      },
+      {
+        "start": 4.183333333333334,
+        "end": 5.516666666666667,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.34,
+        "aidd_count": 0
+      },
+      {
+        "start": 5.516666666666667,
+        "end": 6.033333333333333,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.51,
+        "aidd_count": 0
+      },
+      {
+        "start": 5.8,
+        "end": 7.866666666666667,
+        "type": "closetime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 2.06,
+        "aidd_count": 0
+      },
+      {
+        "start": 6.033333333333333,
+        "end": 8.783333333333333,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 2.76,
+        "aidd_count": 0
+      },
+      {
+        "start": 7.866666666666667,
+        "end": 9.7,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 1.84,
+        "aidd_count": 0
+      },
+      {
+        "start": 8.783333333333333,
+        "end": 12.666666666666666,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 3.88,
+        "aidd_count": 0
+      },
+      {
+        "start": 9.7,
+        "end": 14.016666666666667,
+        "type": "closetime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 4.32,
+        "aidd_count": 0
+      },
+      {
+        "start": 12.666666666666666,
+        "end": 13.666666666666666,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 13.666666666666666,
+        "end": 14.533333333333333,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.86,
+        "aidd_count": 0
+      },
+      {
+        "start": 14.016666666666667,
+        "end": 16.016666666666666,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 2.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 14.533333333333333,
+        "end": 16.233333333333334,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.7,
+        "aidd_count": 0
+      },
+      {
+        "start": 16.016666666666666,
+        "end": 17.283333333333335,
+        "type": "braintime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 1.26,
+        "aidd_count": 0
+      },
+      {
+        "start": 16.233333333333334,
+        "end": 16.583333333333332,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.35,
+        "aidd_count": 0
+      },
+      {
+        "start": 16.583333333333332,
+        "end": 18.083333333333332,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.51,
+        "aidd_count": 0
+      },
+      {
+        "start": 17.283333333333335,
+        "end": 17.283333333333335,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 0.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 17.283333333333335,
+        "end": 17.283333333333335,
+        "type": "closetime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 0.01,
+        "aidd_count": 0
+      },
+      {
+        "start": 17.283333333333335,
+        "end": 24.716666666666665,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 7.44,
+        "aidd_count": 0
+      },
+      {
+        "start": 18.083333333333332,
+        "end": 19.3,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.21,
+        "aidd_count": 0
+      },
+      {
+        "start": 19.3,
+        "end": 20.3,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 20.3,
+        "end": 21.216666666666665,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.92,
+        "aidd_count": 0
+      },
+      {
+        "start": 21.216666666666665,
+        "end": 21.483333333333334,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.27,
+        "aidd_count": 0
+      },
+      {
+        "start": 21.483333333333334,
+        "end": 22.416666666666668,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.93,
+        "aidd_count": 0
+      },
+      {
+        "start": 22.416666666666668,
+        "end": 23.666666666666668,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.25,
+        "aidd_count": 0
+      },
+      {
+        "start": 23.666666666666668,
+        "end": 24.966666666666665,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.29,
+        "aidd_count": 0
+      },
+      {
+        "start": 24.3,
+        "end": 25.083333333333332,
+        "type": "braintime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 0.78,
+        "aidd_count": 0
+      },
+      {
+        "start": 24.716666666666665,
+        "end": 32.483333333333334,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 7.76,
+        "aidd_count": 0
+      },
+      {
+        "start": 24.966666666666665,
+        "end": 25.416666666666668,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.46,
+        "aidd_count": 0
+      },
+      {
+        "start": 25.083333333333332,
+        "end": 41.1,
+        "type": "fingertime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 16.02,
+        "aidd_count": 0
+      },
+      {
+        "start": 25.416666666666668,
+        "end": 25.85,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.43,
+        "aidd_count": 0
+      },
+      {
+        "start": 25.85,
+        "end": 27.066666666666666,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.22,
+        "aidd_count": 0
+      },
+      {
+        "start": 27.066666666666666,
+        "end": 28.616666666666667,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.55,
+        "aidd_count": 0
+      },
+      {
+        "start": 28.616666666666667,
+        "end": 31.4,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 2.79,
+        "aidd_count": 0
+      },
+      {
+        "start": 31.4,
+        "end": 34.333333333333336,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 2.93,
+        "aidd_count": 0
+      },
+      {
+        "start": 32.483333333333334,
+        "end": 32.75,
+        "type": "closetime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 0.27,
+        "aidd_count": 0
+      },
+      {
+        "start": 32.75,
+        "end": 37.03333333333333,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 4.28,
+        "aidd_count": 0
+      },
+      {
+        "start": 34.333333333333336,
+        "end": 35.333333333333336,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 35.333333333333336,
+        "end": 39.25,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 3.92,
+        "aidd_count": 0
+      },
+      {
+        "start": 37.03333333333333,
+        "end": 38.86666666666667,
+        "type": "braintime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 1.85,
+        "aidd_count": 0
+      },
+      {
+        "start": 38.86666666666667,
+        "end": 39.86666666666667,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 39.25,
+        "end": 40.25,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 39.86666666666667,
+        "end": 41.13333333333333,
+        "type": "braintime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 1.26,
+        "aidd_count": 0
+      },
+      {
+        "start": 40.25,
+        "end": 41.45,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.2,
+        "aidd_count": 0
+      },
+      {
+        "start": 41.1,
+        "end": 41.78333333333333,
+        "type": "braintime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 0.67,
+        "aidd_count": 0
+      },
+      {
+        "start": 41.13333333333333,
+        "end": 44.25,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 3.12,
+        "aidd_count": 0
+      },
+      {
+        "start": 41.45,
+        "end": 43.28333333333333,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [
+          {
+            "type": "AIPlayRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 1.83,
+        "aidd_count": 1
+      },
+      {
+        "start": 41.78333333333333,
+        "end": 45.416666666666664,
+        "type": "fingertime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 3.64,
+        "aidd_count": 0
+      },
+      {
+        "start": 43.2,
+        "end": 45.11666666666667,
+        "type": "braintime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 1.9,
+        "aidd_count": 0
+      },
+      {
+        "start": 43.28333333333333,
+        "end": 45.13333333333333,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.85,
+        "aidd_count": 0
+      },
+      {
+        "start": 44.25,
+        "end": 44.53333333333333,
+        "type": "closetime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 0.28,
+        "aidd_count": 0
+      },
+      {
+        "start": 44.53333333333333,
+        "end": 49.25,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 4.72,
+        "aidd_count": 0
+      },
+      {
+        "start": 45.11666666666667,
+        "end": 51.333333333333336,
+        "type": "fingertime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 6.23,
+        "aidd_count": 0
+      },
+      {
+        "start": 45.13333333333333,
+        "end": 46.483333333333334,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.34,
+        "aidd_count": 0
+      },
+      {
+        "start": 45.416666666666664,
+        "end": 45.583333333333336,
+        "type": "braintime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 0.16,
+        "aidd_count": 0
+      },
+      {
+        "start": 45.583333333333336,
+        "end": 48.53333333333333,
+        "type": "fingertime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 2.95,
+        "aidd_count": 0
+      },
+      {
+        "start": 46.483333333333334,
+        "end": 48.43333333333333,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.94,
+        "aidd_count": 0
+      },
+      {
+        "start": 48.43333333333333,
+        "end": 49.61666666666667,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.2,
+        "aidd_count": 0
+      },
+      {
+        "start": 48.53333333333333,
+        "end": 49.733333333333334,
+        "type": "braintime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 1.2,
+        "aidd_count": 0
+      },
+      {
+        "start": 49.25,
+        "end": 49.5,
+        "type": "closetime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 0.25,
+        "aidd_count": 0
+      },
+      {
+        "start": 49.5,
+        "end": 52.266666666666666,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 2.77,
+        "aidd_count": 0
+      },
+      {
+        "start": 49.61666666666667,
+        "end": 50.56666666666667,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.94,
+        "aidd_count": 0
+      },
+      {
+        "start": 49.733333333333334,
+        "end": 51.416666666666664,
+        "type": "fingertime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 1.69,
+        "aidd_count": 0
+      },
+      {
+        "start": 50.56666666666667,
+        "end": 51.56666666666667,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 51.333333333333336,
+        "end": 51.35,
+        "type": "braintime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 0.02,
+        "aidd_count": 0
+      },
+      {
+        "start": 51.35,
+        "end": 75.8,
+        "type": "fingertime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [
+          {
+            "type": "AIPlayRecommend",
+            "count": 3
+          }
+        ],
+        "duration": 24.44,
+        "aidd_count": 3
+      },
+      {
+        "start": 51.416666666666664,
+        "end": 51.45,
+        "type": "braintime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 0.03,
+        "aidd_count": 0
+      },
+      {
+        "start": 51.45,
+        "end": 91.4,
+        "type": "fingertime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [
+          {
+            "type": "AIPlayRecommend",
+            "count": 1
+          },
+          {
+            "type": "QueryMakerRecommend",
+            "count": 4
+          }
+        ],
+        "duration": 39.96,
+        "aidd_count": 5
+      },
+      {
+        "start": 51.56666666666667,
+        "end": 57.266666666666666,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 5.7,
+        "aidd_count": 0
+      },
+      {
+        "start": 52.266666666666666,
+        "end": 60.96666666666667,
+        "type": "braintime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 8.69,
+        "aidd_count": 0
+      },
+      {
+        "start": 57.266666666666666,
+        "end": 57.43333333333333,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.17,
+        "aidd_count": 0
+      },
+      {
+        "start": 57.43333333333333,
+        "end": 57.86666666666667,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.44,
+        "aidd_count": 0
+      },
+      {
+        "start": 57.86666666666667,
+        "end": 58.2,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.33,
+        "aidd_count": 0
+      },
+      {
+        "start": 58.2,
+        "end": 58.7,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.5,
+        "aidd_count": 0
+      },
+      {
+        "start": 58.7,
+        "end": 58.75,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.06,
+        "aidd_count": 0
+      },
+      {
+        "start": 58.75,
+        "end": 59.483333333333334,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.73,
+        "aidd_count": 0
+      },
+      {
+        "start": 59.483333333333334,
+        "end": 60.583333333333336,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.1,
+        "aidd_count": 0
+      },
+      {
+        "start": 60.583333333333336,
+        "end": 60.85,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.28,
+        "aidd_count": 0
+      },
+      {
+        "start": 60.85,
+        "end": 61.666666666666664,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.82,
+        "aidd_count": 0
+      },
+      {
+        "start": 60.96666666666667,
+        "end": 60.96666666666667,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 0.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 60.96666666666667,
+        "end": 60.983333333333334,
+        "type": "closetime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 0.01,
+        "aidd_count": 0
+      },
+      {
+        "start": 60.983333333333334,
+        "end": 61.36666666666667,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 0.4,
+        "aidd_count": 0
+      },
+      {
+        "start": 61.36666666666667,
+        "end": 66.03333333333333,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [
+          {
+            "type": "AIPlayRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 4.66,
+        "aidd_count": 1
+      },
+      {
+        "start": 61.666666666666664,
+        "end": 62.88333333333333,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.21,
+        "aidd_count": 0
+      },
+      {
+        "start": 62.88333333333333,
+        "end": 66.96666666666667,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 4.09,
+        "aidd_count": 0
+      },
+      {
+        "start": 66.03333333333333,
+        "end": 68.21666666666667,
+        "type": "closetime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 2.18,
+        "aidd_count": 0
+      },
+      {
+        "start": 66.96666666666667,
+        "end": 67.2,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.23,
+        "aidd_count": 0
+      },
+      {
+        "start": 67.2,
+        "end": 67.2,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 67.2,
+        "end": 67.21666666666667,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.01,
+        "aidd_count": 0
+      },
+      {
+        "start": 67.21666666666667,
+        "end": 68.41666666666667,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.2,
+        "aidd_count": 0
+      },
+      {
+        "start": 68.21666666666667,
+        "end": 72.0,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 3.78,
+        "aidd_count": 0
+      },
+      {
+        "start": 68.41666666666667,
+        "end": 69.41666666666667,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 69.41666666666667,
+        "end": 71.03333333333333,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.62,
+        "aidd_count": 0
+      },
+      {
+        "start": 71.03333333333333,
+        "end": 72.03333333333333,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 72.0,
+        "end": 72.15,
+        "type": "braintime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 0.16,
+        "aidd_count": 0
+      },
+      {
+        "start": 72.03333333333333,
+        "end": 72.43333333333334,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.39,
+        "aidd_count": 0
+      },
+      {
+        "start": 72.15,
+        "end": 114.78333333333333,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [
+          {
+            "type": "AIPlayRecommend",
+            "count": 11
+          }
+        ],
+        "duration": 42.63,
+        "aidd_count": 11
+      },
+      {
+        "start": 72.43333333333334,
+        "end": 73.66666666666667,
+        "type": "fingertime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 1.24,
+        "aidd_count": 0
+      },
+      {
+        "start": 73.66666666666667,
+        "end": 74.08333333333333,
+        "type": "braintime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 0.41,
+        "aidd_count": 0
+      },
+      {
+        "start": 74.08333333333333,
+        "end": 120,
+        "type": "closetime",
+        "user": "sangwon.jung@lgcns.com",
+        "bubbles": [],
+        "duration": 45.92,
+        "aidd_count": 0
+      },
+      {
+        "start": 75.8,
+        "end": 76.63333333333334,
+        "type": "braintime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 0.84,
+        "aidd_count": 0
+      },
+      {
+        "start": 76.63333333333334,
+        "end": 80.38333333333334,
+        "type": "fingertime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 3.75,
+        "aidd_count": 0
+      },
+      {
+        "start": 80.38333333333334,
+        "end": 83.13333333333334,
+        "type": "braintime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 2.74,
+        "aidd_count": 0
+      },
+      {
+        "start": 83.13333333333334,
+        "end": 105.26666666666667,
+        "type": "fingertime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [
+          {
+            "type": "AIPlayRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 22.14,
+        "aidd_count": 1
+      },
+      {
+        "start": 91.4,
+        "end": 92.15,
+        "type": "braintime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 0.74,
+        "aidd_count": 0
+      },
+      {
+        "start": 92.15,
+        "end": 94.38333333333334,
+        "type": "fingertime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 2.24,
+        "aidd_count": 0
+      },
+      {
+        "start": 94.38333333333334,
+        "end": 97.08333333333333,
+        "type": "braintime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 2.7,
+        "aidd_count": 0
+      },
+      {
+        "start": 97.08333333333333,
+        "end": 98.75,
+        "type": "fingertime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 1.66,
+        "aidd_count": 0
+      },
+      {
+        "start": 98.75,
+        "end": 102.03333333333333,
+        "type": "braintime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 3.28,
+        "aidd_count": 0
+      },
+      {
+        "start": 102.03333333333333,
+        "end": 120,
+        "type": "closetime",
+        "user": "saehoon0501@lgcns.com",
+        "bubbles": [],
+        "duration": 17.97,
+        "aidd_count": 0
+      },
+      {
+        "start": 105.26666666666667,
+        "end": 106.4,
+        "type": "braintime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 1.13,
+        "aidd_count": 0
+      },
+      {
+        "start": 106.4,
+        "end": 107.4,
+        "type": "fingertime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 107.4,
+        "end": 107.98333333333333,
+        "type": "braintime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 0.58,
+        "aidd_count": 0
+      },
+      {
+        "start": 107.98333333333333,
+        "end": 109.3,
+        "type": "fingertime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 1.31,
+        "aidd_count": 0
+      },
+      {
+        "start": 109.3,
+        "end": 120,
+        "type": "closetime",
+        "user": "minwoo_cho@lgcns.com",
+        "bubbles": [],
+        "duration": 10.69,
+        "aidd_count": 0
+      },
+      {
+        "start": 114.78333333333333,
+        "end": 116.25,
+        "type": "braintime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 1.47,
+        "aidd_count": 0
+      },
+      {
+        "start": 116.25,
+        "end": 118.96666666666667,
+        "type": "fingertime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 2.72,
+        "aidd_count": 0
+      },
+      {
+        "start": 118.96666666666667,
+        "end": 120,
+        "type": "closetime",
+        "user": "syoon0127@lgcns.com",
+        "bubbles": [],
+        "duration": 1.02,
+        "aidd_count": 0
+      }
+    ],
+    "summary": {
+      "total_fingertime": 319.97,
+      "total_braintime": 59.23,
+      "total_closetime": 100.82,
+      "fingertime_percent": 84,
+      "braintime_percent": 16,
+      "top_aidd_types": [
+        [
+          "AIPlayRecommend",
+          24
+        ],
+        [
+          "QueryMakerRecommend",
+          4
+        ]
+      ],
+      "all_aidd_types": {
+        "AIPlayRecommend": 24,
+        "QueryMakerRecommend": 4
+      }
+    },
+    "max_quality": 41,
+    "max_tasks": 77
+  },
+  "Project03": {
+    "team_name": "TEAM065",
+    "developers": [
+      "HyeonHo1926@lgcns.com",
+      "hyeonho1926@lgcns.com",
+      "lee.hanbyeol@lgcns.com",
+      "s1.park@lgcns.com",
+      "yeongwon@lgcns.com"
+    ],
+    "timeline_data": [
+      {
+        "start": 0,
+        "end": 11.5,
+        "type": "closetime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 11.5,
+        "aidd_count": 0
+      },
+      {
+        "start": 0,
+        "end": 0.15,
+        "type": "closetime",
+        "user": "lee.hanbyeol@lgcns.com",
+        "bubbles": [],
+        "duration": 0.15,
+        "aidd_count": 0
+      },
+      {
+        "start": 0,
+        "end": 1.3833333333333333,
+        "type": "closetime",
+        "user": "s1.park@lgcns.com",
+        "bubbles": [],
+        "duration": 1.38333333333333,
+        "aidd_count": 0
+      },
+      {
+        "start": 0,
+        "end": 0.35,
+        "type": "closetime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.36,
+        "aidd_count": 0
+      },
+      {
+        "start": 0.15,
+        "end": 18.05,
+        "type": "fingertime",
+        "user": "lee.hanbyeol@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 9
+          },
+          {
+            "type": "CommentRecommend",
+            "count": 1
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 1
+          },
+          {
+            "type": "NextLineRecommend",
+            "count": 3
+          }
+        ],
+        "duration": 17.9,
+        "aidd_count": 14
+      },
+      {
+        "start": 0.35,
+        "end": 0.8,
+        "type": "braintime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.45,
+        "aidd_count": 0
+      },
+      {
+        "start": 0.8,
+        "end": 9.85,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [
+          {
+            "type": "QueryMakerRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 9.05,
+        "aidd_count": 1
+      },
+      {
+        "start": 1.3833333333333333,
+        "end": 106.68333333333334,
+        "type": "fingertime",
+        "user": "s1.park@lgcns.com",
+        "bubbles": [
+          {
+            "type": "RevisionMaker",
+            "count": 643
+          },
+          {
+            "type": "CodeMacro",
+            "count": 270
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 2
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 11
+          },
+          {
+            "type": "RevisionMakerRecommend",
+            "count": 11
+          },
+          {
+            "type": "CodeMacroRecommend",
+            "count": 7
+          },
+          {
+            "type": "QueryMakerRecommend",
+            "count": 2
+          }
+        ],
+        "duration": 105.3,
+        "aidd_count": 946
+      },
+      {
+        "start": 9.85,
+        "end": 10.433333333333334,
+        "type": "closetime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.58,
+        "aidd_count": 0
+      },
+      {
+        "start": 10.433333333333334,
+        "end": 11.15,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.71,
+        "aidd_count": 0
+      },
+      {
+        "start": 11.15,
+        "end": 11.65,
+        "type": "closetime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.51,
+        "aidd_count": 0
+      },
+      {
+        "start": 11.5,
+        "end": 64.48333333333333,
+        "type": "fingertime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 29
+          },
+          {
+            "type": "CodeMacro",
+            "count": 7
+          },
+          {
+            "type": "CodeMacroRecommend",
+            "count": 1
+          },
+          {
+            "type": "NextLineRecommend",
+            "count": 23
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 6
+          }
+        ],
+        "duration": 52.9833333333333,
+        "aidd_count": 66
+      },
+      {
+        "start": 11.5,
+        "end": 64.48333333333333,
+        "type": "fingertime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 29
+          },
+          {
+            "type": "CodeMacro",
+            "count": 7
+          }
+        ],
+        "duration": 52.9833333333333,
+        "aidd_count": 36
+      },
+      {
+        "start": 11.65,
+        "end": 14.2,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 2.55,
+        "aidd_count": 0
+      },
+      {
+        "start": 14.2,
+        "end": 17.516666666666666,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 3.32,
+        "aidd_count": 0
+      },
+      {
+        "start": 17.516666666666666,
+        "end": 18.65,
+        "type": "closetime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 1.12,
+        "aidd_count": 0
+      },
+      {
+        "start": 18.05,
+        "end": 18.883333333333333,
+        "type": "braintime",
+        "user": "lee.hanbyeol@lgcns.com",
+        "bubbles": [],
+        "duration": 0.83,
+        "aidd_count": 0
+      },
+      {
+        "start": 18.65,
+        "end": 37.93333333333333,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [
+          {
+            "type": "QueryMakerRecommend",
+            "count": 3
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 19.29,
+        "aidd_count": 4
+      },
+      {
+        "start": 18.883333333333333,
+        "end": 19.883333333333333,
+        "type": "fingertime",
+        "user": "lee.hanbyeol@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 19.883333333333333,
+        "end": 20.05,
+        "type": "braintime",
+        "user": "lee.hanbyeol@lgcns.com",
+        "bubbles": [],
+        "duration": 0.16,
+        "aidd_count": 0
+      },
+      {
+        "start": 20.05,
+        "end": 47.4,
+        "type": "fingertime",
+        "user": "lee.hanbyeol@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 12
+          },
+          {
+            "type": "CodeMacro",
+            "count": 3
+          },
+          {
+            "type": "RevisionMaker",
+            "count": 1
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 5
+          },
+          {
+            "type": "CodeMacroRecommend",
+            "count": 2
+          },
+          {
+            "type": "NextLineRecommend",
+            "count": 2
+          },
+          {
+            "type": "RevisionMakerRecommend",
+            "count": 1
+          },
+          {
+            "type": "QueryTuningRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 27.35,
+        "aidd_count": 27
+      },
+      {
+        "start": 37.93333333333333,
+        "end": 38.03333333333333,
+        "type": "braintime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.09,
+        "aidd_count": 0
+      },
+      {
+        "start": 38.03333333333333,
+        "end": 72.78333333333333,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [
+          {
+            "type": "QueryMakerRecommend",
+            "count": 3
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 2
+          }
+        ],
+        "duration": 34.75,
+        "aidd_count": 5
+      },
+      {
+        "start": 47.4,
+        "end": 47.4,
+        "type": "braintime",
+        "user": "lee.hanbyeol@lgcns.com",
+        "bubbles": [],
+        "duration": 0.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 47.4,
+        "end": 115.86666666666666,
+        "type": "fingertime",
+        "user": "lee.hanbyeol@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 113
+          },
+          {
+            "type": "NextLineRecommend",
+            "count": 21
+          },
+          {
+            "type": "CommentRecommend",
+            "count": 2
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 2
+          },
+          {
+            "type": "QueryMakerRecommend",
+            "count": 4
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 68.47,
+        "aidd_count": 143
+      },
+      {
+        "start": 64.48333333333333,
+        "end": 65.1,
+        "type": "braintime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.62,
+        "aidd_count": 0
+      },
+      {
+        "start": 64.48333333333333,
+        "end": 65.1,
+        "type": "braintime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.62,
+        "aidd_count": 0
+      },
+      {
+        "start": 65.1,
+        "end": 78.81666666666666,
+        "type": "fingertime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [
+          {
+            "type": "CodeMacro",
+            "count": 14
+          },
+          {
+            "type": "NextLine",
+            "count": 14
+          }
+        ],
+        "duration": 13.71,
+        "aidd_count": 28
+      },
+      {
+        "start": 65.1,
+        "end": 78.81666666666666,
+        "type": "fingertime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [
+          {
+            "type": "CodeMacro",
+            "count": 14
+          },
+          {
+            "type": "NextLine",
+            "count": 14
+          }
+        ],
+        "duration": 13.71,
+        "aidd_count": 28
+      },
+      {
+        "start": 72.78333333333333,
+        "end": 73.08333333333333,
+        "type": "braintime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.3,
+        "aidd_count": 0
+      },
+      {
+        "start": 73.08333333333333,
+        "end": 75.8,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 2.72,
+        "aidd_count": 0
+      },
+      {
+        "start": 75.8,
+        "end": 76.38333333333334,
+        "type": "braintime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.58,
+        "aidd_count": 0
+      },
+      {
+        "start": 76.38333333333334,
+        "end": 77.4,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 1.03,
+        "aidd_count": 0
+      },
+      {
+        "start": 77.4,
+        "end": 77.41666666666667,
+        "type": "braintime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 77.41666666666667,
+        "end": 89.08333333333333,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 11.68,
+        "aidd_count": 0
+      },
+      {
+        "start": 78.81666666666666,
+        "end": 79.35,
+        "type": "closetime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.53,
+        "aidd_count": 0
+      },
+      {
+        "start": 78.81666666666666,
+        "end": 79.35,
+        "type": "closetime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.53,
+        "aidd_count": 0
+      },
+      {
+        "start": 79.35,
+        "end": 84.0,
+        "type": "fingertime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 4.66,
+        "aidd_count": 0
+      },
+      {
+        "start": 79.35,
+        "end": 84.0,
+        "type": "fingertime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 4.66,
+        "aidd_count": 0
+      },
+      {
+        "start": 84.0,
+        "end": 84.51666666666667,
+        "type": "closetime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.52,
+        "aidd_count": 0
+      },
+      {
+        "start": 84.0,
+        "end": 84.51666666666667,
+        "type": "closetime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.52,
+        "aidd_count": 0
+      },
+      {
+        "start": 84.51666666666667,
+        "end": 84.75,
+        "type": "fingertime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.23,
+        "aidd_count": 0
+      },
+      {
+        "start": 84.51666666666667,
+        "end": 84.75,
+        "type": "fingertime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.23,
+        "aidd_count": 0
+      },
+      {
+        "start": 84.75,
+        "end": 85.36666666666666,
+        "type": "closetime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.62,
+        "aidd_count": 0
+      },
+      {
+        "start": 84.75,
+        "end": 85.36666666666666,
+        "type": "closetime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.62,
+        "aidd_count": 0
+      },
+      {
+        "start": 85.36666666666666,
+        "end": 86.58333333333333,
+        "type": "fingertime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 1.22,
+        "aidd_count": 0
+      },
+      {
+        "start": 85.36666666666666,
+        "end": 86.58333333333333,
+        "type": "fingertime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 1.22,
+        "aidd_count": 0
+      },
+      {
+        "start": 86.58333333333333,
+        "end": 87.0,
+        "type": "closetime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.42,
+        "aidd_count": 0
+      },
+      {
+        "start": 86.58333333333333,
+        "end": 87.0,
+        "type": "closetime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.42,
+        "aidd_count": 0
+      },
+      {
+        "start": 87.0,
+        "end": 108.33333333333333,
+        "type": "fingertime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 17
+          },
+          {
+            "type": "Query2CodeRecommend",
+            "count": 1
+          },
+          {
+            "type": "NextLineRecommend",
+            "count": 15
+          }
+        ],
+        "duration": 21.33,
+        "aidd_count": 33
+      },
+      {
+        "start": 87.0,
+        "end": 108.33333333333333,
+        "type": "fingertime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 17
+          }
+        ],
+        "duration": 21.33,
+        "aidd_count": 17
+      },
+      {
+        "start": 89.08333333333333,
+        "end": 89.88333333333334,
+        "type": "braintime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.79,
+        "aidd_count": 0
+      },
+      {
+        "start": 89.88333333333334,
+        "end": 96.28333333333333,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 6.41,
+        "aidd_count": 0
+      },
+      {
+        "start": 96.28333333333333,
+        "end": 96.75,
+        "type": "braintime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.46,
+        "aidd_count": 0
+      },
+      {
+        "start": 96.75,
+        "end": 98.7,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 1.94,
+        "aidd_count": 0
+      },
+      {
+        "start": 98.7,
+        "end": 99.3,
+        "type": "closetime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.61,
+        "aidd_count": 0
+      },
+      {
+        "start": 99.3,
+        "end": 100.8,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 1.51,
+        "aidd_count": 0
+      },
+      {
+        "start": 100.8,
+        "end": 101.31666666666666,
+        "type": "closetime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.51,
+        "aidd_count": 0
+      },
+      {
+        "start": 101.31666666666666,
+        "end": 102.9,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 1.58,
+        "aidd_count": 0
+      },
+      {
+        "start": 102.9,
+        "end": 103.5,
+        "type": "closetime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.59,
+        "aidd_count": 0
+      },
+      {
+        "start": 103.5,
+        "end": 105.03333333333333,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 1.54,
+        "aidd_count": 0
+      },
+      {
+        "start": 105.03333333333333,
+        "end": 110.98333333333333,
+        "type": "braintime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 5.95,
+        "aidd_count": 0
+      },
+      {
+        "start": 106.68333333333334,
+        "end": 107.31666666666666,
+        "type": "braintime",
+        "user": "s1.park@lgcns.com",
+        "bubbles": [],
+        "duration": 0.62,
+        "aidd_count": 0
+      },
+      {
+        "start": 107.31666666666666,
+        "end": 108.75,
+        "type": "fingertime",
+        "user": "s1.park@lgcns.com",
+        "bubbles": [
+          {
+            "type": "RevisionMaker",
+            "count": 6
+          },
+          {
+            "type": "CodeMacro",
+            "count": 3
+          }
+        ],
+        "duration": 1.44,
+        "aidd_count": 9
+      },
+      {
+        "start": 108.33333333333333,
+        "end": 108.66666666666667,
+        "type": "braintime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.33,
+        "aidd_count": 0
+      },
+      {
+        "start": 108.33333333333333,
+        "end": 108.66666666666667,
+        "type": "braintime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.33,
+        "aidd_count": 0
+      },
+      {
+        "start": 108.66666666666667,
+        "end": 110.5,
+        "type": "fingertime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 1.84,
+        "aidd_count": 0
+      },
+      {
+        "start": 108.66666666666667,
+        "end": 110.5,
+        "type": "fingertime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 1.84,
+        "aidd_count": 0
+      },
+      {
+        "start": 108.75,
+        "end": 109.15,
+        "type": "braintime",
+        "user": "s1.park@lgcns.com",
+        "bubbles": [],
+        "duration": 0.4,
+        "aidd_count": 0
+      },
+      {
+        "start": 109.15,
+        "end": 116.61666666666666,
+        "type": "fingertime",
+        "user": "s1.park@lgcns.com",
+        "bubbles": [
+          {
+            "type": "RevisionMaker",
+            "count": 50
+          },
+          {
+            "type": "CodeMacro",
+            "count": 26
+          },
+          {
+            "type": "CodeMacroRecommend",
+            "count": 1
+          },
+          {
+            "type": "AIPlayRecommend",
+            "count": 1
+          }
+        ],
+        "duration": 7.46,
+        "aidd_count": 78
+      },
+      {
+        "start": 110.5,
+        "end": 110.75,
+        "type": "braintime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.25,
+        "aidd_count": 0
+      },
+      {
+        "start": 110.5,
+        "end": 110.75,
+        "type": "braintime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.25,
+        "aidd_count": 0
+      },
+      {
+        "start": 110.75,
+        "end": 116.16666666666667,
+        "type": "fingertime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 3
+          }
+        ],
+        "duration": 5.42,
+        "aidd_count": 3
+      },
+      {
+        "start": 110.75,
+        "end": 116.16666666666667,
+        "type": "fingertime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [
+          {
+            "type": "NextLine",
+            "count": 3
+          }
+        ],
+        "duration": 5.42,
+        "aidd_count": 3
+      },
+      {
+        "start": 110.98333333333333,
+        "end": 112.45,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 1.46,
+        "aidd_count": 0
+      },
+      {
+        "start": 112.45,
+        "end": 113.15,
+        "type": "braintime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 0.7,
+        "aidd_count": 0
+      },
+      {
+        "start": 113.15,
+        "end": 114.31666666666666,
+        "type": "fingertime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 1.17,
+        "aidd_count": 0
+      },
+      {
+        "start": 114.31666666666666,
+        "end": 120,
+        "type": "closetime",
+        "user": "yeongwon@lgcns.com",
+        "bubbles": [],
+        "duration": 5.67,
+        "aidd_count": 0
+      },
+      {
+        "start": 115.86666666666666,
+        "end": 120,
+        "type": "closetime",
+        "user": "lee.hanbyeol@lgcns.com",
+        "bubbles": [],
+        "duration": 4.12,
+        "aidd_count": 0
+      },
+      {
+        "start": 116.16666666666667,
+        "end": 116.96666666666667,
+        "type": "braintime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.81,
+        "aidd_count": 0
+      },
+      {
+        "start": 116.16666666666667,
+        "end": 116.96666666666667,
+        "type": "braintime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 0.81,
+        "aidd_count": 0
+      },
+      {
+        "start": 116.61666666666666,
+        "end": 120,
+        "type": "closetime",
+        "user": "s1.park@lgcns.com",
+        "bubbles": [],
+        "duration": 3.38,
+        "aidd_count": 0
+      },
+      {
+        "start": 116.96666666666667,
+        "end": 117.96666666666667,
+        "type": "fingertime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 116.96666666666667,
+        "end": 117.96666666666667,
+        "type": "fingertime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 1.0,
+        "aidd_count": 0
+      },
+      {
+        "start": 117.96666666666667,
+        "end": 120,
+        "type": "closetime",
+        "user": "HyeonHo1926@lgcns.com",
+        "bubbles": [],
+        "duration": 2.02,
+        "aidd_count": 0
+      },
+      {
+        "start": 117.96666666666667,
+        "end": 120,
+        "type": "closetime",
+        "user": "hyeonho1926@lgcns.com",
+        "bubbles": [],
+        "duration": 2.02,
+        "aidd_count": 0
+      }
+    ],
+    "summary": {
+      "total_fingertime": 534.4166666666666,
+      "total_braintime": 15.35,
+      "total_closetime": 38.70333333333333,
+      "fingertime_percent": 97,
+      "braintime_percent": 3,
+      "top_aidd_types": [
+        [
+          "RevisionMaker",
+          700
+        ],
+        [
+          "CodeMacro",
+          344
+        ],
+        [
+          "NextLine",
+          260
+        ]
+      ],
+      "all_aidd_types": {
+        "NextLine": 260,
+        "CodeMacro": 344,
+        "CodeMacroRecommend": 11,
+        "NextLineRecommend": 64,
+        "Query2CodeRecommend": 24,
+        "CommentRecommend": 3,
+        "RevisionMaker": 700,
+        "AIPlayRecommend": 9,
+        "RevisionMakerRecommend": 12,
+        "QueryTuningRecommend": 1,
+        "QueryMakerRecommend": 13
+      }
+    },
+    "max_quality": 11,
+    "max_tasks": 60
+  }
+}
