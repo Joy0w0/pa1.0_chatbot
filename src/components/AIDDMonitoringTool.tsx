@@ -87,7 +87,7 @@ const TimelineVisualization = ({
       top: 60, // 레전드 공간을 위해 증가
       right: window.innerWidth < 768 ? 40 : 60,
       bottom: 20,
-      left: window.innerWidth < 768 ? 80 : 100 // 개발자 이름이 보이도록 여백 확보
+      left: window.innerWidth < 768 ? 80 : 100, // 개발자 이름이 보이도록 여백 확보
     };
     const chartWidth = width - margin.left - margin.right;
     const chartHeight = height - margin.top - margin.bottom;
@@ -276,10 +276,10 @@ const TimelineVisualization = ({
               const fingertimeProgress =
                 fingertimeEnd > fingertimeStart
                   ? Math.min(
-                    1,
-                    (currentMinutes - fingertimeStart) /
-                    (fingertimeEnd - fingertimeStart),
-                  )
+                      1,
+                      (currentMinutes - fingertimeStart) /
+                        (fingertimeEnd - fingertimeStart),
+                    )
                   : 1;
 
               // Calculate current bubble sizes based on progress
@@ -348,9 +348,7 @@ const TimelineVisualization = ({
       new Set(data.flatMap((item) => item.bubbles.map((b) => b.type))),
     );
 
-    const legend = svg
-      .append('g')
-      .attr('transform', `translate(10, 15)`); // 레전드를 더 왼쪽으로 이동
+    const legend = svg.append('g').attr('transform', `translate(10, 15)`); // 레전드를 더 왼쪽으로 이동
 
     const legendItems = [
       { label: 'Fingertime', color: '#0bd1b9', shape: 'rect' },
@@ -552,16 +550,6 @@ export default function App() {
                 ? Math.round((totalBraintimeDuration / totalActiveTime) * 100)
                 : 0;
 
-            // Count of activities for display
-            const fingertimeEntries = projectData.timeline_data.filter(
-              (item) =>
-                item.type === 'fingertime' && item.start <= currentMinutes,
-            ).length;
-            const braintimeEntries = projectData.timeline_data.filter(
-              (item) =>
-                item.type === 'braintime' && item.start <= currentMinutes,
-            ).length;
-
             // Calculate real-time AIDD usage
             const relevantFingertime = projectData.timeline_data.filter(
               (item) => {
@@ -578,7 +566,7 @@ export default function App() {
               const itemProgress = Math.min(
                 1,
                 (currentMinutes - itemStartMinutes) /
-                (item.end - itemStartMinutes),
+                  (item.end - itemStartMinutes),
               );
 
               item.bubbles.forEach((bubble) => {
@@ -638,7 +626,9 @@ export default function App() {
                             {aiCounts.slice(0, 3).map(([type, count], idx) => {
                               const shortType = type.replace('Recommend', '');
                               return (
-                                <div key={type} className="text-xs md:text-sm leading-relaxed break-words">
+                                <div
+                                  key={type}
+                                  className="text-xs md:text-sm leading-relaxed break-words">
                                   {`${idx + 1}. ${shortType}: ${count}`}
                                 </div>
                               );

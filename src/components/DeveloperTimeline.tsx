@@ -224,7 +224,7 @@ export default function DeveloperTimeline() {
                 : 1;
             let currentX = startX + (barWidth - totalBubbleWidth * scale) / 2;
 
-            entries.forEach(([type, count], index) => {
+            entries.forEach(([type, count]) => {
               const rawR = 6 + Math.sqrt(Number(count)) * 3;
               const r = Math.max(6, rawR * scale);
               const cx = currentX + r;
