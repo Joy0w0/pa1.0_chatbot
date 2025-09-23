@@ -398,7 +398,7 @@ const TimelineVisualization = ({
   }, [projectIndex, currentTime]);
 
   return (
-    <div className="w-full h-52 md:h-56 overflow-x-auto overflow-y-visible">
+    <div className="w-full overflow-x-auto overflow-y-visible h-52 md:h-56">
       <svg ref={svgRef}></svg>
     </div>
   );
@@ -451,16 +451,16 @@ export default function App() {
 
   return (
     <div className="w-full overflow-auto bg-gradient-to-r from-[#1c1b47] via-[rgb(35,38,100)] to-[#2f1b47] p-4 md:p-8 min-h-screen">
-      <div className="px-2 md:px-4 mx-auto max-w-none">
+      <div className="px-2 mx-auto md:px-4 max-w-none">
         {' '}
         {/* Removed max-width constraint for wider layout */}
         <div className="relative mb-6 md:mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-center text-white">
+          <h1 className="text-2xl font-bold text-center text-white md:text-3xl">
             AIDD Monitoring Tool
           </h1>
           {/* Navigation Button to Developer Timeline */}
           <button
-            onClick={() => navigate('/developer-timeline')}
+            onClick={() => navigate('/developtimeline')}
             className="absolute top-0 right-0 flex items-center gap-2 px-4 py-2 text-white transition-all bg-purple-600 rounded-lg hover:bg-purple-700"
             title="Switch to Developer Timeline View">
             <span className="text-sm font-medium">All Data</span>
@@ -478,18 +478,18 @@ export default function App() {
             </svg>
           </button>
         </div>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 md:gap-4 mb-6 md:mb-8">
+        <div className="flex flex-col items-center justify-center gap-2 mb-6 sm:flex-row md:gap-4 md:mb-8">
           <button
             onClick={isPlaying ? stopAnimation : startAnimation}
-            className="px-4 md:px-6 py-2 text-sm md:text-base text-white transition-all bg-blue-600 rounded hover:bg-blue-700">
+            className="px-4 py-2 text-sm text-white transition-all bg-blue-600 rounded md:px-6 md:text-base hover:bg-blue-700">
             {isPlaying ? 'Stop' : 'Start'}
           </button>
           <button
             onClick={resetAnimation}
-            className="px-4 md:px-6 py-2 text-sm md:text-base text-white transition-all bg-gray-600 rounded hover:bg-gray-700">
+            className="px-4 py-2 text-sm text-white transition-all bg-gray-600 rounded md:px-6 md:text-base hover:bg-gray-700">
             Reset
           </button>
-          <div className="px-3 md:px-4 py-2 text-xs md:text-sm text-white bg-gray-800 rounded">
+          <div className="px-3 py-2 text-xs text-white bg-gray-800 rounded md:px-4 md:text-sm">
             Current Time: {currentTime}
           </div>
         </div>
@@ -576,7 +576,7 @@ export default function App() {
                     {projectData.team_name}
                   </h2>
                   <div className="w-full overflow-x-auto">
-                    <div className="flex flex-col lg:flex-row items-start lg:items-center gap-3 lg:gap-6 min-w-max">
+                    <div className="flex flex-col items-start gap-3 lg:flex-row lg:items-center lg:gap-6 min-w-max">
                       {' '}
                       {/* Increased gap from 6 to 8 */}
                       <div className="w-full lg:flex-1">
@@ -589,7 +589,7 @@ export default function App() {
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           F/B Breakdown
                         </h3>
-                        <div className="flex flex-col justify-center h-20 md:h-24 p-3 md:p-4 text-center text-white rounded bg-gradient-to-br from-teal-600 to-teal-700">
+                        <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded md:h-24 md:p-4 bg-gradient-to-br from-teal-600 to-teal-700">
                           <div className="mb-2 text-xs text-teal-100">
                             Finger/Brain
                           </div>
@@ -602,7 +602,7 @@ export default function App() {
                         <h3 className="flex items-center h-4 mb-1 text-sm text-gray-300">
                           AI Breakdown
                         </h3>
-                        <div className="flex flex-col justify-center h-20 md:h-24 p-2 md:p-3 text-center text-white rounded bg-gradient-to-br from-blue-600 to-blue-700">
+                        <div className="flex flex-col justify-center h-20 p-2 text-center text-white rounded md:h-24 md:p-3 bg-gradient-to-br from-blue-600 to-blue-700">
                           <div className="mb-2 text-sm text-blue-100">
                             상위 기능
                           </div>
@@ -612,7 +612,7 @@ export default function App() {
                               return (
                                 <div
                                   key={type}
-                                  className="text-xs md:text-sm leading-relaxed break-words">
+                                  className="text-xs leading-relaxed break-words md:text-sm">
                                   {`${idx + 1}. ${shortType}: ${count}`}
                                 </div>
                               );
@@ -629,7 +629,7 @@ export default function App() {
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           Task Completion
                         </h3>
-                        <div className="flex flex-col justify-center h-20 md:h-24 p-3 md:p-4 text-center text-white rounded bg-gradient-to-br from-teal-700 to-teal-800">
+                        <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded md:h-24 md:p-4 bg-gradient-to-br from-teal-700 to-teal-800">
                           <div className="text-lg font-bold leading-tight">
                             {currentTasks}/{maxTasks}건
                           </div>
@@ -642,7 +642,7 @@ export default function App() {
                         <h3 className="flex items-center h-4 mb-1 text-xs text-gray-300">
                           Expected Quality
                         </h3>
-                        <div className="flex flex-col justify-center h-20 md:h-24 p-3 md:p-4 text-center text-white rounded bg-gradient-to-br from-blue-700 to-blue-800">
+                        <div className="flex flex-col justify-center h-20 p-3 text-center text-white rounded md:h-24 md:p-4 bg-gradient-to-br from-blue-700 to-blue-800">
                           <div className="text-lg font-bold leading-tight">
                             {currentQuality}점
                           </div>

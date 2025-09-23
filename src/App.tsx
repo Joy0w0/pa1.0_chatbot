@@ -7,7 +7,7 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<AIDDMonitoringTool />} />
-        <Route path="/developer-timeline" element={<DeveloperTimeline />} />
+        <Route path="/developtimeline" element={<DeveloperTimeline />} />
       </Routes>
     </Router>
   );
