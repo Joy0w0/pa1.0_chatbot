@@ -237,10 +237,9 @@ const TimelineVisualization = ({
         const endX = xScale(itemEndTime);
         const barWidth = endX - startX;
 
-        if (barWidth > 1) {
-          // Create bar with original gradient style
-          const rect = g
-            .append('rect')
+        if (barWidth > 1 && item.type !== 'closetime') {
+          // Only create bars for fingertime and braintime
+          g.append('rect')
             .attr('x', startX)
             .attr('y', barY)
             .attr('width', barWidth)
@@ -252,19 +251,21 @@ const TimelineVisualization = ({
                 : `url(#brainGradient-${projectIndex})`,
             )
             .attr('rx', 0)
-            .attr('opacity', 0.9)
+            .attr('opacity', item.type === 'braintime' ? 0.95 : 0.9)
             .attr('stroke', item.type === 'braintime' ? '#f78aff' : 'none')
             .attr('stroke-width', item.type === 'braintime' ? 2 : 0)
+            .attr(
+              'filter',
+              item.type === 'braintime'
+                ? `url(#brainGlow-${projectIndex})`
+                : 'none',
+            )
             .style(
               'filter',
               item.type === 'braintime'
-                ? 'drop-shadow(0 0 5px #f78aff) drop-shadow(0 0 10px #f78aff)'
+                ? 'drop-shadow(0 0 5px #f78aff) drop-shadow(0 0 8px #f78aff)'
                 : 'none',
             );
-
-          if (item.type === 'braintime') {
-            rect.attr('filter', `url(#brainGlow-${projectIndex})`);
-          }
 
           // Add AIDD bubbles (original style with progressive growth)
           if (item.type === 'fingertime' && barWidth > 15) {
@@ -416,7 +417,7 @@ export default function App() {
 
     let seconds = 0;
     const id = setInterval(() => {
-      seconds += 60; // 60초씩 증가 (매우 빠르게)
+      seconds += 20; // 20초씩 증가 (적당한 속도로)
       const hours = 16 + Math.floor(seconds / 3600);
       const minutes = Math.floor((seconds % 3600) / 60);
       const secs = seconds % 60;
@@ -429,7 +430,7 @@ export default function App() {
         setIsPlaying(false);
         setIntervalId(null);
       }
-    }, 20); // 20ms마다 업데이트 (매우 빠르고 부드럽게)
+    }, 75); // 75ms마다 업데이트 (부드럽게)
 
     setIntervalId(id);
   };
