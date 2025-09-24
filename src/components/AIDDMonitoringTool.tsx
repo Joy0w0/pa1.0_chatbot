@@ -229,7 +229,7 @@ const TimelineVisualization = ({
       };
       const chartWidth = width - margin.left - margin.right;
       const chartHeight = height - margin.top - margin.bottom;
-      const barHeight = 10;
+      const barHeight = 14;
 
       // Show complete timeline (16:00 to 18:00)
 
