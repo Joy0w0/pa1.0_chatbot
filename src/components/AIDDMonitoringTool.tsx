@@ -517,18 +517,21 @@ export default function App() {
             }
             const currentQuality = Math.floor(progress * maxQuality);
 
-            // Calculate F/B breakdown percentages based on time progress
+            // Calculate F/B breakdown percentages from real data
             let targetFingertime, targetBraintime;
 
             if (projectKey === 'Project01') {
+              // TEAM119 데이터 기반
               targetFingertime = 87;
               targetBraintime = 13;
             } else if (projectKey === 'Project02') {
-              targetFingertime = 71;
-              targetBraintime = 29;
+              // TEAM044 데이터 기반
+              targetFingertime = 84;
+              targetBraintime = 16;
             } else {
-              targetFingertime = 63;
-              targetBraintime = 37;
+              // TEAM080 데이터 기반 (Project03)
+              targetFingertime = 81;
+              targetBraintime = 19;
             }
 
             // Calculate current percentages based on progress

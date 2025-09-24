@@ -1,0 +1,23 @@
+{
+  "TEAM119": {
+    "fingertime_minutes": 405.66,
+    "braintime_minutes": 62.59,
+    "total_minutes": 468.25,
+    "fingertime_percent": 87,
+    "braintime_percent": 13
+  },
+  "TEAM044": {
+    "fingertime_minutes": 319.97,
+    "braintime_minutes": 59.23,
+    "total_minutes": 379.2,
+    "fingertime_percent": 84,
+    "braintime_percent": 16
+  },
+  "TEAM080": {
+    "fingertime_minutes": 286.05,
+    "braintime_minutes": 66.0,
+    "total_minutes": 352.05,
+    "fingertime_percent": 81,
+    "braintime_percent": 19
+  }
+}
