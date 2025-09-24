@@ -206,168 +206,225 @@ const TimelineVisualization = ({
   useEffect(() => {
     if (!svgRef.current) return;
 
-    // Use D3.js for consistent styling with original DeveloperTimeline
-    const svg = d3.select(svgRef.current);
-    svg.selectAll('*').remove();
+    const drawChart = () => {
+      if (!svgRef.current) return;
 
-    // 반응형 크기 계산
-    const containerWidth = svgRef.current.parentElement?.clientWidth || 1000;
-    const width = containerWidth; // 컴포넌트에 맞게 조정
-    const height = window.innerWidth < 768 ? 180 : 220; // 레전드를 위해 높이 증가
-    const margin = {
-      top: 60, // 레전드 공간을 위해 증가
-      right: window.innerWidth < 768 ? 40 : 60,
-      bottom: 20,
-      left: window.innerWidth < 768 ? 80 : 100, // 개발자 이름이 보이도록 여백 확보
-    };
-    const chartWidth = width - margin.left - margin.right;
-    const chartHeight = height - margin.top - margin.bottom;
-    const barHeight = 10;
+      // Use D3.js for consistent styling with original DeveloperTimeline
+      const svg = d3.select(svgRef.current);
+      svg.selectAll('*').remove();
 
-    // Show complete timeline (16:00 to 18:00)
+      // 반응형 크기 계산 - 컨테이너 크기에 맞춰 동적으로 조정
+      const container = svgRef.current.parentElement;
+      if (!container) return;
 
-    // Get team data from real data
-    const teamData = realData[teamName];
+      const containerRect = container.getBoundingClientRect();
+      const containerWidth = containerRect.width;
+      const width = Math.max(600, containerWidth - 40); // 패딩과 여백을 고려
+      const height = window.innerWidth < 768 ? 180 : 220;
+      const margin = {
+        top: 60,
+        right: window.innerWidth < 768 ? 40 : 60,
+        bottom: 20,
+        left: window.innerWidth < 768 ? 80 : 100,
+      };
+      const chartWidth = width - margin.left - margin.right;
+      const chartHeight = height - margin.top - margin.bottom;
+      const barHeight = 10;
 
-    if (!teamData) return;
+      // Show complete timeline (16:00 to 18:00)
 
-    const data = teamData.timeline_data;
-    const users = teamData.developers;
+      // Get team data from real data
+      const teamData = realData[teamName];
 
-    // Set up SVG dimensions
-    svg.attr('width', width).attr('height', height);
+      if (!teamData) return;
 
-    // Create main group
-    const g = svg
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+      const data = teamData.timeline_data;
+      const users = teamData.developers;
 
-    // Create scales
-    const parseTime = d3.timeParse('%H:%M:%S');
-    const startTime = parseTime('16:00:00')!;
-    const endTime = parseTime('18:00:00')!;
+      // Set up SVG dimensions - 부모 컨테이너에 맞춰 설정
+      svg
+        .attr('width', width)
+        .attr('height', height)
+        .attr('viewBox', `0 0 ${width} ${height}`)
+        .attr('preserveAspectRatio', 'xMidYMid meet');
 
-    const xScale = d3
-      .scaleTime()
-      .domain([startTime, endTime])
-      .range([0, chartWidth]);
+      // Create main group
+      const g = svg
+        .append('g')
+        .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    const yScale = d3
-      .scaleBand()
-      .domain(users)
-      .range([0, chartHeight])
-      .padding(0.9);
+      // Create scales
+      const parseTime = d3.timeParse('%H:%M:%S');
+      const startTime = parseTime('16:00:00')!;
+      const endTime = parseTime('18:00:00')!;
 
-    // Removed gradients and filters - using solid colors
+      const xScale = d3
+        .scaleTime()
+        .domain([startTime, endTime])
+        .range([0, chartWidth]);
 
-    // Time axis
-    g.append('g')
-      .call(
-        d3
-          .axisTop(xScale)
-          .ticks(4)
-          .tickFormat((d) => d3.timeFormat('%H:%M')(d as Date)),
-      )
-      .selectAll('text')
-      .style('fill', '#e0e0e0')
-      .style('font-size', '10px');
+      const yScale = d3
+        .scaleBand()
+        .domain(users)
+        .range([0, chartHeight])
+        .padding(0.9);
 
-    // User labels - show email prefix before @
-    g.append('g')
-      .call(d3.axisLeft(yScale).tickFormat((d) => (d as string).split('@')[0]))
-      .selectAll('text')
-      .style('fill', '#f0f0f0')
-      .style('font-size', '12px');
+      // Removed gradients and filters - using solid colors
 
-    // Removed AIDD color scale - only showing time bars
-
-    // Draw timeline bars
-    data.forEach((item) => {
-      const userY = yScale(item.user);
-      if (!userY) return;
-
-      const barY = userY + (yScale.bandwidth() - barHeight) / 2;
-
-      // Show complete bars
-      const itemStartMinutes = item.start;
-      const itemEndMinutes = item.end;
-
-      if (itemEndMinutes > itemStartMinutes) {
-        const itemStartTime = new Date(
-          startTime.getTime() + itemStartMinutes * 60000,
-        );
-        const itemEndTime = new Date(
-          startTime.getTime() + itemEndMinutes * 60000,
-        );
-
-        const startX = xScale(itemStartTime);
-        const endX = xScale(itemEndTime);
-        const barWidth = endX - startX;
-
-        if (barWidth > 1 && item.type !== 'closetime') {
-          // Only create bars for fingertime and braintime with solid colors
-          g.append('rect')
-            .attr('x', startX)
-            .attr('y', barY)
-            .attr('width', barWidth)
-            .attr('height', barHeight)
-            .attr('fill', item.type === 'fingertime' ? '#0bd1b9' : '#e818f7')
-            .attr('rx', 0)
-            .attr('opacity', 0.8);
-
-          // AIDD bubbles removed - showing only time bars
-        }
-      }
-    });
-
-    // Add legend at the top (시간 타입만 표시)
-    const legend = svg.append('g').attr('transform', `translate(10, 15)`); // 레전드를 더 왼쪽으로 이동
-
-    const legendItems = [
-      { label: 'Fingertime', color: '#0bd1b9', shape: 'rect' },
-      { label: 'Braintime', color: '#f78aff', shape: 'rect' },
-    ];
-
-    // 가로로 배치하기 위한 계산
-    let currentX = 0;
-    legendItems.forEach((item) => {
-      const x = currentX;
-      const y = 0;
-
-      if (item.shape === 'rect') {
-        legend
-          .append('rect')
-          .attr('x', x - 6)
-          .attr('y', y - 6)
-          .attr('width', 12)
-          .attr('height', 12)
-          .attr('fill', item.color);
-      } else {
-        legend
-          .append('circle')
-          .attr('cx', x)
-          .attr('cy', y)
-          .attr('r', 6)
-          .attr('fill', item.color);
-      }
-
-      legend
-        .append('text')
-        .attr('x', x + 16)
-        .attr('y', y + 4)
-        .text(item.label)
-        .style('fill', 'white')
+      // Time axis
+      g.append('g')
+        .call(
+          d3
+            .axisTop(xScale)
+            .ticks(4)
+            .tickFormat((d) => d3.timeFormat('%H:%M')(d as Date)),
+        )
+        .selectAll('text')
+        .style('fill', '#e0e0e0')
         .style('font-size', '10px');
 
-      // 다음 아이템 위치 계산
-      const textWidth = item.label.length * 6 + 30; // 대략적인 텍스트 너비
-      currentX += textWidth;
-    });
+      // User labels - show email prefix before @
+      g.append('g')
+        .call(
+          d3.axisLeft(yScale).tickFormat((d) => (d as string).split('@')[0]),
+        )
+        .selectAll('text')
+        .style('fill', '#f0f0f0')
+        .style('font-size', '12px');
+
+      // Removed AIDD color scale - only showing time bars
+
+      // Draw timeline bars
+      data.forEach((item) => {
+        const userY = yScale(item.user);
+        if (!userY) return;
+
+        const barY = userY + (yScale.bandwidth() - barHeight) / 2;
+
+        // Show complete bars
+        const itemStartMinutes = item.start;
+        const itemEndMinutes = item.end;
+
+        if (itemEndMinutes > itemStartMinutes) {
+          const itemStartTime = new Date(
+            startTime.getTime() + itemStartMinutes * 60000,
+          );
+          const itemEndTime = new Date(
+            startTime.getTime() + itemEndMinutes * 60000,
+          );
+
+          const startX = xScale(itemStartTime);
+          const endX = xScale(itemEndTime);
+          const barWidth = endX - startX;
+
+          if (barWidth > 1 && item.type !== 'closetime') {
+            // Only create bars for fingertime and braintime with solid colors
+            g.append('rect')
+              .attr('x', startX)
+              .attr('y', barY)
+              .attr('width', barWidth)
+              .attr('height', barHeight)
+              .attr('fill', item.type === 'fingertime' ? '#0bd1b9' : '#e818f7')
+              .attr('rx', 0)
+              .attr('opacity', 0.8);
+
+            // AIDD bubbles removed - showing only time bars
+          }
+        }
+      });
+
+      // Add legend at the top (시간 타입만 표시)
+      const legend = svg.append('g').attr('transform', `translate(10, 15)`); // 레전드를 더 왼쪽으로 이동
+
+      const legendItems = [
+        { label: 'Fingertime', color: '#0bd1b9', shape: 'rect' },
+        { label: 'Braintime', color: '#f78aff', shape: 'rect' },
+      ];
+
+      // 가로로 배치하기 위한 계산
+      let currentX = 0;
+      legendItems.forEach((item) => {
+        const x = currentX;
+        const y = 0;
+
+        if (item.shape === 'rect') {
+          legend
+            .append('rect')
+            .attr('x', x - 6)
+            .attr('y', y - 6)
+            .attr('width', 12)
+            .attr('height', 12)
+            .attr('fill', item.color);
+        } else {
+          legend
+            .append('circle')
+            .attr('cx', x)
+            .attr('cy', y)
+            .attr('r', 6)
+            .attr('fill', item.color);
+        }
+
+        legend
+          .append('text')
+          .attr('x', x + 16)
+          .attr('y', y + 4)
+          .text(item.label)
+          .style('fill', 'white')
+          .style('font-size', '10px');
+
+        // 다음 아이템 위치 계산
+        const textWidth = item.label.length * 6 + 30; // 대략적인 텍스트 너비
+        currentX += textWidth;
+      });
+    };
+
+    // 초기 차트 그리기
+    drawChart();
+
+    // ResizeObserver로 컨테이너 크기 변화 감지
+    const container = svgRef.current.parentElement;
+    let resizeObserver: ResizeObserver | null = null;
+    let resizeTimeout: NodeJS.Timeout | null = null;
+
+    if (container) {
+      resizeObserver = new ResizeObserver((entries) => {
+        // Debounce 처리로 성능 최적화
+        if (resizeTimeout) {
+          clearTimeout(resizeTimeout);
+        }
+
+        resizeTimeout = setTimeout(() => {
+          const entry = entries[0];
+          if (entry && entry.contentRect.width > 0) {
+            drawChart();
+          }
+        }, 50);
+      });
+
+      resizeObserver.observe(container);
+    }
+
+    // 클린업
+    return () => {
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+      if (resizeObserver && container) {
+        resizeObserver.unobserve(container);
+        resizeObserver.disconnect();
+      }
+    };
   }, [teamName, realData]);
 
   return (
-    <div className="w-full overflow-x-auto overflow-y-visible h-52 md:h-56">
-      <svg ref={svgRef}></svg>
+    <div className="w-full h-52 md:h-56" style={{ minWidth: '600px' }}>
+      <svg
+        ref={svgRef}
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'block',
+        }}></svg>
     </div>
   );
 };
@@ -431,7 +488,7 @@ export default function App() {
           {projectKeys.map((teamName) => {
             return (
               <div className="flex justify-center w-full" key={teamName}>
-                <div className="w-full max-w-[1600px] mx-auto p-4 md:p-6 border border-gray-700 rounded-lg bg-gray-900/50 overflow-hidden">
+                <div className="w-full max-w-[1600px] mx-auto p-4 md:p-6 border border-gray-700 rounded-lg bg-gray-900/50 overflow-x-auto">
                   <h2 className="mb-3 text-lg font-bold text-white">
                     {teamName}
                   </h2>
