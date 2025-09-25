@@ -700,12 +700,16 @@ export default function App() {
     loadData();
   }, []);
 
-  const projectKeys = Object.keys(realData).sort((a, b) => {
-    // TEAM00을 맨 위에 배치
-    if (a === 'TEAM00') return -1;
-    if (b === 'TEAM00') return 1;
-    return a.localeCompare(b);
-  });
+  // 지정된 팀만 표시
+  const allowedTeams = ['TEAM035', 'TEAM039', 'TEAM052', 'TEAM056', 'TEAM112'];
+  const projectKeys = Object.keys(realData)
+    .filter(teamName => allowedTeams.includes(teamName))
+    .sort((a, b) => {
+      // 팀 번호 순으로 정렬
+      const aNum = parseInt(a.replace('TEAM', ''));
+      const bNum = parseInt(b.replace('TEAM', ''));
+      return aNum - bNum;
+    });
 
   if (loading) {
     return (
