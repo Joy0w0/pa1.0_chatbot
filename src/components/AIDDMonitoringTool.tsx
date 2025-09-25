@@ -534,11 +534,12 @@ const TimelineVisualization = ({
 
       const legendItems = [
         { label: 'Fingertime', color: '#0bd1b9', shape: 'rect' },
-        { label: 'Braintime', color: '#f78aff', shape: 'rect' },
+        { label: 'Braintime', color: '#e818f7', shape: 'rect' },
         { label: 'Prompt 기능', color: '#C7FF70', shape: 'triangle_up' },
         { label: 'Icon 기능', color: '#EB0000', shape: 'star' },
         { label: 'Autofill 기능', color: '#ffff00', shape: 'line_vertical' },
       ];
+
 
       // 가로로 배치하기 위한 계산
       let currentX = 0;
