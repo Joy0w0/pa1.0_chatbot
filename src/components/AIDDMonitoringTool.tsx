@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import * as d3 from 'd3';
 
 interface BubbleData {
@@ -50,7 +49,27 @@ interface CSVRow {
   recommend_types: string;
 }
 
+interface AIDDTimeRow {
+  email: string;
+  feature_name: string;
+  timestamp: string;
+  data_source: string;
+  file_path: string;
+  usage_timestamp: string;
+  actual_usage_time: string;
+  milliseconds: number;
+  sequence: number;
+  team_name: string;
+  file_type: string;
+}
+
 const parseTimeToMinutes = (timeStr: string): number => {
+  const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+  return (hours - 16) * 60 + minutes + seconds / 60;
+};
+
+const parseAIDDTimeToMinutes = (timeStr: string): number => {
+  // "16:00:48" 형식의 시간을 분으로 변환
   const [hours, minutes, seconds] = timeStr.split(':').map(Number);
   return (hours - 16) * 60 + minutes + seconds / 60;
 };
@@ -64,6 +83,62 @@ const parseRecommendTypes = (typeStr: string): BubbleData[] => {
       count: count as number,
     }));
   } catch {
+    return [];
+  }
+};
+
+const processAIDDTimeData = async (): Promise<AIDDTimeRow[]> => {
+  try {
+    const response = await fetch('/aidd_time.csv');
+    const csvText = await response.text();
+    const lines = csvText.split('\n').slice(1); // Remove header
+
+    const aiddTimeData: AIDDTimeRow[] = [];
+
+    lines.forEach((line) => {
+      if (!line.trim()) return;
+      const [
+        email,
+        feature_name,
+        timestamp,
+        data_source,
+        file_path,
+        usage_timestamp,
+        actual_usage_time,
+        milliseconds,
+        sequence,
+        team_name,
+        file_type,
+      ] = line.split(',');
+
+      aiddTimeData.push({
+        email,
+        feature_name,
+        timestamp,
+        data_source,
+        file_path,
+        usage_timestamp,
+        actual_usage_time,
+        milliseconds: parseInt(milliseconds),
+        sequence: parseInt(sequence),
+        team_name,
+        file_type,
+      });
+    });
+
+    // Update TEAM00 developers' team_name in AIDD data
+    const team00Developers = ['hwyang@biztechi.com', 'kimhk', 'gamja', 'twchung', 'suhyeok', 'quangnd'];
+    aiddTimeData.forEach(item => {
+      team00Developers.forEach(devName => {
+        if (item.email.includes(devName) || item.email.includes(devName.toLowerCase())) {
+          item.team_name = 'TEAM00';
+        }
+      });
+    });
+
+    return aiddTimeData;
+  } catch (error) {
+    console.error('Error processing AIDD time data:', error);
     return [];
   }
 };
@@ -105,6 +180,39 @@ const processCSVData = async (): Promise<ProcessedData> => {
         recommend_types,
       });
     });
+
+    // Create TEAM00 with specific developers
+    const team00Developers = [
+      'hwyang@biztechi.com', // TEAM035
+      'kimhk', // TEAM039
+      'gamja', // TEAM052
+      'twchung', // TEAM052
+      'suhyeok', // TEAM056
+      'quangnd' // TEAM112
+    ];
+    const team00Data: CSVRow[] = [];
+
+    // Find data for these developers from their original teams
+    const originalTeams = ['TEAM035', 'TEAM039', 'TEAM052', 'TEAM052', 'TEAM056', 'TEAM112'];
+
+    team00Developers.forEach((devName, index) => {
+      const originalTeam = originalTeams[index];
+      if (teamData[originalTeam]) {
+        const devData = teamData[originalTeam].filter(row =>
+          row.email.includes(devName) || row.email.includes(devName.toLowerCase())
+        );
+        devData.forEach(data => {
+          team00Data.push({
+            ...data,
+            team_name: 'TEAM00'
+          });
+        });
+      }
+    });
+
+    if (team00Data.length > 0) {
+      teamData['TEAM00'] = team00Data;
+    }
 
     // Convert to ProcessedData format
     const processedTeams: ProcessedData = {};
@@ -197,9 +305,11 @@ const processCSVData = async (): Promise<ProcessedData> => {
 const TimelineVisualization = ({
   teamName,
   realData,
+  aiddTimeData,
 }: {
   teamName: string;
   realData: ProcessedData;
+  aiddTimeData: AIDDTimeRow[];
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -220,7 +330,7 @@ const TimelineVisualization = ({
       const containerRect = container.getBoundingClientRect();
       const containerWidth = containerRect.width;
       const width = Math.max(600, containerWidth - 40); // 패딩과 여백을 고려
-      const height = window.innerWidth < 768 ? 180 : 220;
+      const height = window.innerWidth < 768 ? 280 : 320; // 높이를 크게 늘려서 간격 확보
       const margin = {
         top: 60,
         right: window.innerWidth < 768 ? 40 : 60,
@@ -229,7 +339,7 @@ const TimelineVisualization = ({
       };
       const chartWidth = width - margin.left - margin.right;
       const chartHeight = height - margin.top - margin.bottom;
-      const barHeight = 14;
+      const barHeight = 12; // 막대 높이를 조금 줄여서 간격 효과 증대
 
       // Show complete timeline (16:00 to 18:00)
 
@@ -240,6 +350,9 @@ const TimelineVisualization = ({
 
       const data = teamData.timeline_data;
       const users = teamData.developers;
+
+      // Get AIDD time data for this team
+      const teamAIDDData = aiddTimeData.filter(item => item.team_name === teamName);
 
       // Set up SVG dimensions - 부모 컨테이너에 맞춰 설정
       svg
@@ -267,7 +380,7 @@ const TimelineVisualization = ({
         .scaleBand()
         .domain(users)
         .range([0, chartHeight])
-        .padding(0.9);
+        .padding(0.1); // 개발자 간격을 매우 크게 벌림
 
       // Removed gradients and filters - using solid colors
 
@@ -333,12 +446,98 @@ const TimelineVisualization = ({
         }
       });
 
+      // Draw AIDD feature usage markers (only during fingertime)
+      teamAIDDData.forEach((aiddItem) => {
+        const userY = yScale(aiddItem.email);
+        if (!userY) return;
+
+        const aiddTimeMinutes = parseAIDDTimeToMinutes(aiddItem.actual_usage_time);
+
+        // Check if this AIDD usage is during fingertime
+        const isDuringFingertime = data.some((timelineItem) => {
+          return timelineItem.user === aiddItem.email &&
+            timelineItem.type === 'fingertime' &&
+            aiddTimeMinutes >= timelineItem.start &&
+            aiddTimeMinutes <= timelineItem.end;
+        });
+
+        if (isDuringFingertime) {
+          const aiddTime = new Date(startTime.getTime() + aiddTimeMinutes * 60000);
+          const aiddX = xScale(aiddTime);
+
+          const barY = userY + (yScale.bandwidth() - barHeight) / 2;
+
+          // Determine feature type and draw appropriate marker
+          const promptFeatures = ["AIPlayRecommend", "TestCaseRecommend", "SummaryRecommend", "CodeMacroRecommend", "CodeMacro"];
+          const iconFeatures = [
+            "QueryMakerRecommend", "MarkerRecommend", "Query2CodeRecommend", "ExceptionHelperRecommend", "MethodGenRecommend",
+            "QueryTuningRecommend", "SimpleMethodRecommend", "Query2Code", "Marker", "SimpleMethod", "MethodGen"
+          ];
+          const autofillFeatures = ["NextLineRecommend", "RevisionMakerRecommend", "CommentRecommend", "RevisionMaker", "NextLine"];
+
+          if (promptFeatures.includes(aiddItem.feature_name)) {
+            // Prompt 기능: 연두색 역정삼각형 (막대 위, 별 크기와 비슷하게)
+            const triangleSize = 8; // 정삼각형의 한 변의 길이
+            const triangleColor = '#C7FF70'; // 연두색
+
+            // Points for a downward-pointing equilateral triangle above the bar
+            const centerY = barY - triangleSize / 2; // 막대 위에 딱 붙게
+            const height = triangleSize * Math.sqrt(3) / 2; // 정삼각형의 높이
+            const p1 = `${aiddX},${centerY + height / 2}`; // Bottom point
+            const p2 = `${aiddX - triangleSize / 2},${centerY - height / 2}`; // Top left
+            const p3 = `${aiddX + triangleSize / 2},${centerY - height / 2}`; // Top right
+
+            g.append('polygon')
+              .attr('points', `${p1} ${p2} ${p3}`)
+              .attr('fill', triangleColor)
+              .attr('opacity', 1);
+          } else if (iconFeatures.includes(aiddItem.feature_name)) {
+            // Icon 기능: 진한 빨간색 별 (막대 위)
+            const starSize = 10; // 별 크기
+            const starColor = '#EB0000'; // 진한 빨간색
+
+            // Create a simple star shape with adjusted position
+            const starPoints = [];
+            const outerRadius = starSize / 2;
+            const innerRadius = outerRadius * 0.4;
+            const starY = barY - starSize / 2; // 막대 위에 딱 붙게
+
+            for (let i = 0; i < 10; i++) {
+              const angle = (i * Math.PI) / 5;
+              const radius = i % 2 === 0 ? outerRadius : innerRadius;
+              const x = aiddX + radius * Math.cos(angle - Math.PI / 2);
+              const y = starY + radius * Math.sin(angle - Math.PI / 2);
+              starPoints.push(`${x},${y}`);
+            }
+
+            g.append('polygon')
+              .attr('points', starPoints.join(' '))
+              .attr('fill', starColor)
+              .attr('opacity', 1);
+          } else if (autofillFeatures.includes(aiddItem.feature_name)) {
+            // Autofill 기능: 노란색 선 (막대 아래)
+            const lineY = barY + barHeight; // 막대 아래에 딱 붙게
+            g.append('line')
+              .attr('x1', aiddX)
+              .attr('x2', aiddX)
+              .attr('y1', lineY)
+              .attr('y2', lineY + 12) // 세로 길이 살짝 증가
+              .attr('stroke', '#ffff00') // Yellow color
+              .attr('stroke-width', 3)
+              .attr('opacity', 0.8);
+          }
+        }
+      });
+
       // Add legend at the top (시간 타입만 표시)
       const legend = svg.append('g').attr('transform', `translate(10, 15)`); // 레전드를 더 왼쪽으로 이동
 
       const legendItems = [
         { label: 'Fingertime', color: '#0bd1b9', shape: 'rect' },
         { label: 'Braintime', color: '#f78aff', shape: 'rect' },
+        { label: 'Prompt 기능', color: '#C7FF70', shape: 'triangle_up' },
+        { label: 'Icon 기능', color: '#EB0000', shape: 'star' },
+        { label: 'Autofill 기능', color: '#ffff00', shape: 'line_vertical' },
       ];
 
       // 가로로 배치하기 위한 계산
@@ -355,6 +554,57 @@ const TimelineVisualization = ({
             .attr('width', 12)
             .attr('height', 12)
             .attr('fill', item.color);
+        } else if (item.shape === 'line') {
+          legend
+            .append('line')
+            .attr('x1', x - 6)
+            .attr('x2', x + 6)
+            .attr('y1', y)
+            .attr('y2', y)
+            .attr('stroke', item.color)
+            .attr('stroke-width', 2);
+        } else if (item.shape === 'line_vertical') {
+          // Draw vertical line (세로 선)
+          legend
+            .append('line')
+            .attr('x1', x)
+            .attr('x2', x)
+            .attr('y1', y - 6)
+            .attr('y2', y + 6)
+            .attr('stroke', item.color)
+            .attr('stroke-width', 3)
+            .attr('opacity', 0.8);
+        } else if (item.shape === 'triangle_up') {
+          // Draw downward-pointing equilateral triangle (역정삼각형)
+          const triangleSize = 6; // 정삼각형의 한 변의 길이
+          const height = triangleSize * Math.sqrt(3) / 2; // 정삼각형의 높이
+          const p1 = `${x},${y + height / 2}`; // Bottom point
+          const p2 = `${x - triangleSize / 2},${y - height / 2}`; // Top left
+          const p3 = `${x + triangleSize / 2},${y - height / 2}`; // Top right
+
+          legend.append('polygon')
+            .attr('points', `${p1} ${p2} ${p3}`)
+            .attr('fill', item.color)
+            .attr('opacity', 1);
+        } else if (item.shape === 'star') {
+          // Draw star
+          const starSize = 8; // 레전드 별 크기도 증가
+          const starPoints = [];
+          const outerRadius = starSize / 2;
+          const innerRadius = outerRadius * 0.4;
+
+          for (let i = 0; i < 10; i++) {
+            const angle = (i * Math.PI) / 5;
+            const radius = i % 2 === 0 ? outerRadius : innerRadius;
+            const starX = x + radius * Math.cos(angle - Math.PI / 2);
+            const starY = y + radius * Math.sin(angle - Math.PI / 2);
+            starPoints.push(`${starX},${starY}`);
+          }
+
+          legend.append('polygon')
+            .attr('points', starPoints.join(' '))
+            .attr('fill', item.color)
+            .attr('opacity', 1);
         } else {
           legend
             .append('circle')
@@ -414,10 +664,10 @@ const TimelineVisualization = ({
         resizeObserver.disconnect();
       }
     };
-  }, [teamName, realData]);
+  }, [teamName, realData, aiddTimeData]);
 
   return (
-    <div className="w-full h-52 md:h-56" style={{ minWidth: '600px' }}>
+    <div className="w-full h-80 md:h-96" style={{ minWidth: '600px' }}>
       <svg
         ref={svgRef}
         style={{
@@ -430,22 +680,31 @@ const TimelineVisualization = ({
 };
 
 export default function App() {
-  const navigate = useNavigate();
   const [realData, setRealData] = useState<ProcessedData>({});
+  const [aiddTimeData, setAiddTimeData] = useState<AIDDTimeRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      const data = await processCSVData();
-      setRealData(data);
+      const [csvData, aiddData] = await Promise.all([
+        processCSVData(),
+        processAIDDTimeData()
+      ]);
+      setRealData(csvData);
+      setAiddTimeData(aiddData);
       setLoading(false);
     };
 
     loadData();
   }, []);
 
-  const projectKeys = Object.keys(realData).sort();
+  const projectKeys = Object.keys(realData).sort((a, b) => {
+    // TEAM00을 맨 위에 배치
+    if (a === 'TEAM00') return -1;
+    if (b === 'TEAM00') return 1;
+    return a.localeCompare(b);
+  });
 
   if (loading) {
     return (
@@ -462,27 +721,8 @@ export default function App() {
         {/* Removed max-width constraint for wider layout */}
         <div className="relative mb-6 md:mb-8">
           <h1 className="text-2xl font-bold text-center text-white md:text-3xl">
-            AIDD Monitoring Tool
+            Brain AI
           </h1>
-          {/* Navigation Button to Developer Timeline */}
-          <button
-            onClick={() => navigate('/developtimeline')}
-            className="absolute top-0 right-0 flex items-center gap-2 px-4 py-2 text-white transition-all bg-purple-600 rounded-lg hover:bg-purple-700"
-            title="Switch to Developer Timeline View">
-            <span className="text-sm font-medium">All Data</span>
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </svg>
-          </button>
         </div>
         <div className="space-y-4 md:space-y-6">
           {projectKeys.map((teamName) => {
@@ -496,6 +736,7 @@ export default function App() {
                     <TimelineVisualization
                       teamName={teamName}
                       realData={realData}
+                      aiddTimeData={aiddTimeData}
                     />
                   </div>
                 </div>
