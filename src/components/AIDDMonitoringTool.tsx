@@ -127,10 +127,20 @@ const processAIDDTimeData = async (): Promise<AIDDTimeRow[]> => {
     });
 
     // Update TEAM00 developers' team_name in AIDD data
-    const team00Developers = ['hwyang@biztechi.com', 'kimhk', 'gamja', 'twchung', 'suhyeok', 'quangnd'];
-    aiddTimeData.forEach(item => {
-      team00Developers.forEach(devName => {
-        if (item.email.includes(devName) || item.email.includes(devName.toLowerCase())) {
+    const team00Developers = [
+      'hwyang@biztechi.com',
+      'kimhk',
+      'gamja',
+      'twchung',
+      'suhyeok',
+      'quangnd',
+    ];
+    aiddTimeData.forEach((item) => {
+      team00Developers.forEach((devName) => {
+        if (
+          item.email.includes(devName) ||
+          item.email.includes(devName.toLowerCase())
+        ) {
           item.team_name = 'TEAM00';
         }
       });
@@ -188,23 +198,32 @@ const processCSVData = async (): Promise<ProcessedData> => {
       'gamja', // TEAM052
       'twchung', // TEAM052
       'suhyeok', // TEAM056
-      'quangnd' // TEAM112
+      'quangnd', // TEAM112
     ];
     const team00Data: CSVRow[] = [];
 
     // Find data for these developers from their original teams
-    const originalTeams = ['TEAM035', 'TEAM039', 'TEAM052', 'TEAM052', 'TEAM056', 'TEAM112'];
+    const originalTeams = [
+      'TEAM035',
+      'TEAM039',
+      'TEAM052',
+      'TEAM052',
+      'TEAM056',
+      'TEAM112',
+    ];
 
     team00Developers.forEach((devName, index) => {
       const originalTeam = originalTeams[index];
       if (teamData[originalTeam]) {
-        const devData = teamData[originalTeam].filter(row =>
-          row.email.includes(devName) || row.email.includes(devName.toLowerCase())
+        const devData = teamData[originalTeam].filter(
+          (row) =>
+            row.email.includes(devName) ||
+            row.email.includes(devName.toLowerCase()),
         );
-        devData.forEach(data => {
+        devData.forEach((data) => {
           team00Data.push({
             ...data,
-            team_name: 'TEAM00'
+            team_name: 'TEAM00',
           });
         });
       }
@@ -352,7 +371,9 @@ const TimelineVisualization = ({
       const users = teamData.developers;
 
       // Get AIDD time data for this team
-      const teamAIDDData = aiddTimeData.filter(item => item.team_name === teamName);
+      const teamAIDDData = aiddTimeData.filter(
+        (item) => item.team_name === teamName,
+      );
 
       // Set up SVG dimensions - 부모 컨테이너에 맞춰 설정
       svg
@@ -451,29 +472,56 @@ const TimelineVisualization = ({
         const userY = yScale(aiddItem.email);
         if (!userY) return;
 
-        const aiddTimeMinutes = parseAIDDTimeToMinutes(aiddItem.actual_usage_time);
+        const aiddTimeMinutes = parseAIDDTimeToMinutes(
+          aiddItem.actual_usage_time,
+        );
 
         // Check if this AIDD usage is during fingertime
         const isDuringFingertime = data.some((timelineItem) => {
-          return timelineItem.user === aiddItem.email &&
+          return (
+            timelineItem.user === aiddItem.email &&
             timelineItem.type === 'fingertime' &&
             aiddTimeMinutes >= timelineItem.start &&
-            aiddTimeMinutes <= timelineItem.end;
+            aiddTimeMinutes <= timelineItem.end
+          );
         });
 
         if (isDuringFingertime) {
-          const aiddTime = new Date(startTime.getTime() + aiddTimeMinutes * 60000);
+          const aiddTime = new Date(
+            startTime.getTime() + aiddTimeMinutes * 60000,
+          );
           const aiddX = xScale(aiddTime);
 
           const barY = userY + (yScale.bandwidth() - barHeight) / 2;
 
           // Determine feature type and draw appropriate marker
-          const promptFeatures = ["AIPlayRecommend", "TestCaseRecommend", "SummaryRecommend", "CodeMacroRecommend", "CodeMacro"];
-          const iconFeatures = [
-            "QueryMakerRecommend", "MarkerRecommend", "Query2CodeRecommend", "ExceptionHelperRecommend", "MethodGenRecommend",
-            "QueryTuningRecommend", "SimpleMethodRecommend", "Query2Code", "Marker", "SimpleMethod", "MethodGen"
+          const promptFeatures = [
+            'AIPlayRecommend',
+            'TestCaseRecommend',
+            'SummaryRecommend',
+            'CodeMacroRecommend',
+            'CodeMacro',
           ];
-          const autofillFeatures = ["NextLineRecommend", "RevisionMakerRecommend", "CommentRecommend", "RevisionMaker", "NextLine"];
+          const iconFeatures = [
+            'QueryMakerRecommend',
+            'MarkerRecommend',
+            'Query2CodeRecommend',
+            'ExceptionHelperRecommend',
+            'MethodGenRecommend',
+            'QueryTuningRecommend',
+            'SimpleMethodRecommend',
+            'Query2Code',
+            'Marker',
+            'SimpleMethod',
+            'MethodGen',
+          ];
+          const autofillFeatures = [
+            'NextLineRecommend',
+            'RevisionMakerRecommend',
+            'CommentRecommend',
+            'RevisionMaker',
+            'NextLine',
+          ];
 
           if (promptFeatures.includes(aiddItem.feature_name)) {
             // Prompt 기능: 연두색 역정삼각형 (막대 위, 별 크기와 비슷하게)
@@ -482,7 +530,7 @@ const TimelineVisualization = ({
 
             // Points for a downward-pointing equilateral triangle above the bar
             const centerY = barY - triangleSize / 2; // 막대 위에 딱 붙게
-            const height = triangleSize * Math.sqrt(3) / 2; // 정삼각형의 높이
+            const height = (triangleSize * Math.sqrt(3)) / 2; // 정삼각형의 높이
             const p1 = `${aiddX},${centerY + height / 2}`; // Bottom point
             const p2 = `${aiddX - triangleSize / 2},${centerY - height / 2}`; // Top left
             const p3 = `${aiddX + triangleSize / 2},${centerY - height / 2}`; // Top right
@@ -540,7 +588,6 @@ const TimelineVisualization = ({
         { label: 'Autofill 기능', color: '#ffff00', shape: 'line_vertical' },
       ];
 
-
       // 가로로 배치하기 위한 계산
       let currentX = 0;
       legendItems.forEach((item) => {
@@ -578,12 +625,13 @@ const TimelineVisualization = ({
         } else if (item.shape === 'triangle_up') {
           // Draw downward-pointing equilateral triangle (역정삼각형)
           const triangleSize = 6; // 정삼각형의 한 변의 길이
-          const height = triangleSize * Math.sqrt(3) / 2; // 정삼각형의 높이
+          const height = (triangleSize * Math.sqrt(3)) / 2; // 정삼각형의 높이
           const p1 = `${x},${y + height / 2}`; // Bottom point
           const p2 = `${x - triangleSize / 2},${y - height / 2}`; // Top left
           const p3 = `${x + triangleSize / 2},${y - height / 2}`; // Top right
 
-          legend.append('polygon')
+          legend
+            .append('polygon')
             .attr('points', `${p1} ${p2} ${p3}`)
             .attr('fill', item.color)
             .attr('opacity', 1);
@@ -602,7 +650,8 @@ const TimelineVisualization = ({
             starPoints.push(`${starX},${starY}`);
           }
 
-          legend.append('polygon')
+          legend
+            .append('polygon')
             .attr('points', starPoints.join(' '))
             .attr('fill', item.color)
             .attr('opacity', 1);
@@ -690,7 +739,7 @@ export default function App() {
       setLoading(true);
       const [csvData, aiddData] = await Promise.all([
         processCSVData(),
-        processAIDDTimeData()
+        processAIDDTimeData(),
       ]);
       setRealData(csvData);
       setAiddTimeData(aiddData);
@@ -703,7 +752,7 @@ export default function App() {
   // 지정된 팀만 표시
   const allowedTeams = ['TEAM035', 'TEAM039', 'TEAM052', 'TEAM056', 'TEAM112'];
   const projectKeys = Object.keys(realData)
-    .filter(teamName => allowedTeams.includes(teamName))
+    .filter((teamName) => allowedTeams.includes(teamName))
     .sort((a, b) => {
       // 팀 번호 순으로 정렬
       const aNum = parseInt(a.replace('TEAM', ''));
@@ -726,7 +775,7 @@ export default function App() {
         {/* Removed max-width constraint for wider layout */}
         <div className="relative mb-6 md:mb-8">
           <h1 className="text-2xl font-bold text-center text-white md:text-3xl">
-            Brain AI
+            AIDD Monitoring Tool
           </h1>
         </div>
         <div className="space-y-4 md:space-y-6">
