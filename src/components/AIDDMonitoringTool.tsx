@@ -325,10 +325,12 @@ const TimelineVisualization = ({
   teamName,
   realData,
   aiddTimeData,
+  currentTime,
 }: {
   teamName: string;
   realData: ProcessedData;
   aiddTimeData: AIDDTimeRow[];
+  currentTime: string;
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -360,7 +362,14 @@ const TimelineVisualization = ({
       const chartHeight = height - margin.top - margin.bottom;
       const barHeight = 12; // 막대 높이를 조금 줄여서 간격 효과 증대
 
-      // Show complete timeline (16:00 to 18:00)
+      // 애니메이션 처리: 현재 시간 계산 (모든 표시되는 팀에 애니메이션 적용)
+      const isAnimatedTeam = true; // 표시되는 모든 팀이 애니메이션 팀
+      // Convert current time to minutes from 16:00
+      const [hours, minutes, seconds] = currentTime.split(':').map(Number);
+      const currentMinutes = (hours - 16) * 60 + minutes + seconds / 60;
+      console.log(
+        `${teamName}: currentTime=${currentTime}, currentMinutes=${currentMinutes}`,
+      );
 
       // Get team data from real data
       const teamData = realData[teamName];
@@ -449,9 +458,39 @@ const TimelineVisualization = ({
 
           const startX = xScale(itemStartTime);
           const endX = xScale(itemEndTime);
-          const barWidth = endX - startX;
+          let barWidth = endX - startX;
 
-          if (barWidth > 1 && item.type !== 'closetime') {
+          // 애니메이션 적용: 애니메이션 팀의 경우 현재 시간까지만 막대 표시
+          if (isAnimatedTeam) {
+            console.log(
+              `${teamName} - ${item.user}: itemStart=${itemStartMinutes}, itemEnd=${itemEndMinutes}, current=${currentMinutes}`,
+            );
+            if (currentMinutes >= itemStartMinutes) {
+              // 현재 시간이 막대 시작 시간을 지났으면 표시 시작
+              const visibleEndMinutes = Math.min(
+                itemEndMinutes,
+                currentMinutes,
+              );
+              const visibleEndTime = new Date(
+                startTime.getTime() + visibleEndMinutes * 60000,
+              );
+              const visibleEndX = xScale(visibleEndTime);
+              const originalBarWidth = barWidth;
+              barWidth = Math.max(0, visibleEndX - startX);
+              console.log(
+                `  -> originalWidth=${originalBarWidth}, animatedWidth=${barWidth}`,
+              );
+            } else {
+              // 아직 시작 시간이 되지 않았으면 막대를 표시하지 않음
+              console.log(`  -> 아직 시작 시간 전, barWidth=0`);
+              barWidth = 0;
+            }
+          }
+
+          if (
+            (barWidth > 1 || (isAnimatedTeam && barWidth > 0)) &&
+            item.type !== 'closetime'
+          ) {
             // Only create bars for fingertime and braintime with solid colors
             g.append('rect')
               .attr('x', startX)
@@ -486,93 +525,97 @@ const TimelineVisualization = ({
           );
         });
 
+        // 애니메이션 팀의 경우 현재 시간까지만 AIDD 마커 표시
         if (isDuringFingertime) {
-          const aiddTime = new Date(
-            startTime.getTime() + aiddTimeMinutes * 60000,
-          );
-          const aiddX = xScale(aiddTime);
+          // 애니메이션 팀이 아니거나, 애니메이션 팀인데 현재 시간이 AIDD 사용 시간을 지났을 때만 표시
+          if (!isAnimatedTeam || aiddTimeMinutes <= currentMinutes) {
+            const aiddTime = new Date(
+              startTime.getTime() + aiddTimeMinutes * 60000,
+            );
+            const aiddX = xScale(aiddTime);
 
-          const barY = userY + (yScale.bandwidth() - barHeight) / 2;
+            const barY = userY + (yScale.bandwidth() - barHeight) / 2;
 
-          // Determine feature type and draw appropriate marker
-          const promptFeatures = [
-            'AIPlayRecommend',
-            'TestCaseRecommend',
-            'SummaryRecommend',
-            'CodeMacroRecommend',
-            'CodeMacro',
-          ];
-          const iconFeatures = [
-            'QueryMakerRecommend',
-            'MarkerRecommend',
-            'Query2CodeRecommend',
-            'ExceptionHelperRecommend',
-            'MethodGenRecommend',
-            'QueryTuningRecommend',
-            'SimpleMethodRecommend',
-            'Query2Code',
-            'Marker',
-            'SimpleMethod',
-            'MethodGen',
-          ];
-          const autofillFeatures = [
-            'NextLineRecommend',
-            'RevisionMakerRecommend',
-            'CommentRecommend',
-            'RevisionMaker',
-            'NextLine',
-          ];
+            // Determine feature type and draw appropriate marker
+            const promptFeatures = [
+              'AIPlayRecommend',
+              'TestCaseRecommend',
+              'SummaryRecommend',
+              'CodeMacroRecommend',
+              'CodeMacro',
+            ];
+            const iconFeatures = [
+              'QueryMakerRecommend',
+              'MarkerRecommend',
+              'Query2CodeRecommend',
+              'ExceptionHelperRecommend',
+              'MethodGenRecommend',
+              'QueryTuningRecommend',
+              'SimpleMethodRecommend',
+              'Query2Code',
+              'Marker',
+              'SimpleMethod',
+              'MethodGen',
+            ];
+            const autofillFeatures = [
+              'NextLineRecommend',
+              'RevisionMakerRecommend',
+              'CommentRecommend',
+              'RevisionMaker',
+              'NextLine',
+            ];
 
-          if (promptFeatures.includes(aiddItem.feature_name)) {
-            // Prompt 기능: 연두색 역정삼각형 (막대 위, 별 크기와 비슷하게)
-            const triangleSize = 8; // 정삼각형의 한 변의 길이
-            const triangleColor = '#C7FF70'; // 연두색
+            if (promptFeatures.includes(aiddItem.feature_name)) {
+              // Prompt 기능: 연두색 역정삼각형 (막대 위, 별 크기와 비슷하게)
+              const triangleSize = 8; // 정삼각형의 한 변의 길이
+              const triangleColor = '#C7FF70'; // 연두색
 
-            // Points for a downward-pointing equilateral triangle above the bar
-            const centerY = barY - triangleSize / 2; // 막대 위에 딱 붙게
-            const height = (triangleSize * Math.sqrt(3)) / 2; // 정삼각형의 높이
-            const p1 = `${aiddX},${centerY + height / 2}`; // Bottom point
-            const p2 = `${aiddX - triangleSize / 2},${centerY - height / 2}`; // Top left
-            const p3 = `${aiddX + triangleSize / 2},${centerY - height / 2}`; // Top right
+              // Points for a downward-pointing equilateral triangle above the bar
+              const centerY = barY - triangleSize / 2; // 막대 위에 딱 붙게
+              const height = (triangleSize * Math.sqrt(3)) / 2; // 정삼각형의 높이
+              const p1 = `${aiddX},${centerY + height / 2}`; // Bottom point
+              const p2 = `${aiddX - triangleSize / 2},${centerY - height / 2}`; // Top left
+              const p3 = `${aiddX + triangleSize / 2},${centerY - height / 2}`; // Top right
 
-            g.append('polygon')
-              .attr('points', `${p1} ${p2} ${p3}`)
-              .attr('fill', triangleColor)
-              .attr('opacity', 1);
-          } else if (iconFeatures.includes(aiddItem.feature_name)) {
-            // Icon 기능: 진한 빨간색 별 (막대 위)
-            const starSize = 10; // 별 크기
-            const starColor = '#EB0000'; // 진한 빨간색
+              g.append('polygon')
+                .attr('points', `${p1} ${p2} ${p3}`)
+                .attr('fill', triangleColor)
+                .attr('opacity', 1);
+            } else if (iconFeatures.includes(aiddItem.feature_name)) {
+              // Icon 기능: 진한 빨간색 별 (막대 위)
+              const starSize = 10; // 별 크기
+              const starColor = '#EB0000'; // 진한 빨간색
 
-            // Create a simple star shape with adjusted position
-            const starPoints = [];
-            const outerRadius = starSize / 2;
-            const innerRadius = outerRadius * 0.4;
-            const starY = barY - starSize / 2; // 막대 위에 딱 붙게
+              // Create a simple star shape with adjusted position
+              const starPoints = [];
+              const outerRadius = starSize / 2;
+              const innerRadius = outerRadius * 0.4;
+              const starY = barY - starSize / 2; // 막대 위에 딱 붙게
 
-            for (let i = 0; i < 10; i++) {
-              const angle = (i * Math.PI) / 5;
-              const radius = i % 2 === 0 ? outerRadius : innerRadius;
-              const x = aiddX + radius * Math.cos(angle - Math.PI / 2);
-              const y = starY + radius * Math.sin(angle - Math.PI / 2);
-              starPoints.push(`${x},${y}`);
+              for (let i = 0; i < 10; i++) {
+                const angle = (i * Math.PI) / 5;
+                const radius = i % 2 === 0 ? outerRadius : innerRadius;
+                const x = aiddX + radius * Math.cos(angle - Math.PI / 2);
+                const y = starY + radius * Math.sin(angle - Math.PI / 2);
+                starPoints.push(`${x},${y}`);
+              }
+
+              g.append('polygon')
+                .attr('points', starPoints.join(' '))
+                .attr('fill', starColor)
+                .attr('opacity', 1);
+            } else if (autofillFeatures.includes(aiddItem.feature_name)) {
+              // Autofill 기능: 노란색 선 (막대 아래)
+              const lineY = barY + barHeight; // 막대 아래에 딱 붙게
+              g.append('line')
+                .attr('x1', aiddX)
+                .attr('x2', aiddX)
+                .attr('y1', lineY)
+                .attr('y2', lineY + 12) // 세로 길이 살짝 증가
+                .attr('stroke', '#ffff00') // Yellow color
+                .attr('stroke-width', 3)
+                .attr('opacity', 0.8);
             }
-
-            g.append('polygon')
-              .attr('points', starPoints.join(' '))
-              .attr('fill', starColor)
-              .attr('opacity', 1);
-          } else if (autofillFeatures.includes(aiddItem.feature_name)) {
-            // Autofill 기능: 노란색 선 (막대 아래)
-            const lineY = barY + barHeight; // 막대 아래에 딱 붙게
-            g.append('line')
-              .attr('x1', aiddX)
-              .attr('x2', aiddX)
-              .attr('y1', lineY)
-              .attr('y2', lineY + 12) // 세로 길이 살짝 증가
-              .attr('stroke', '#ffff00') // Yellow color
-              .attr('stroke-width', 3)
-              .attr('opacity', 0.8);
           }
         }
       });
@@ -714,7 +757,7 @@ const TimelineVisualization = ({
         resizeObserver.disconnect();
       }
     };
-  }, [teamName, realData, aiddTimeData]);
+  }, [teamName, realData, aiddTimeData, currentTime]);
 
   return (
     <div className="w-full h-80 md:h-96" style={{ minWidth: '600px' }}>
@@ -733,6 +776,52 @@ export default function App() {
   const [realData, setRealData] = useState<ProcessedData>({});
   const [aiddTimeData, setAiddTimeData] = useState<AIDDTimeRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentTime, setCurrentTime] = useState('16:00:00');
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+
+  const startAnimation = () => {
+    console.log('Animation started!');
+    setIsPlaying(true);
+
+    // 현재 시간에서 시작하도록 seconds 계산
+    const [currentHours, currentMinutes, currentSeconds] = currentTime
+      .split(':')
+      .map(Number);
+    let seconds =
+      (currentHours - 16) * 3600 + currentMinutes * 60 + currentSeconds;
+
+    const id = setInterval(() => {
+      seconds += 15; // 15초씩 증가 (조금 더 천천히)
+      const hours = 16 + Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+
+      const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      setCurrentTime(timeString);
+
+      if (hours >= 18) {
+        clearInterval(id);
+        setIsPlaying(false);
+        setIntervalId(null);
+      }
+    }, 100); // 100ms마다 업데이트 (조금 더 천천히)
+
+    setIntervalId(id);
+  };
+
+  const stopAnimation = () => {
+    if (intervalId) {
+      clearInterval(intervalId);
+      setIntervalId(null);
+    }
+    setIsPlaying(false);
+  };
+
+  const resetAnimation = () => {
+    stopAnimation();
+    setCurrentTime('16:00:00');
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -749,12 +838,12 @@ export default function App() {
     loadData();
   }, []);
 
-  // 지정된 팀만 표시
-  const allowedTeams = ['TEAM035', 'TEAM039', 'TEAM052', 'TEAM056', 'TEAM112'];
+  // 애니메이션을 적용할 특정 팀들만 표시
+  const animatedTeams = ['TEAM035', 'TEAM039', 'TEAM052', 'TEAM056', 'TEAM112'];
+  // 특정 팀들만 표시하고 번호 순으로 정렬
   const projectKeys = Object.keys(realData)
-    .filter((teamName) => allowedTeams.includes(teamName))
+    .filter((teamName) => animatedTeams.includes(teamName))
     .sort((a, b) => {
-      // 팀 번호 순으로 정렬
       const aNum = parseInt(a.replace('TEAM', ''));
       const bNum = parseInt(b.replace('TEAM', ''));
       return aNum - bNum;
@@ -777,6 +866,23 @@ export default function App() {
           <h1 className="text-2xl font-bold text-center text-white md:text-3xl">
             AIDD Monitoring Tool
           </h1>
+
+          {/* Animation Controls */}
+          <div className="flex items-center justify-center mt-4 space-x-4">
+            <button
+              onClick={isPlaying ? stopAnimation : startAnimation}
+              className="px-4 py-2 text-sm text-white bg-blue-600 rounded hover:bg-blue-700 md:px-6 md:text-base">
+              {isPlaying ? 'Stop' : 'Start'}
+            </button>
+            <button
+              onClick={resetAnimation}
+              className="px-4 py-2 text-sm text-white bg-gray-600 rounded hover:bg-gray-700 md:px-6 md:text-base">
+              Reset
+            </button>
+            <div className="px-3 py-2 text-xs text-white bg-gray-800 rounded md:px-4 md:text-sm">
+              Current Time: {currentTime}
+            </div>
+          </div>
         </div>
         <div className="space-y-4 md:space-y-6">
           {projectKeys.map((teamName) => {
@@ -791,6 +897,7 @@ export default function App() {
                       teamName={teamName}
                       realData={realData}
                       aiddTimeData={aiddTimeData}
+                      currentTime={currentTime}
                     />
                   </div>
                 </div>
