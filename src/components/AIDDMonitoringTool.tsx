@@ -321,6 +321,56 @@ const processCSVData = async (): Promise<ProcessedData> => {
   }
 };
 
+// 팀별 braintime 평균 계산 함수
+const calculateTeamBraintimeAverage = (
+  teamName: string,
+  data: ProcessedData,
+): number => {
+  const teamData = data[teamName];
+  if (!teamData) return 0;
+
+  const totalBraintimeByDeveloper: { [email: string]: number } = {};
+
+  // 각 개발자별 총 braintime 계산
+  teamData.timeline_data.forEach((item) => {
+    if (item.type === 'braintime') {
+      if (!totalBraintimeByDeveloper[item.user]) {
+        totalBraintimeByDeveloper[item.user] = 0;
+      }
+      totalBraintimeByDeveloper[item.user] += item.duration;
+    }
+  });
+
+  // 개발자별 평균 계산
+  const braintimes = Object.values(totalBraintimeByDeveloper);
+  if (braintimes.length === 0) return 0;
+
+  const average =
+    braintimes.reduce((sum, time) => sum + time, 0) / braintimes.length;
+  return Math.round(average * 10) / 10; // 소수점 첫째자리까지
+};
+
+// Braintime 평균 표시 컴포넌트
+const BraintimeAverageCard = ({
+  teamName,
+  realData,
+}: {
+  teamName: string;
+  realData: ProcessedData;
+}) => {
+  const average = calculateTeamBraintimeAverage(teamName, realData);
+
+  return (
+    <div className="mr-4 bg-purple-600/20 border border-purple-500/30 rounded-lg p-4 min-w-[120px]">
+      <div className="mb-1 text-xs font-medium text-purple-300 ">
+        Braintime 평균
+      </div>
+      <div className="text-lg font-bold text-white">{average}분</div>
+      <div className="mt-1 text-xs text-purple-300">개발자당</div>
+    </div>
+  );
+};
+
 const TimelineVisualization = ({
   teamName,
   realData,
@@ -892,13 +942,21 @@ export default function App() {
                   <h2 className="mb-3 text-lg font-bold text-white">
                     {teamName}
                   </h2>
-                  <div className="w-full">
-                    <TimelineVisualization
-                      teamName={teamName}
-                      realData={realData}
-                      aiddTimeData={aiddTimeData}
-                      currentTime={currentTime}
-                    />
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <TimelineVisualization
+                        teamName={teamName}
+                        realData={realData}
+                        aiddTimeData={aiddTimeData}
+                        currentTime={currentTime}
+                      />
+                    </div>
+                    <div className="flex-shrink-0">
+                      <BraintimeAverageCard
+                        teamName={teamName}
+                        realData={realData}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
