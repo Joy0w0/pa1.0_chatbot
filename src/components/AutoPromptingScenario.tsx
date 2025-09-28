@@ -1210,7 +1210,7 @@ export default function AIDDMonitoringTool() {
           <div className="absolute top-0 left-0">
             <button
               onClick={() => navigate('/')}
-              className="px-4 py-2 text-sm text-white transition-colors bg-blue-600 rounded hover:bg-blue-700 md:px-6 md:text-base">
+              className="px-4 py-2 text-sm text-white transition-colors bg-green-600 rounded hover:bg-green-700 md:px-6 md:text-base">
               ← Monitoring Tool
             </button>
           </div>

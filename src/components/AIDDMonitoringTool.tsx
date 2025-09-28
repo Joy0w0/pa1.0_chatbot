@@ -919,7 +919,7 @@ export default function AutoPromptingScenario() {
           <div className="absolute top-0 right-0">
             <button
               onClick={() => navigate('/scenario')}
-              className="px-4 py-2 text-sm text-white transition-colors bg-green-600 rounded hover:bg-green-700 md:px-6 md:text-base">
+              className="px-4 py-2 text-sm text-white transition-colors bg-purple-600 rounded hover:bg-purple-700 md:px-6 md:text-base">
               Scenario →
             </button>
           </div>
