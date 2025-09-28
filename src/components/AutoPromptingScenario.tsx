@@ -377,11 +377,15 @@ const TimelineVisualization = ({
   realData,
   aiddTimeData,
   currentTime,
+  brainAIUsages,
+  isAnimationPaused,
 }: {
   teamName: string;
   realData: ProcessedData;
   aiddTimeData: AIDDTimeRow[];
   currentTime: string;
+  brainAIUsages: BrainAIUsage[];
+  isAnimationPaused: boolean;
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -427,7 +431,51 @@ const TimelineVisualization = ({
 
       if (!teamData) return;
 
-      const data = teamData.timeline_data;
+      // 원본 데이터를 복사하고 Brain AI 사용에 따라 수정
+      let modifiedData = [...teamData.timeline_data];
+
+      // 해당 팀의 Brain AI 사용 기록 필터링
+      const teamBrainAIUsages = brainAIUsages.filter(
+        (usage) => usage.teamName === teamName,
+      );
+
+      // Brain AI 사용 시점 이후 braintime을 fingertime으로 전환
+      teamBrainAIUsages.forEach((usage) => {
+        modifiedData = modifiedData
+          .map((item) => {
+            if (item.user === usage.developer && item.type === 'braintime') {
+              // Brain AI 사용 시점이 이 braintime 구간에 포함되는 경우
+              if (usage.time >= item.start && usage.time <= item.end) {
+                // 해당 시점 이전은 braintime, 이후는 fingertime으로 분할
+                const splitTime = usage.time;
+                const modifiedItems = [];
+
+                // Brain AI 사용 이전 부분 (braintime 유지)
+                if (splitTime > item.start) {
+                  modifiedItems.push({
+                    ...item,
+                    end: splitTime,
+                  });
+                }
+
+                // Brain AI 사용 이후 부분 (fingertime으로 전환)
+                if (splitTime < item.end) {
+                  modifiedItems.push({
+                    ...item,
+                    start: splitTime,
+                    type: 'fingertime',
+                  });
+                }
+
+                return modifiedItems;
+              }
+            }
+            return [item];
+          })
+          .flat();
+      });
+
+      const data = modifiedData;
       const users = teamData.developers;
 
       // Get AIDD time data for this team
@@ -671,12 +719,53 @@ const TimelineVisualization = ({
         }
       });
 
+      // Draw Brain AI usage markers (동그라미)
+      teamBrainAIUsages.forEach((brainAIUsage) => {
+        // 애니메이션 팀인 경우 현재 시간 이후의 Brain AI 사용은 표시하지 않음
+        if (isAnimatedTeam && brainAIUsage.time > currentMinutes) {
+          return;
+        }
+
+        const userY = yScale(brainAIUsage.developer);
+        if (!userY) return;
+
+        const brainAITime = new Date(
+          startTime.getTime() + brainAIUsage.time * 60000,
+        );
+        const brainAIX = xScale(brainAITime);
+
+        const barY = userY + (yScale.bandwidth() - barHeight) / 2;
+        const circleY = barY + barHeight / 2; // 막대 중앙에 위치
+
+        // Brain AI 사용 표시: 파란색 동그라미
+        g.append('circle')
+          .attr('cx', brainAIX)
+          .attr('cy', circleY)
+          .attr('r', 6)
+          .attr('fill', '#3B82F6') // 파란색
+          .attr('stroke', '#FFFFFF') // 흰색 테두리
+          .attr('stroke-width', 2)
+          .attr('opacity', 1);
+
+        // 'AI' 텍스트 추가
+        g.append('text')
+          .attr('x', brainAIX)
+          .attr('y', circleY + 1) // 약간 아래로 조정
+          .attr('text-anchor', 'middle')
+          .attr('dominant-baseline', 'middle')
+          .text('AI')
+          .style('fill', 'white')
+          .style('font-size', '8px')
+          .style('font-weight', 'bold');
+      });
+
       // Add legend at the top (시간 타입만 표시)
       const legend = svg.append('g').attr('transform', `translate(10, 15)`); // 레전드를 더 왼쪽으로 이동
 
       const legendItems = [
         { label: 'Fingertime', color: '#0bd1b9', shape: 'rect' },
         { label: 'Braintime', color: '#e818f7', shape: 'rect' },
+        { label: 'Brain AI 사용', color: '#3B82F6', shape: 'circle' },
         { label: 'Prompt 기능', color: '#C7FF70', shape: 'triangle_up' },
         { label: 'Icon 기능', color: '#EB0000', shape: 'star' },
         { label: 'Autofill 기능', color: '#ffff00', shape: 'line_vertical' },
@@ -749,6 +838,28 @@ const TimelineVisualization = ({
             .attr('points', starPoints.join(' '))
             .attr('fill', item.color)
             .attr('opacity', 1);
+        } else if (item.shape === 'circle') {
+          // Draw circle with border (Brain AI 마커와 동일하게)
+          legend
+            .append('circle')
+            .attr('cx', x)
+            .attr('cy', y)
+            .attr('r', 6)
+            .attr('fill', item.color)
+            .attr('stroke', '#FFFFFF')
+            .attr('stroke-width', 1);
+
+          // 'AI' 텍스트 추가
+          legend
+            .append('text')
+            .attr('x', x)
+            .attr('y', y + 1)
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'middle')
+            .text('AI')
+            .style('fill', 'white')
+            .style('font-size', '7px')
+            .style('font-weight', 'bold');
         } else {
           legend
             .append('circle')
@@ -808,7 +919,14 @@ const TimelineVisualization = ({
         resizeObserver.disconnect();
       }
     };
-  }, [teamName, realData, aiddTimeData, currentTime]);
+  }, [
+    teamName,
+    realData,
+    aiddTimeData,
+    currentTime,
+    brainAIUsages,
+    isAnimationPaused,
+  ]);
 
   return (
     <div className="w-full h-80 md:h-96" style={{ minWidth: '600px' }}>
@@ -823,7 +941,22 @@ const TimelineVisualization = ({
   );
 };
 
-export default function AutoPromptingScenario() {
+// Brain AI 사용 기록 타입 정의
+interface BrainAIUsage {
+  teamName: string;
+  developer: string;
+  time: number; // minutes from 16:00
+}
+
+// 팝업 상태 타입 정의
+interface PopupState {
+  show: boolean;
+  teamName: string;
+  developer: string;
+  time: number;
+}
+
+export default function AIDDMonitoringTool() {
   const navigate = useNavigate();
   const [realData, setRealData] = useState<ProcessedData>({});
   const [aiddTimeData, setAiddTimeData] = useState<AIDDTimeRow[]>([]);
@@ -831,6 +964,140 @@ export default function AutoPromptingScenario() {
   const [currentTime, setCurrentTime] = useState('16:00:00');
   const [isPlaying, setIsPlaying] = useState(false);
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
+  const [activeTab, setActiveTab] = useState('TEAM035');
+
+  // 개발자별 누적 braintime 추적 (로컬 변수로 관리)
+
+  // 팝업 상태 관리
+  const [popupState, setPopupState] = useState<PopupState>({
+    show: false,
+    teamName: '',
+    developer: '',
+    time: 0,
+  });
+
+  // Brain AI 사용 기록
+  const [brainAIUsages, setBrainAIUsages] = useState<BrainAIUsage[]>([]);
+
+  // 이미 알림이 표시된 개발자들 추적 (중복 방지)
+  const [notifiedDevelopers, setNotifiedDevelopers] = useState<Set<string>>(
+    new Set(),
+  );
+
+  // 개발자별 누적 braintime 계산 및 팝업 체크
+  const checkBraintimeAndShowPopup = (currentMinutes: number) => {
+    // 이미 팝업이 떠있으면 체크하지 않음
+    if (popupState.show || !realData[activeTab]) return;
+
+    const teamData = realData[activeTab];
+    const teamAverage = calculateTeamBraintimeAverage(activeTab, realData);
+
+    // 현재 시간까지의 각 개발자별 누적 braintime 계산
+    const newDeveloperBraintimes: { [key: string]: number } = {};
+
+    teamData.timeline_data.forEach((item) => {
+      if (item.type === 'braintime' && item.start <= currentMinutes) {
+        const endTime = Math.min(item.end, currentMinutes);
+        if (endTime > item.start) {
+          const duration = endTime - item.start;
+          newDeveloperBraintimes[item.user] =
+            (newDeveloperBraintimes[item.user] || 0) + duration;
+        }
+      }
+    });
+
+    // 디버깅: 개발자별 braintime 추적
+    if (Object.keys(newDeveloperBraintimes).length > 0) {
+      console.log(`${activeTab} braintimes:`, newDeveloperBraintimes);
+    }
+
+    // 팀 평균을 넘어선 개발자 확인
+    Object.entries(newDeveloperBraintimes).forEach(([developer, braintime]) => {
+      const developerKey = `${activeTab}-${developer}`;
+      if (braintime > teamAverage && !notifiedDevelopers.has(developerKey)) {
+        // 팝업 표시
+        setPopupState({
+          show: true,
+          teamName: activeTab,
+          developer: developer,
+          time: currentMinutes,
+        });
+        setNotifiedDevelopers((prev) => new Set(prev).add(developerKey));
+
+        // 애니메이션 일시정지
+        if (intervalId) {
+          clearInterval(intervalId);
+          setIntervalId(null);
+        }
+        setIsPlaying(false);
+        console.log('Animation paused due to popup');
+      }
+    });
+  };
+
+  // 애니메이션 재시작 함수
+  const resumeAnimation = (startTime?: number) => {
+    const currentPopupTime = startTime || popupState.time;
+    setIsPlaying(true);
+    let currentSeconds = currentPopupTime * 60;
+
+    console.log('Animation resumed from time:', currentPopupTime);
+
+    const id = setInterval(() => {
+      currentSeconds += 15; // 누적 변수 사용
+      const hours = 16 + Math.floor(currentSeconds / 3600);
+      const minutes = Math.floor((currentSeconds % 3600) / 60);
+      const secs = currentSeconds % 60;
+
+      const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      setCurrentTime(timeString);
+
+      // braintime 체크 (팝업이 떠있지 않을 때만)
+      if (!popupState.show) {
+        checkBraintimeAndShowPopup((hours - 16) * 60 + minutes + secs / 60);
+      }
+
+      if (hours >= 18) {
+        clearInterval(id);
+        setIsPlaying(false);
+        setIntervalId(null);
+      }
+    }, 100);
+
+    setIntervalId(id);
+  };
+
+  // 팝업 확인 버튼 핸들러
+  const handlePopupConfirm = () => {
+    console.log('Popup confirm clicked');
+    // Brain AI 사용 기록 추가
+    setBrainAIUsages((prev) => [
+      ...prev,
+      {
+        teamName: popupState.teamName,
+        developer: popupState.developer,
+        time: popupState.time,
+      },
+    ]);
+
+    // 팝업 닫기
+    const currentPopupTime = popupState.time;
+    setPopupState({ show: false, teamName: '', developer: '', time: 0 });
+
+    // 애니메이션 재시작
+    resumeAnimation(currentPopupTime);
+  };
+
+  // 팝업 취소 버튼 핸들러
+  const handlePopupCancel = () => {
+    console.log('Popup cancel clicked');
+    // 팝업 닫기
+    const currentPopupTime = popupState.time;
+    setPopupState({ show: false, teamName: '', developer: '', time: 0 });
+
+    // 애니메이션 재시작 (Brain AI 사용 기록 없이)
+    resumeAnimation(currentPopupTime);
+  };
 
   const startAnimation = () => {
     console.log('Animation started!');
@@ -851,6 +1118,12 @@ export default function AutoPromptingScenario() {
 
       const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
       setCurrentTime(timeString);
+
+      // braintime 체크 (팝업이 떠있지 않을 때만)
+      const currentMinutes = (hours - 16) * 60 + minutes + secs / 60;
+      if (!popupState.show) {
+        checkBraintimeAndShowPopup(currentMinutes);
+      }
 
       if (hours >= 18) {
         clearInterval(id);
@@ -873,6 +1146,9 @@ export default function AutoPromptingScenario() {
   const resetAnimation = () => {
     stopAnimation();
     setCurrentTime('16:00:00');
+    setNotifiedDevelopers(new Set());
+    setBrainAIUsages([]);
+    setPopupState({ show: false, teamName: '', developer: '', time: 0 });
   };
 
   useEffect(() => {
@@ -889,6 +1165,21 @@ export default function AutoPromptingScenario() {
 
     loadData();
   }, []);
+
+  // 탭 변경 시 상태 초기화
+  useEffect(() => {
+    resetAnimation();
+  }, [activeTab]);
+
+  // 팝업 상태 변화 감지 - 팝업이 뜨면 애니메이션 강제 중지
+  useEffect(() => {
+    if (popupState.show && intervalId) {
+      console.log('Popup shown - force stopping animation');
+      clearInterval(intervalId);
+      setIntervalId(null);
+      setIsPlaying(false);
+    }
+  }, [popupState.show, intervalId]);
 
   // 애니메이션을 적용할 특정 팀들만 표시
   const animatedTeams = ['TEAM035', 'TEAM039', 'TEAM052', 'TEAM056', 'TEAM112'];
@@ -916,18 +1207,17 @@ export default function AutoPromptingScenario() {
         {/* Removed max-width constraint for wider layout */}
         <div className="relative mb-6 md:mb-8">
           {/* Navigation Button */}
-          <div className="absolute top-0 right-0">
+          <div className="absolute top-0 left-0">
             <button
-              onClick={() => navigate('/scenario')}
-              className="px-4 py-2 text-sm text-white transition-colors bg-green-600 rounded hover:bg-green-700 md:px-6 md:text-base">
-              Scenario →
+              onClick={() => navigate('/')}
+              className="px-4 py-2 text-sm text-white transition-colors bg-blue-600 rounded hover:bg-blue-700 md:px-6 md:text-base">
+              ← Monitoring Tool
             </button>
           </div>
 
           <h1 className="text-2xl font-bold text-center text-white md:text-3xl">
-            AIDD Monitoring Tool
+            Brain AI Scenario
           </h1>
-
           {/* Animation Controls */}
           <div className="flex items-center justify-center mt-4 space-x-4">
             <button
@@ -945,36 +1235,83 @@ export default function AutoPromptingScenario() {
             </div>
           </div>
         </div>
-        <div className="space-y-4 md:space-y-6">
-          {projectKeys.map((teamName) => {
-            return (
-              <div className="flex justify-center w-full" key={teamName}>
-                <div className="w-full max-w-[1600px] mx-auto p-4 md:p-6 border border-gray-700 rounded-lg bg-gray-900/50 overflow-x-auto">
-                  <h2 className="mb-3 text-lg font-bold text-white">
-                    {teamName}
-                  </h2>
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                      <TimelineVisualization
-                        teamName={teamName}
-                        realData={realData}
-                        aiddTimeData={aiddTimeData}
-                        currentTime={currentTime}
-                      />
-                    </div>
-                    <div className="flex-shrink-0">
-                      <BraintimeAverageCard
-                        teamName={teamName}
-                        realData={realData}
-                      />
-                    </div>
-                  </div>
-                </div>
+        {/* Tab Navigation */}
+        <div className="mb-6">
+          <div className="flex justify-center">
+            <div className="flex p-1 rounded-lg bg-gray-800/50">
+              {projectKeys.map((teamName) => (
+                <button
+                  key={teamName}
+                  onClick={() => setActiveTab(teamName)}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    activeTab === teamName
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                  }`}>
+                  {teamName}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        {/* Active Team Content */}
+        <div className="flex justify-center w-full">
+          <div className="w-full max-w-[1600px] mx-auto p-4 md:p-6 border border-gray-700 rounded-lg bg-gray-900/50 overflow-x-auto">
+            <h2 className="mb-3 text-lg font-bold text-white">{activeTab}</h2>
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <TimelineVisualization
+                  teamName={activeTab}
+                  realData={realData}
+                  aiddTimeData={aiddTimeData}
+                  currentTime={currentTime}
+                  brainAIUsages={brainAIUsages}
+                  isAnimationPaused={popupState.show}
+                />
               </div>
-            );
-          })}
+              <div className="flex-shrink-0">
+                <BraintimeAverageCard
+                  teamName={activeTab}
+                  realData={realData}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      {/* Auto Prompt 제안 팝업 모달 */}
+      {popupState.show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
+          <div className="max-w-md p-6 mx-4 bg-white rounded-lg shadow-2xl">
+            <div className="text-center">
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">
+                Brain AI 어시스턴트
+              </h3>
+              <div className="mb-6 leading-relaxed text-gray-600">
+                <p>
+                  현재 데이터 조회 API 기능 구현을 시도 중이신 것으로 보입니다.
+                </p>
+                <p className="mt-2">
+                  개발에 참고할 수 있는 Auto Prompt를 제공해드릴까요?
+                </p>
+              </div>
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={handlePopupConfirm}
+                  className="px-6 py-2 text-white transition-colors bg-blue-600 rounded shadow-lg hover:bg-blue-700">
+                  확인
+                </button>
+                <button
+                  onClick={handlePopupCancel}
+                  className="px-6 py-2 text-gray-700 transition-colors bg-gray-300 rounded shadow-lg hover:bg-gray-400">
+                  취소
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
