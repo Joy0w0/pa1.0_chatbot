@@ -380,6 +380,7 @@ const TimelineVisualization = ({
   currentTime,
   brainAIUsages,
   isAnimationPaused,
+  getModifiedTimelineData,
 }: {
   teamName: string;
   realData: ProcessedData;
@@ -387,6 +388,7 @@ const TimelineVisualization = ({
   currentTime: string;
   brainAIUsages: BrainAIUsage[];
   isAnimationPaused: boolean;
+  getModifiedTimelineData: (teamName: string) => TimelineEntry[];
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -432,51 +434,8 @@ const TimelineVisualization = ({
 
       if (!teamData) return;
 
-      // 원본 데이터를 복사하고 Brain AI 사용에 따라 수정
-      let modifiedData = [...teamData.timeline_data];
-
-      // 해당 팀의 Brain AI 사용 기록 필터링
-      const teamBrainAIUsages = brainAIUsages.filter(
-        (usage) => usage.teamName === teamName,
-      );
-
-      // Brain AI 사용 시점 이후 braintime을 fingertime으로 전환
-      teamBrainAIUsages.forEach((usage) => {
-        modifiedData = modifiedData
-          .map((item) => {
-            if (item.user === usage.developer && item.type === 'braintime') {
-              // Brain AI 사용 시점이 이 braintime 구간에 포함되는 경우
-              if (usage.time >= item.start && usage.time <= item.end) {
-                // 해당 시점 이전은 braintime, 이후는 fingertime으로 분할
-                const splitTime = usage.time;
-                const modifiedItems = [];
-
-                // Brain AI 사용 이전 부분 (braintime 유지)
-                if (splitTime > item.start) {
-                  modifiedItems.push({
-                    ...item,
-                    end: splitTime,
-                  });
-                }
-
-                // Brain AI 사용 이후 부분 (fingertime으로 전환)
-                if (splitTime < item.end) {
-                  modifiedItems.push({
-                    ...item,
-                    start: splitTime,
-                    type: 'fingertime',
-                  });
-                }
-
-                return modifiedItems;
-              }
-            }
-            return [item];
-          })
-          .flat();
-      });
-
-      const data = modifiedData;
+      // 수정된 데이터 사용
+      const data = getModifiedTimelineData(teamName);
       const users = teamData.developers;
 
       // Get AIDD time data for this team
@@ -721,6 +680,11 @@ const TimelineVisualization = ({
       });
 
       // Draw Brain AI usage markers (동그라미)
+      // 해당 팀의 Brain AI 사용 기록 필터링
+      const teamBrainAIUsages = brainAIUsages.filter(
+        (usage) => usage.teamName === teamName,
+      );
+
       teamBrainAIUsages.forEach((brainAIUsage) => {
         // 애니메이션 팀인 경우 현재 시간 이후의 Brain AI 사용은 표시하지 않음
         if (isAnimatedTeam && brainAIUsage.time > currentMinutes) {
@@ -983,39 +947,110 @@ export default function AIDDMonitoringTool() {
   const [brainAIUsages, setBrainAIUsages] = useState<BrainAIUsage[]>([]);
 
   // 개발자별 마지막 알림 시간 추적 (중복 방지 개선)
-  const [lastNotificationTime, setLastNotificationTime] = useState<{ [key: string]: number }>({});
+  const [lastNotificationTime, setLastNotificationTime] = useState<{
+    [key: string]: number;
+  }>({});
 
   // 개발자별 활성 상태 관리
-  const [activeDevelopers, setActiveDevelopers] = useState<{ [key: string]: { isActive: boolean; apiType: 'reservation' | 'checkin'; lastActivated?: number } }>({});
+  const [activeDevelopers, setActiveDevelopers] = useState<{
+    [key: string]: {
+      isActive: boolean;
+      apiType: 'reservation' | 'checkin';
+      lastActivated?: number;
+    };
+  }>({});
+
+  // Brain AI 사용에 따라 수정된 데이터를 생성하는 함수
+  const getModifiedTimelineData = (teamName: string) => {
+    const teamData = realData[teamName];
+    if (!teamData) return [];
+
+    // 원본 데이터를 복사하고 Brain AI 사용에 따라 수정
+    let modifiedData = [...teamData.timeline_data];
+
+    // 해당 팀의 Brain AI 사용 기록 필터링
+    const teamBrainAIUsages = brainAIUsages.filter(
+      (usage) => usage.teamName === teamName,
+    );
+
+    // Brain AI 사용 시점 이후 braintime을 fingertime으로 전환
+    teamBrainAIUsages.forEach((usage) => {
+      modifiedData = modifiedData
+        .map((item) => {
+          if (item.user === usage.developer && item.type === 'braintime') {
+            // Brain AI 사용 시점이 이 braintime 구간에 포함되는 경우
+            if (usage.time >= item.start && usage.time <= item.end) {
+              // 해당 시점 이전은 braintime, 이후는 fingertime으로 분할
+              const splitTime = usage.time;
+              const modifiedItems = [];
+
+              // Brain AI 사용 이전 부분 (braintime 유지)
+              if (splitTime > item.start) {
+                modifiedItems.push({
+                  ...item,
+                  end: splitTime,
+                });
+              }
+
+              // Brain AI 사용 이후 부분 (fingertime으로 전환)
+              if (splitTime < item.end) {
+                modifiedItems.push({
+                  ...item,
+                  start: splitTime,
+                  type: 'fingertime',
+                });
+              }
+
+              return modifiedItems;
+            }
+          }
+          return [item];
+        })
+        .flat();
+    });
+
+    return modifiedData;
+  };
 
   // 다른 개발자들이 모두 fingertime일 때 혼자 braintime인 경우 감지
   const checkLoneBraintimeAndShowPopup = (currentMinutes: number) => {
     // 이미 팝업이 떠있으면 체크하지 않음
     if (popupState.show || !realData[activeTab]) return;
 
-    const teamData = realData[activeTab];
+    // 수정된 데이터를 사용
+    const modifiedTimelineData = getModifiedTimelineData(activeTab);
 
     // 현재 시간에 활동 중인 개발자들 찾기 (closetime 제외)
-    const activeDevelopers = teamData.timeline_data.filter((item) => {
-      return item.start <= currentMinutes && item.end > currentMinutes && item.type !== 'closetime';
+    const activeDevelopers = modifiedTimelineData.filter((item) => {
+      return (
+        item.start <= currentMinutes &&
+        item.end > currentMinutes &&
+        item.type !== 'closetime'
+      );
     });
 
     if (activeDevelopers.length === 0) return;
 
     // 현재 시간에 fingertime인 개발자들
-    const fingertimeDevelopers = activeDevelopers.filter((item) => item.type === 'fingertime');
+    const fingertimeDevelopers = activeDevelopers.filter(
+      (item) => item.type === 'fingertime',
+    );
 
     // 현재 시간에 braintime인 개발자들
-    const braintimeDevelopers = activeDevelopers.filter((item) => item.type === 'braintime');
+    const braintimeDevelopers = activeDevelopers.filter(
+      (item) => item.type === 'braintime',
+    );
 
     // 조건: 다른 개발자들이 모두 fingertime이고, 혼자만 braintime인 경우
     // 1. braintime 개발자가 정확히 1명
     // 2. fingertime 개발자가 1명 이상 (다른 개발자들이 있음)
     // 3. 전체 활동 중인 개발자 = fingertime + braintime
-    if (braintimeDevelopers.length === 1 &&
+    if (
+      braintimeDevelopers.length === 1 &&
       fingertimeDevelopers.length >= 1 &&
-      fingertimeDevelopers.length + braintimeDevelopers.length === activeDevelopers.length) {
-
+      fingertimeDevelopers.length + braintimeDevelopers.length ===
+        activeDevelopers.length
+    ) {
       const loneBraintimeDeveloper = braintimeDevelopers[0];
       const developerKey = `${activeTab}-${loneBraintimeDeveloper.user}`;
 
@@ -1026,14 +1061,18 @@ export default function AIDDMonitoringTool() {
       // 5분 이상 지났거나 처음 알림인 경우
       if (timeSinceLastNotification >= 5) {
         // braintime 지속 시간 계산
-        const braintimeDuration = Math.min(loneBraintimeDeveloper.end, currentMinutes) - loneBraintimeDeveloper.start;
+        const braintimeDuration =
+          Math.min(loneBraintimeDeveloper.end, currentMinutes) -
+          loneBraintimeDeveloper.start;
 
         // 2분 이상 지속된 경우에만 알림 표시
         if (braintimeDuration >= 2) {
           // API 타입을 번갈아가면서 선택
           const apiType = Math.random() < 0.5 ? 'reservation' : 'checkin';
 
-          console.log(`[AI 알림] ${loneBraintimeDeveloper.user} (${loneBraintimeDeveloper.type}) - ${apiType} API`);
+          console.log(
+            `[AI 알림] ${loneBraintimeDeveloper.user} (${loneBraintimeDeveloper.type}) - ${apiType} API`,
+          );
 
           setPopupState({
             show: true,
@@ -1044,9 +1083,9 @@ export default function AIDDMonitoringTool() {
           });
 
           // 마지막 알림 시간 업데이트
-          setLastNotificationTime(prev => ({
+          setLastNotificationTime((prev) => ({
             ...prev,
-            [developerKey]: currentMinutes
+            [developerKey]: currentMinutes,
           }));
         }
       }
@@ -1074,24 +1113,36 @@ export default function AIDDMonitoringTool() {
 
     // 개발자별 프롬프팅 패널 활성화 (기존 상태가 있으면 업데이트)
     const developerKey = `${popupState.teamName}-${popupState.developer}`;
-    setActiveDevelopers(prev => ({
+    setActiveDevelopers((prev) => ({
       ...prev,
       [developerKey]: {
         isActive: true,
         apiType: popupState.apiType,
-        lastActivated: Date.now() // 마지막 활성화 시간 추가
-      }
+        lastActivated: Date.now(), // 마지막 활성화 시간 추가
+      },
     }));
 
     // 팝업 닫기 (애니메이션은 계속 진행됨)
-    setPopupState({ show: false, teamName: '', developer: '', time: 0, apiType: 'reservation' });
+    setPopupState({
+      show: false,
+      teamName: '',
+      developer: '',
+      time: 0,
+      apiType: 'reservation',
+    });
   };
 
   // 팝업 취소 버튼 핸들러
   const handlePopupCancel = () => {
     console.log('Popup cancel clicked');
     // 팝업 닫기 (애니메이션은 계속 진행됨)
-    setPopupState({ show: false, teamName: '', developer: '', time: 0, apiType: 'reservation' });
+    setPopupState({
+      show: false,
+      teamName: '',
+      developer: '',
+      time: 0,
+      apiType: 'reservation',
+    });
   };
 
   const startAnimation = () => {
@@ -1140,12 +1191,12 @@ export default function AIDDMonitoringTool() {
 
   // 개발자별 프롬프팅 패널 닫기 핸들러
   const handleCloseDeveloperPanel = (developerKey: string) => {
-    setActiveDevelopers(prev => ({
+    setActiveDevelopers((prev) => ({
       ...prev,
       [developerKey]: {
         ...prev[developerKey],
-        isActive: false
-      }
+        isActive: false,
+      },
     }));
   };
 
@@ -1155,7 +1206,13 @@ export default function AIDDMonitoringTool() {
     setLastNotificationTime({});
     setBrainAIUsages([]); // Brain AI 사용 기록 초기화
     setActiveDevelopers({});
-    setPopupState({ show: false, teamName: '', developer: '', time: 0, apiType: 'reservation' });
+    setPopupState({
+      show: false,
+      teamName: '',
+      developer: '',
+      time: 0,
+      apiType: 'reservation',
+    });
   };
 
   useEffect(() => {
@@ -1250,10 +1307,11 @@ export default function AIDDMonitoringTool() {
                 <button
                   key={teamName}
                   onClick={() => setActiveTab(teamName)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${activeTab === teamName
-                    ? 'bg-blue-600 text-white shadow-lg'
-                    : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
-                    }`}>
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    activeTab === teamName
+                      ? 'bg-blue-600 text-white shadow-lg'
+                      : 'text-gray-300 hover:text-white hover:bg-gray-700/50'
+                  }`}>
                   {teamName}
                 </button>
               ))}
@@ -1273,6 +1331,7 @@ export default function AIDDMonitoringTool() {
                   currentTime={currentTime}
                   brainAIUsages={brainAIUsages}
                   isAnimationPaused={popupState.show}
+                  getModifiedTimelineData={getModifiedTimelineData}
                 />
               </div>
               <div className="flex-shrink-0">
@@ -1286,7 +1345,9 @@ export default function AIDDMonitoringTool() {
             {/* 개발자별 프롬프팅 패널들 */}
             {realData[activeTab] && (
               <div className="mt-6">
-                <h3 className="mb-4 text-md font-semibold text-white">개발자별 AI 어시스턴트</h3>
+                <h3 className="mb-4 text-md font-semibold text-white">
+                  개발자별 AI 어시스턴트
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {realData[activeTab].developers.map((developer) => {
                     const developerKey = `${activeTab}-${developer}`;
@@ -1299,7 +1360,9 @@ export default function AIDDMonitoringTool() {
                           isActive={developerState?.isActive || false}
                           apiType={developerState?.apiType || 'reservation'}
                           lastActivated={developerState?.lastActivated}
-                          onClose={() => handleCloseDeveloperPanel(developerKey)}
+                          onClose={() =>
+                            handleCloseDeveloperPanel(developerKey)
+                          }
                         />
                       </div>
                     );
@@ -1323,11 +1386,11 @@ export default function AIDDMonitoringTool() {
                 <p>
                   {popupState.apiType === 'reservation'
                     ? '예약 등록 API 기능 구현을 시도 중이신 것으로 보입니다.'
-                    : '체크인 API 기능 구현을 시도 중이신 것으로 보입니다.'
-                  }
+                    : '체크인 API 기능 구현을 시도 중이신 것으로 보입니다.'}
                 </p>
                 <p className="mt-2">
-                  개발에 참고할 수 있도록, AIDD에 활용할 수 있는 프롬프트를 제공해드릴까요?
+                  개발에 참고할 수 있도록, AIDD에 활용할 수 있는 프롬프트를
+                  제공해드릴까요?
                 </p>
               </div>
               <div className="flex justify-center space-x-4">
