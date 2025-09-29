@@ -1360,6 +1360,7 @@ export default function AIDDMonitoringTool() {
                           isActive={developerState?.isActive || false}
                           apiType={developerState?.apiType || 'reservation'}
                           lastActivated={developerState?.lastActivated}
+                          currentTime={currentTime}
                           onClose={() =>
                             handleCloseDeveloperPanel(developerKey)
                           }

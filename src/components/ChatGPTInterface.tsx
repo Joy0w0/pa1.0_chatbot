@@ -11,18 +11,30 @@ interface ChatGPTInterfaceProps {
   isVisible: boolean;
   onClose: () => void;
   initialPrompt?: string;
+  currentTime?: string; // 시뮬레이션된 현재 시간
 }
 
 const ChatGPTInterface: React.FC<ChatGPTInterfaceProps> = ({
   isVisible,
   onClose,
   initialPrompt = '',
+  currentTime = '16:00:00',
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // 시뮬레이션된 시간을 Date 객체로 변환하는 함수
+  const getSimulatedDateTime = (): Date => {
+    if (!currentTime) return new Date();
+
+    const [hours, minutes, seconds] = currentTime.split(':').map(Number);
+    const simulatedDate = new Date();
+    simulatedDate.setHours(hours, minutes, seconds || 0, 0);
+    return simulatedDate;
+  };
 
   // 자동 스크롤
   const scrollToBottom = () => {
@@ -331,7 +343,7 @@ public class CheckInSeatOutDto {
       id: Date.now().toString(),
       content: text,
       isUser: true,
-      timestamp: new Date(),
+      timestamp: getSimulatedDateTime(),
     };
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
@@ -345,7 +357,7 @@ public class CheckInSeatOutDto {
         id: (Date.now() + 1).toString(),
         content: aiResponse,
         isUser: false,
-        timestamp: new Date(),
+        timestamp: getSimulatedDateTime(),
       };
 
       setMessages((prev) => [...prev, aiMessage]);
@@ -355,7 +367,7 @@ public class CheckInSeatOutDto {
         id: (Date.now() + 1).toString(),
         content: '죄송합니다. 응답을 생성하는 중 오류가 발생했습니다.',
         isUser: false,
-        timestamp: new Date(),
+        timestamp: getSimulatedDateTime(),
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {

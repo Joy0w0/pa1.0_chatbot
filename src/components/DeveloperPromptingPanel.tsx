@@ -12,6 +12,7 @@ interface DeveloperPromptingPanelProps {
   isActive: boolean;
   apiType: 'reservation' | 'checkin';
   lastActivated?: number;
+  currentTime?: string; // 시뮬레이션된 현재 시간 (예: "16:30:45")
   onClose: () => void;
 }
 
@@ -20,6 +21,7 @@ const DeveloperPromptingPanel: React.FC<DeveloperPromptingPanelProps> = ({
   isActive,
   apiType,
   lastActivated,
+  currentTime = '16:00:00',
   onClose,
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -27,6 +29,16 @@ const DeveloperPromptingPanel: React.FC<DeveloperPromptingPanelProps> = ({
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // 시뮬레이션된 시간을 Date 객체로 변환하는 함수
+  const getSimulatedDateTime = (): Date => {
+    if (!currentTime) return new Date();
+
+    const [hours, minutes, seconds] = currentTime.split(':').map(Number);
+    const simulatedDate = new Date();
+    simulatedDate.setHours(hours, minutes, seconds || 0, 0);
+    return simulatedDate;
+  };
 
   // 자동 스크롤
   const scrollToBottom = () => {
@@ -316,7 +328,7 @@ public class SeatService {
       id: Date.now().toString(),
       content: text,
       isUser: true,
-      timestamp: new Date(),
+      timestamp: getSimulatedDateTime(),
     };
     setMessages((prev) => [...prev, userMessage]);
     setInputValue('');
@@ -330,7 +342,7 @@ public class SeatService {
         id: (Date.now() + 1).toString(),
         content: aiResponse,
         isUser: false,
-        timestamp: new Date(),
+        timestamp: getSimulatedDateTime(),
       };
 
       setMessages((prev) => [...prev, aiMessage]);
@@ -340,7 +352,7 @@ public class SeatService {
         id: (Date.now() + 1).toString(),
         content: '죄송합니다. 응답을 생성하는 중 오류가 발생했습니다.',
         isUser: false,
-        timestamp: new Date(),
+        timestamp: getSimulatedDateTime(),
       };
       setMessages((prev) => [...prev, errorMessage]);
     } finally {
