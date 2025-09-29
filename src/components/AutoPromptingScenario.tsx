@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as d3 from 'd3';
-import DeveloperPromptingPanel from './DeveloperPromptingPanel';
+import DeveloperPromptingPanel, { Message } from './DeveloperPromptingPanel';
+import DeveloperChatModal from './DeveloperChatModal';
 
 interface BubbleData {
   type: string;
@@ -960,6 +961,19 @@ export default function AIDDMonitoringTool() {
     };
   }>({});
 
+  // 모달 상태 관리
+  const [modalState, setModalState] = useState<{
+    isOpen: boolean;
+    developer: string;
+    messages: Message[];
+    apiType: 'reservation' | 'checkin';
+  }>({
+    isOpen: false,
+    developer: '',
+    messages: [],
+    apiType: 'reservation',
+  });
+
   // Brain AI 사용에 따라 수정된 데이터를 생성하는 함수
   const getModifiedTimelineData = (teamName: string) => {
     const teamData = realData[teamName];
@@ -1200,6 +1214,30 @@ export default function AIDDMonitoringTool() {
     }));
   };
 
+  // 모달 열기 핸들러
+  const handleExpandModal = (
+    developer: string,
+    messages: Message[],
+    apiType: 'reservation' | 'checkin',
+  ) => {
+    setModalState({
+      isOpen: true,
+      developer,
+      messages,
+      apiType,
+    });
+  };
+
+  // 모달 닫기 핸들러
+  const handleCloseModal = () => {
+    setModalState({
+      isOpen: false,
+      developer: '',
+      messages: [],
+      apiType: 'reservation',
+    });
+  };
+
   const resetAnimation = () => {
     stopAnimation();
     setCurrentTime('16:00:00');
@@ -1364,6 +1402,7 @@ export default function AIDDMonitoringTool() {
                           onClose={() =>
                             handleCloseDeveloperPanel(developerKey)
                           }
+                          onExpandModal={handleExpandModal}
                         />
                       </div>
                     );
@@ -1410,6 +1449,16 @@ export default function AIDDMonitoringTool() {
           </div>
         </div>
       )}
+
+      {/* 개발자 채팅 모달 */}
+      <DeveloperChatModal
+        isOpen={modalState.isOpen}
+        developer={modalState.developer}
+        apiType={modalState.apiType}
+        initialMessages={modalState.messages}
+        currentTime={currentTime}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 }

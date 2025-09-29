@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-interface Message {
+export interface Message {
   id: string;
   content: string;
   isUser: boolean;
@@ -14,6 +14,11 @@ interface DeveloperPromptingPanelProps {
   lastActivated?: number;
   currentTime?: string; // 시뮬레이션된 현재 시간 (예: "16:30:45")
   onClose: () => void;
+  onExpandModal?: (
+    developer: string,
+    messages: Message[],
+    apiType: 'reservation' | 'checkin',
+  ) => void; // 모달 확장 콜백
 }
 
 const DeveloperPromptingPanel: React.FC<DeveloperPromptingPanelProps> = ({
@@ -23,6 +28,7 @@ const DeveloperPromptingPanel: React.FC<DeveloperPromptingPanelProps> = ({
   lastActivated,
   currentTime = '16:00:00',
   onClose,
+  onExpandModal,
 }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
@@ -370,7 +376,10 @@ public class SeatService {
   if (!isActive) return null;
 
   return (
-    <div className="h-full bg-white rounded-lg shadow-lg flex flex-col border border-gray-200 overflow-hidden">
+    <div
+      className="h-full bg-white rounded-lg shadow-lg flex flex-col border border-gray-200 overflow-hidden cursor-pointer hover:shadow-xl transition-shadow"
+      onDoubleClick={() => onExpandModal?.(developer, messages, apiType)}
+      title="더블클릭하여 크게 보기">
       {/* 헤더 */}
       <div className="flex items-center justify-between p-3 border-b border-gray-200 bg-gray-50 rounded-t-lg">
         <div className="flex items-center space-x-2">
